@@ -1,14 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
 import BeforeAfterGallery from '../components/BeforeAfterGallery.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { company } from '../data/company';
 import { services } from '../data/services';
-import '../styles/three-d-concept.css';
-import '../styles/three-d-concept-v2.css';
-import '../styles/ultra-realism.css';
+import '../styles/cinematic-studio.css';
 
 const title = 'Bilpleje i Esbjerg | Esbjerg Shine';
 const description = 'Esbjerg Shine tilbyder bilpleje, klargøring, polering, håndvask og lakbeskyttelse i Esbjerg. Kontakt os og få et tilbud tilpasset din bil.';
@@ -29,94 +25,112 @@ const serviceSchema = {
 };
 ---
 <BaseLayout title={title} description={description} schema={serviceSchema}>
-  <div class="shine3d" id="top">
-    <Header />
+  <div class="film-site" id="top" data-film-site data-active-service="bilvask">
+    <div class="film-progress" aria-hidden="true"><i data-page-progress></i></div>
+
+    <header class="film-nav" data-film-nav>
+      <div class="film-nav__inner">
+        <a class="film-brand" href="#top" aria-label="Esbjerg Shine – forsiden">
+          <span class="film-brand__mark">ES</span>
+          <span class="film-brand__text"><strong>ESBJERG SHINE</strong><small>DETAILING STUDIO · 6700</small></span>
+        </a>
+        <nav class="film-menu" aria-label="Primær navigation">
+          <a href="#behandlinger">Behandlinger</a>
+          <a href="#resultater">Før / efter</a>
+          <a href="#studiet">Studiet</a>
+          <a href="#kontakt">Kontakt</a>
+        </nav>
+        <a class="film-nav__call" href={`tel:${company.phoneHref}`}><span>{company.phoneDisplay}</span><i>Ring</i></a>
+      </div>
+    </header>
 
     <main id="indhold">
-      <section class="hero3d hero3d--studio" aria-labelledby="hero-title">
-        <div class="hero3d__ambient" aria-hidden="true">
-          <i></i><i></i><i></i><i></i><i></i><i></i>
-        </div>
+      <section class="film-hero" aria-labelledby="hero-title" data-hero>
+        <canvas class="wet-glass" data-wet-glass aria-hidden="true"></canvas>
+        <div class="film-hero__ceiling" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="film-hero__wall" aria-hidden="true"></div>
+        <div class="film-hero__floor" aria-hidden="true"></div>
 
-        <div class="shell hero3d__grid">
-          <div class="hero3d__copy">
-            <p class="hero3d__kicker">Bilpleje · Esbjerg · Detailing studio</p>
-            <h1 id="hero-title">Renere.<span>Skarpere.</span>Blankere.</h1>
-            <p class="hero3d__lead">Bilpleje skal føles lige så gennemført som resultatet ser ud. Håndvask, polering, klargøring og lakbeskyttelse med detaljen i centrum.</p>
-            <div class="hero3d__actions">
-              <a class="button button--primary" href="#ydelser"><span>Udforsk behandlinger</span><i aria-hidden="true">↓</i></a>
-              <a class="button button--ghost" href="#kontakt"><span>Få et tilbud</span><i aria-hidden="true">↗</i></a>
-            </div>
-            <div class="hero3d__micro" aria-label="Esbjerg Shine kort fortalt">
-              <span>Efter aftale</span><span>Randersvej 26</span><span>Esbjerg</span>
-            </div>
-          </div>
-
-          <div class="detail-lab" data-hero-scene aria-label="Detaljeret bil i et digitalt detailing-studie">
-            <div class="detail-lab__ceiling" aria-hidden="true">
-              <i></i><i></i><i></i><i></i>
-            </div>
-            <div class="detail-lab__backwall" aria-hidden="true"></div>
-            <div class="detail-lab__floor" aria-hidden="true"></div>
-            <div class="detail-lab__reflection" aria-hidden="true"></div>
-
-            <div class="detail-lab__car" aria-hidden="true">
-              <img src="/hero-detailing-car.svg" width="1200" height="720" alt="" decoding="async" fetchpriority="high" />
-              <span class="detail-lab__paint-scan"></span>
-              <span class="detail-lab__inspection-line"></span>
-            </div>
-
-            <div class="detail-tool detail-tool--polisher" aria-hidden="true">
-              <span class="detail-tool__handle"></span><span class="detail-tool__head"></span><span class="detail-tool__pad"></span>
-            </div>
-            <div class="detail-tool detail-tool--sprayer" aria-hidden="true">
-              <span class="detail-tool__gun"></span><span class="detail-tool__nozzle"></span><span class="detail-tool__spray"></span>
-            </div>
-
-            <div class="detail-lab__mist" aria-hidden="true">
-              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-            </div>
-
-            <div class="detail-readout detail-readout--paint"><small>LAK</small><strong>Glans & dybde</strong><span></span></div>
-            <div class="detail-readout detail-readout--care"><small>PLEJE</small><strong>Håndarbejde</strong><span></span></div>
-            <div class="detail-readout detail-readout--local"><small>ESBJERG</small><strong>Efter aftale</strong><span></span></div>
+        <div class="film-hero__copy">
+          <p class="film-kicker">Bilpleje · Esbjerg</p>
+          <h1 id="hero-title">Detaljer<br /><em>der skinner.</em></h1>
+          <p>En bil skal ikke bare blive ren. Lakken skal få dybde, interiøret skal føles rigtigt, og finishen skal kunne ses i lyset.</p>
+          <div class="film-hero__actions">
+            <a class="film-button film-button--light" href="#behandlinger"><span>Se behandlinger</span><i>↓</i></a>
+            <a class="film-button" href="#kontakt"><span>Få et tilbud</span><i>↗</i></a>
           </div>
         </div>
 
-        <div class="hero3d__rail" aria-hidden="true">
-          <span>Håndvask</span><i></i><span>Polering</span><i></i><span>Coating</span><i></i><span>Klargøring</span><i></i><span>Interiør</span>
+        <div class="film-car-stage" data-car-stage aria-hidden="true">
+          <div class="film-car-stage__halo"></div>
+          <div class="film-car-stage__car">
+            <img src="/hero-detailing-car-real.svg" width="1400" height="820" alt="" fetchpriority="high" decoding="async" />
+            <span class="film-car-stage__specular"></span>
+            <span class="film-car-stage__inspection"></span>
+          </div>
+          <div class="film-car-stage__reflection">
+            <img src="/hero-detailing-car-real.svg" width="1400" height="820" alt="" decoding="async" />
+          </div>
+          <div class="film-car-stage__mist"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+
+        <div class="film-hero__telemetry" aria-hidden="true">
+          <div><small>STUDIO</small><strong>ESBJERG / DK</strong></div>
+          <div><small>STATUS</small><strong>EFTER AFTALE</strong></div>
+          <div><small>FOCUS</small><strong>LAK · INTERIØR · FINISH</strong></div>
+        </div>
+        <div class="film-hero__scroll" aria-hidden="true"><span>SCROLL TO INSPECT</span><i></i></div>
+      </section>
+
+      <section class="film-manifesto" aria-label="Esbjerg Shine filosofi">
+        <div class="film-manifesto__line" aria-hidden="true">WASH / CORRECT / PROTECT / DETAIL / REPEAT</div>
+        <div class="film-shell film-manifesto__grid">
+          <p class="film-kicker film-reveal">Ikke samlebånd</p>
+          <h2 class="film-reveal">Bilen bliver behandlet som en <em>overflade i bevægelse.</em></h2>
+          <p class="film-reveal">Lys afslører alt. Derfor er hele oplevelsen bygget omkring refleksion, kontrast, materialer og de små ting, man først ser, når arbejdet er gjort rigtigt.</p>
         </div>
       </section>
 
-      <section class="services3d" id="ydelser" data-services-3d aria-labelledby="services-title">
-        <div class="services3d__rinse" aria-hidden="true"></div>
-        <div class="shell">
-          <header class="services3d__head s3-reveal">
-            <div>
-              <p class="eyebrow">Behandlinger</p>
-              <h2 id="services-title">Vælg din <span>finish.</span></h2>
+      <section class="service-journey" id="behandlinger" aria-labelledby="services-title" data-service-journey>
+        <div class="service-journey__visual" aria-hidden="true">
+          <div class="service-bay">
+            <div class="service-bay__lightbar"><i></i><i></i><i></i></div>
+            <div class="service-bay__backdrop"></div>
+            <div class="service-bay__floor"></div>
+            <div class="service-bay__car">
+              <img src="/hero-detailing-car-real.svg" width="1400" height="820" alt="" decoding="async" />
             </div>
-            <p>Hver behandling har sit eget visuelle værktøj og åbner med en kort wash-transition, så oplevelsen føles bygget til bilpleje i stedet for som en almindelig serviceside.</p>
+            <div class="service-effect service-effect--wash"><i></i><i></i><i></i><i></i></div>
+            <div class="service-effect service-effect--interior"><i></i></div>
+            <div class="service-effect service-effect--complete"><i></i><i></i></div>
+            <div class="service-effect service-effect--polish"><i></i><b></b></div>
+            <div class="service-effect service-effect--coat"><i></i><b></b><em></em></div>
+            <div class="service-effect service-effect--seat"><i></i><b></b></div>
+            <div class="service-bay__readout">
+              <small>ACTIVE TREATMENT</small>
+              <strong data-service-readout>Håndvask & udvendig bilpleje</strong>
+              <span><i data-service-index>01</i> / 06</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="service-journey__content film-shell">
+          <header class="service-journey__head film-reveal">
+            <p class="film-kicker">Behandlinger</p>
+            <h2 id="services-title">Seks behandlinger.<br /><em>Én standard: finish.</em></h2>
           </header>
 
-          <div class="services3d__deck">
+          <div class="service-steps">
             {services.map((service, index) => (
-              <article class={`service3d service3d--${service.slug} s3-reveal`} data-tilt style={`--i:${index + 1}`}>
-                <a href={`/ydelser/${service.slug}/`} data-service-link aria-label={`Åbn ${service.title}`}>
-                  <span class="service3d__number">0{index + 1}</span>
-                  <span class="service3d__object" data-tool={service.slug} aria-hidden="true">
-                    <i class="service3d__disc"></i>
-                    <i class="service3d__orb"></i>
-                    <i class="service3d__beam"></i>
-                  </span>
-                  <span class="service3d__body">
-                    <span>
-                      <small>{service.eyebrow}</small>
-                      <strong>{service.title}</strong>
-                      <p>{service.summary}</p>
-                    </span>
-                    <i class="service3d__arrow" aria-hidden="true">↗</i>
-                  </span>
+              <article class="service-step film-reveal" data-service-step={service.slug} data-service-title={service.title} data-service-number={`0${index + 1}`}>
+                <a href={`/ydelser/${service.slug}/`} data-service-link>
+                  <span class="service-step__index">0{index + 1}</span>
+                  <div class="service-step__copy">
+                    <small>{service.eyebrow}</small>
+                    <h3>{service.title}</h3>
+                    <p>{service.summary}</p>
+                  </div>
+                  <span class="service-step__open">Åbn behandling <i>↗</i></span>
                 </a>
               </article>
             ))}
@@ -124,94 +138,102 @@ const serviceSchema = {
         </div>
       </section>
 
-      <section class="results3d" id="foer-efter" aria-labelledby="results-title">
-        <div class="shell results3d__grid">
-          <div class="results3d__copy s3-reveal">
-            <p class="eyebrow">Før / efter</p>
-            <h2 id="results-title">Et resultat.<br /><span>Mange vinkler.</span></h2>
-            <p>Alle før/efter-projekter kan samles i én ramme. Skift projekt med pilene, og træk derefter gennem billedet for at se forskellen.</p>
-            <div class="results3d__hint">Træk for at sammenligne · skift projekt med pilene</div>
+      <section class="paint-lab" id="studiet" aria-labelledby="paint-title">
+        <div class="paint-lab__surface" aria-hidden="true">
+          <div class="paint-lab__paint"><i></i><i></i><i></i></div>
+          <div class="paint-lab__lamp"></div>
+          <div class="paint-lab__swirls"></div>
+          <div class="paint-lab__lens"><span>12.4×</span></div>
+        </div>
+        <div class="film-shell paint-lab__content">
+          <div class="paint-lab__copy film-reveal">
+            <p class="film-kicker">Paint inspection</p>
+            <h2 id="paint-title">Lak er ikke bare farve.<br /><em>Det er lys.</em></h2>
+            <p>Under skarpt inspektionslys bliver vaskespor, hologrammer, matte områder og manglende dybde synlige. Det er her forskellen mellem “ren” og “færdig” begynder.</p>
           </div>
-          <div class="s3-reveal"><BeforeAfterGallery /></div>
+          <div class="paint-lab__meters film-reveal">
+            <div><span>01</span><small>INSPECTION</small><strong>Se overfladen</strong></div>
+            <div><span>02</span><small>CORRECTION</small><strong>Forbedr lakken</strong></div>
+            <div><span>03</span><small>PROTECTION</small><strong>Bevar finishen</strong></div>
+          </div>
         </div>
       </section>
 
-      <section class="process3d" aria-labelledby="process-title">
-        <div class="shell">
-          <header class="process3d__head s3-reveal">
-            <div>
-              <p class="eyebrow">Sådan arbejder vi</p>
-              <h2 id="process-title">Fra beskidt til <span>færdig.</span></h2>
-            </div>
-            <p>Ikke en kompliceret bookingrejse. Du fortæller hvad bilen har brug for, vi aftaler behandlingen, og Esbjerg Shine gør resten.</p>
+      <section class="results-film" id="resultater" aria-labelledby="results-title">
+        <div class="film-shell results-film__grid">
+          <div class="results-film__copy film-reveal">
+            <p class="film-kicker">Før / efter</p>
+            <h2 id="results-title">Ingen filter.<br /><em>Bare forskellen.</em></h2>
+            <p>Når de rigtige projektbilleder kommer ind, bliver de vist som dokumentation – samme område, samme vinkel, før og efter.</p>
+            <div class="results-film__legend"><i></i><span>Træk divideren. Skift projekt med pilene.</span></div>
+          </div>
+          <div class="results-film__viewer film-reveal"><BeforeAfterGallery /></div>
+        </div>
+      </section>
+
+      <section class="bay-process" aria-labelledby="process-title">
+        <div class="film-shell">
+          <header class="bay-process__head film-reveal">
+            <p class="film-kicker">Forløbet</p>
+            <h2 id="process-title">Fra første besked<br /><em>til sidste refleksion.</em></h2>
           </header>
-
-          <div class="process3d__tunnel">
-            <article class="process-step s3-reveal">
-              <span class="process-step__num">01 · KONTAKT</span>
-              <div class="process-step__visual" aria-hidden="true"><i class="process-step__ring"></i></div>
-              <div class="process-step__body"><small>Start</small><strong>Fortæl om bilen</strong><p>Send formularen eller ring. Beskriv bilen, standen og hvad du ønsker.</p></div>
-            </article>
-            <article class="process-step s3-reveal">
-              <span class="process-step__num">02 · AFTALE</span>
-              <div class="process-step__visual" aria-hidden="true"><i class="process-step__ring"></i></div>
-              <div class="process-step__body"><small>Plan</small><strong>Vi finder løsningen</strong><p>Behandlingen tilpasses bilen frem for at presse bilen ind i en standardpakke.</p></div>
-            </article>
-            <article class="process-step s3-reveal">
-              <span class="process-step__num">03 · FINISH</span>
-              <div class="process-step__visual" aria-hidden="true"><i class="process-step__ring"></i></div>
-              <div class="process-step__body"><small>Resultat</small><strong>Detaljen gør forskellen</strong><p>Vask, rens, polering eller beskyttelse afsluttes med fokus på den samlede finish.</p></div>
-            </article>
+          <div class="bay-process__track">
+            <article class="bay-station film-reveal"><span>01</span><small>KONTAKT</small><h3>Fortæl om bilen</h3><p>Model, stand og den behandling du overvejer.</p><i aria-hidden="true"></i></article>
+            <article class="bay-station film-reveal"><span>02</span><small>VURDERING</small><h3>Vi finder niveauet</h3><p>Behandlingen vælges efter bilen – ikke omvendt.</p><i aria-hidden="true"></i></article>
+            <article class="bay-station film-reveal"><span>03</span><small>DETAILING</small><h3>Arbejdet udføres</h3><p>Vask, rens, korrektion eller beskyttelse med fokus på detaljen.</p><i aria-hidden="true"></i></article>
+            <article class="bay-station film-reveal"><span>04</span><small>DELIVERY</small><h3>Finish i lyset</h3><p>Bilen vurderes samlet, før den er klar til aflevering.</p><i aria-hidden="true"></i></article>
           </div>
         </div>
       </section>
 
-      <section class="identity3d" id="om" aria-labelledby="about-title">
-        <div class="shell identity3d__grid">
-          <div class="identity3d__word s3-reveal" aria-hidden="true"><strong>SHINE</strong></div>
-          <div class="identity3d__copy s3-reveal">
-            <p class="eyebrow">Esbjerg Shine</p>
-            <h2 id="about-title">Detaljer der <span>skinner.</span></h2>
-            <p>Esbjerg Shine er lokal bilpleje i Esbjerg med fokus på håndværket omkring vask, rengøring, polering, lak og finish. Arbejdet foregår efter aftale, så behandlingen kan tilpasses bilen.</p>
-            <p>Det visuelle univers er bygget omkring lak, refleksioner, vand, lys, værktøj og den transformation bilen gennemgår under en behandling.</p>
-            <div class="identity3d__facts">
-              <div><small>Adresse</small><a href={company.mapUrl} target="_blank" rel="noopener noreferrer">{company.address.street}, {company.address.postalCode} {company.address.city} ↗</a></div>
-              <div><small>Åbning</small><span>{company.openingText}</span></div>
-              <div><small>Telefon</small><a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a></div>
-              <div><small>CVR</small><span>{company.cvr}</span></div>
-            </div>
+      <section class="studio-profile" aria-labelledby="profile-title">
+        <div class="studio-profile__word" aria-hidden="true">SHINE</div>
+        <div class="film-shell studio-profile__grid">
+          <div class="studio-profile__copy film-reveal">
+            <p class="film-kicker">Esbjerg Shine</p>
+            <h2 id="profile-title">Lokalt studio.<br /><em>Personligt arbejde.</em></h2>
+            <p>Esbjerg Shine arbejder efter aftale fra Randersvej i Esbjerg. Det giver plads til at tilpasse arbejdet til bilen og det resultat, kunden ønsker.</p>
           </div>
+          <dl class="studio-profile__specs film-reveal">
+            <div><dt>Adresse</dt><dd><a href={company.mapUrl} target="_blank" rel="noopener noreferrer">{company.address.street}<br />{company.address.postalCode} {company.address.city} ↗</a></dd></div>
+            <div><dt>Åbning</dt><dd>{company.openingText}</dd></div>
+            <div><dt>Telefon</dt><dd><a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a></dd></div>
+            <div><dt>CVR</dt><dd>{company.cvr}</dd></div>
+          </dl>
         </div>
       </section>
 
-      <section class="contact3d" id="kontakt" aria-labelledby="contact-title">
-        <div class="shell contact3d__panel s3-reveal">
-          <div class="contact3d__copy">
-            <p class="eyebrow">Kontakt</p>
-            <h2 id="contact-title">Klar til mere <span>shine?</span></h2>
-            <p>Fortæl kort om bilen og hvad du overvejer. Esbjerg Shine vender tilbage med næste skridt og et tilbud.</p>
-            <a class="contact3d__phone" href={`tel:${company.phoneHref}`}><small>Ring direkte</small><strong>{company.phoneDisplay}</strong></a>
-            <div class="social-links"><a href={company.facebook} target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href={company.instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a></div>
+      <section class="intake" id="kontakt" aria-labelledby="contact-title">
+        <div class="film-shell intake__grid">
+          <div class="intake__copy film-reveal">
+            <p class="film-kicker">Service intake</p>
+            <h2 id="contact-title">Hvad skal der ske<br /><em>med din bil?</em></h2>
+            <p>Send en kort beskrivelse. Du behøver ikke kende den rigtige behandling på forhånd.</p>
+            <a class="intake__phone" href={`tel:${company.phoneHref}`}><small>Ring direkte</small><strong>{company.phoneDisplay}</strong></a>
+            <div class="intake__social"><a href={company.facebook} target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href={company.instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a></div>
           </div>
-          <div class="contact3d__form"><ContactForm /></div>
+          <div class="intake-console film-reveal" data-intake-console>
+            <div class="intake-console__top"><span>ESBJERG SHINE / INTAKE</span><i>READY</i></div>
+            <ContactForm />
+          </div>
         </div>
       </section>
     </main>
 
-    <Footer />
-
-    <div class="wash-transition" data-wash-transition aria-hidden="true">
-      <div class="wash-transition__sheet"></div>
-      <div class="wash-transition__foam"></div>
-      <div class="wash-transition__bubbles">
-        <i style="--s:18px;--x:8%;--y:44%;--d:.02s"></i><i style="--s:31px;--x:18%;--y:62%;--d:.08s"></i>
-        <i style="--s:13px;--x:31%;--y:49%;--d:.14s"></i><i style="--s:24px;--x:43%;--y:66%;--d:.04s"></i>
-        <i style="--s:37px;--x:55%;--y:48%;--d:.1s"></i><i style="--s:15px;--x:69%;--y:69%;--d:.16s"></i>
-        <i style="--s:28px;--x:82%;--y:51%;--d:.06s"></i><i style="--s:17px;--x:92%;--y:63%;--d:.12s"></i>
+    <footer class="film-footer">
+      <div class="film-shell film-footer__grid">
+        <a class="film-brand" href="#top"><span class="film-brand__mark">ES</span><span class="film-brand__text"><strong>ESBJERG SHINE</strong><small>DETALJER DER SKINNER.</small></span></a>
+        <p>{company.address.street}, {company.address.postalCode} {company.address.city} · CVR {company.cvr}</p>
+        <div><a href="/privatliv/">Privatliv</a><a href={company.instagram} target="_blank" rel="noopener noreferrer">Instagram</a><a href={company.facebook} target="_blank" rel="noopener noreferrer">Facebook</a></div>
       </div>
+    </footer>
+
+    <div class="wash-film" data-wash-transition aria-hidden="true">
+      <canvas data-wash-canvas></canvas>
+      <div class="wash-film__sheet"></div>
+      <div class="wash-film__foam"></div>
     </div>
   </div>
 
-  <script is:inline src="/three-d-site.js" defer></script>
-  <script is:inline src="/ultra-realism.js" defer></script>
+  <script is:inline src="/cinematic-studio.js" defer></script>
 </BaseLayout>
