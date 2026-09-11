@@ -1,0 +1,101 @@
+name: Website quality gate
+
+on:
+  pull_request:
+  push:
+    branches: [master, initial-build]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: esbjerg-shine-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package.json
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: JavaScript syntax
+        run: |
+          node --check public/site.js
+          node --check functions/api/contact.js
+
+      - name: Build static site
+        run: npm run build
+        env:
+          SITE_URL: https://esbjergshine.dk
+
+      - name: Reject accidental large public assets
+        run: |
+          oversized="$(find public -type f -size +1200k -print)"
+          if [ -n "$oversized" ]; then
+            echo "Public files above 1.2 MB are not allowed:"
+            echo "$oversized"
+            exit 1
+          fi
+
+      - name: Verify SEO outputs
+        run: |
+          test -f dist/index.html
+          test -f dist/robots.txt
+          test -f dist/sitemap.xml
+          grep -q 'lang="da-DK"' dist/index.html
+          grep -q 'Bilpleje i Esbjerg' dist/index.html
+          grep -q 'LocalBusiness\|AutoWash' dist/index.html
+          grep -q 'sitemap.xml' dist/robots.txt
+
+      - name: Start local server
+        run: |
+          python3 -m http.server 4173 --directory dist >/tmp/esbjerg-shine-http.log 2>&1 &
+          for i in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 0.5
+          done
+          cat /tmp/esbjerg-shine-http.log
+          exit 1
+
+      - name: Lighthouse mobile
+        run: npx --yes lighthouse@13.4.1 http://127.0.0.1:4173/ --quiet --chrome-flags="--headless --no-sandbox" --output=json --output-path=lighthouse-mobile.json
+
+      - name: Lighthouse desktop
+        run: npx --yes lighthouse@13.4.1 http://127.0.0.1:4173/ --quiet --preset=desktop --chrome-flags="--headless --no-sandbox" --output=json --output-path=lighthouse-desktop.json
+
+      - name: Enforce Lighthouse floor
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const thresholds = { performance: .95, accessibility: .98, 'best-practices': .95, seo: 1 };
+          for (const file of ['lighthouse-mobile.json', 'lighthouse-desktop.json']) {
+            const report = JSON.parse(fs.readFileSync(file, 'utf8'));
+            for (const [name, minimum] of Object.entries(thresholds)) {
+              const score = report.categories?.[name]?.score ?? 0;
+              console.log(`${file} ${name}: ${Math.round(score * 100)} / minimum ${Math.round(minimum * 100)}`);
+              if (score < minimum) process.exitCode = 1;
+            }
+          }
+          NODE
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: lighthouse-*.json
+          retention-days: 14
