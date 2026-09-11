@@ -1,14 +1,80 @@
 # Esbjerg Shine
 
-Modern, performance-first Danish website for **Esbjerg Shine** (CVR 46241479), car care/detailing in Esbjerg.
+Performance-first Danish website for **Esbjerg Shine** (CVR 46241479), bilpleje/detailing in Esbjerg.
 
-The project is designed around:
+## Direction
 
-- Danish-first local SEO and crawlable service pages
-- excellent Core Web Vitals and minimal client-side JavaScript
-- accessible, motion-safe interactions
-- strict security headers and a same-origin contact endpoint
-- a mobile-first before/after comparison experience
-- Cloudflare Pages-compatible static deployment
+The site is deliberately built differently from the earlier DME Murer project: Astro generates the repetitive page structure, production assets receive build hashes, service pages come from one data source, and the browser receives only a very small progressive-enhancement script. There are no third-party fonts, trackers, UI frameworks or runtime CDN dependencies.
 
-> Production domain and contact e-mail are still to be confirmed before launch.
+The visual direction is dark, metallic and minimal, with restrained motion. Real project photography will replace the current purpose-built placeholders when it is available.
+
+## Stack
+
+- Astro 7, fully static output
+- plain CSS and a small vanilla JavaScript enhancement file
+- Cloudflare Pages-compatible `_headers` and `_routes.json`
+- Cloudflare Pages Function for the contact endpoint
+- Danish metadata, canonical URLs, sitemap, robots.txt, `AutoWash`/LocalBusiness-compatible structured data and individual service pages
+- GitHub Actions build + Lighthouse quality gate
+
+## Local development
+
+```bash
+npm install
+npm run dev
+```
+
+Production build:
+
+```bash
+SITE_URL=https://example.dk npm run build
+```
+
+The fallback site URL in development is currently `https://esbjergshine.dk`. **Confirm the production domain before launch** and set `SITE_URL` in the build environment.
+
+## Contact form
+
+The form UI is ready. The Pages Function is provisioned for a Microsoft 365 / Microsoft Graph mailbox using these production secrets:
+
+- `M365_TENANT_ID`
+- `M365_CLIENT_ID`
+- `M365_CLIENT_SECRET`
+- `CONTACT_MAILBOX`
+- `CONTACT_TO`
+
+This mail transport is intentionally not treated as final until Esbjerg Shine's actual business email/provider is confirmed. If the company uses another provider, replace the delivery adapter rather than weakening the form security.
+
+The endpoint already includes same-origin enforcement, server-side validation, an allowlist, honeypot, request-size limits and short IP-hash throttling. It does not log form content.
+
+## Information still needed before production
+
+1. Final production domain.
+2. Business email address and email provider.
+3. Real before/after photo pairs and service/project photos.
+4. Final transparent/cropped logo asset (the supplied black-background image can be used as source material).
+5. Confirmation that the initial service list matches what Esbjerg Shine actually offers.
+6. Optional real customer reviews, with permission to publish them.
+
+## SEO / local search
+
+The current information is consistently represented as:
+
+- Esbjerg Shine
+- Enkeltmandsvirksomhed
+- CVR 46241479
+- +45 91 81 89 90
+- Randersvej 26, 6700 Esbjerg
+- Åbningstider efter aftale
+
+The website uses the physical address in visible content and structured data for local relevance. We intentionally do **not** generate dozens of thin city pages. Search Console, Google Business Profile consistency and real project content will matter more than doorway-style pages.
+
+## Performance target
+
+GitHub Actions builds the site and runs Lighthouse on mobile and desktop. The initial floor is:
+
+- Performance: 95+
+- Accessibility: 98+
+- Best Practices: 95+
+- SEO: 100
+
+Those are lab gates, not a substitute for field Core Web Vitals. After launch, monitor real-user LCP, INP and CLS and keep the 75th percentile in the good range.
