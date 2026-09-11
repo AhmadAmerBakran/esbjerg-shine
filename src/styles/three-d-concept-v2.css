@@ -1,0 +1,269 @@
+/* V2 experiment: more literal automotive/detailing visuals layered on top of the first 3D concept. */
+
+.hero3d--studio {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 73% 46%, rgba(107,220,255,.08), transparent 27rem),
+    linear-gradient(180deg, #030405 0%, #050708 65%, #030405 100%);
+}
+.hero3d--studio::before {
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: linear-gradient(to bottom, #000 0 72%, transparent 96%);
+}
+.hero3d--studio::after { opacity: .68; }
+
+.hero3d__ambient { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+.hero3d__ambient i {
+  position:absolute;
+  width:1px;
+  height:clamp(6rem,13vw,12rem);
+  top:-15%;
+  left:var(--x,50%);
+  opacity:.18;
+  transform:rotate(13deg);
+  background:linear-gradient(transparent,rgba(198,245,255,.9),transparent);
+  animation:studio-rain var(--speed,7s) linear infinite;
+}
+.hero3d__ambient i:nth-child(1){--x:11%;--speed:8.2s;animation-delay:-2s}
+.hero3d__ambient i:nth-child(2){--x:28%;--speed:6.6s;animation-delay:-4.2s}
+.hero3d__ambient i:nth-child(3){--x:49%;--speed:9.4s;animation-delay:-6s}
+.hero3d__ambient i:nth-child(4){--x:67%;--speed:7.8s;animation-delay:-1.1s}
+.hero3d__ambient i:nth-child(5){--x:82%;--speed:8.7s;animation-delay:-5.3s}
+.hero3d__ambient i:nth-child(6){--x:94%;--speed:7.1s;animation-delay:-3.4s}
+@keyframes studio-rain { to { translate:22px 125vh; opacity:0; } }
+
+.detail-lab {
+  --scene-rx:-3deg;
+  --scene-ry:6deg;
+  position:relative;
+  min-height:39rem;
+  transform-style:preserve-3d;
+  transform:perspective(1500px) rotateX(var(--scene-rx)) rotateY(var(--scene-ry));
+  transition:transform .2s ease-out;
+  isolation:isolate;
+}
+.detail-lab::before {
+  content:"";
+  position:absolute;
+  z-index:-4;
+  inset:3% -3% 4%;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:2rem;
+  background:
+    radial-gradient(circle at 58% 39%,rgba(108,224,255,.1),transparent 17rem),
+    linear-gradient(155deg,#101417,#060809 58%,#020303);
+  box-shadow:0 55px 110px rgba(0,0,0,.5), inset 0 1px rgba(255,255,255,.04);
+}
+.detail-lab::after {
+  content:"";
+  position:absolute;
+  z-index:18;
+  inset:4% -2% 7%;
+  pointer-events:none;
+  border-radius:2rem;
+  background:linear-gradient(112deg,transparent 22%,rgba(255,255,255,.02) 39%,rgba(185,242,255,.08) 47%,transparent 55%);
+  transform:translateX(-100%);
+  animation:studio-gloss 8s cubic-bezier(.7,0,.2,1) infinite;
+  mix-blend-mode:screen;
+}
+@keyframes studio-gloss { 0%,54%,100%{transform:translateX(-105%)} 72%{transform:translateX(105%)} }
+
+.detail-lab__ceiling {
+  position:absolute;
+  z-index:-2;
+  left:7%;right:7%;top:6%;height:22%;
+  transform:translateZ(-80px) rotateX(60deg);
+  transform-origin:top;
+}
+.detail-lab__ceiling i {
+  position:absolute;
+  top:0;bottom:0;
+  width:1.8%;
+  border-radius:999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.15),#f8feff 42%,rgba(109,226,255,.25));
+  box-shadow:0 0 16px rgba(215,250,255,.45),0 0 40px rgba(109,226,255,.12);
+}
+.detail-lab__ceiling i:nth-child(1){left:12%}
+.detail-lab__ceiling i:nth-child(2){left:36%}
+.detail-lab__ceiling i:nth-child(3){right:36%}
+.detail-lab__ceiling i:nth-child(4){right:12%}
+
+.detail-lab__backwall {
+  position:absolute;
+  z-index:-3;
+  left:4%;right:4%;top:13%;bottom:24%;
+  transform:translateZ(-105px);
+  border-radius:1.6rem 1.6rem .7rem .7rem;
+  background:
+    linear-gradient(90deg,transparent 0 49.8%,rgba(132,229,255,.08) 50%,transparent 50.2%),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0 1px,transparent 1px 54px),
+    linear-gradient(180deg,#0d1215,#050708);
+  box-shadow:inset 0 -50px 90px rgba(0,0,0,.5);
+}
+.detail-lab__backwall::before,
+.detail-lab__backwall::after {
+  content:"";position:absolute;top:11%;bottom:12%;width:2px;
+  background:linear-gradient(transparent,rgba(121,229,255,.65),transparent);
+  box-shadow:0 0 22px rgba(121,229,255,.3);
+}
+.detail-lab__backwall::before{left:14%}.detail-lab__backwall::after{right:14%}
+
+.detail-lab__floor {
+  position:absolute;
+  z-index:-2;
+  left:-7%;right:-7%;bottom:0;height:40%;
+  transform:translateZ(-65px) rotateX(68deg);
+  transform-origin:bottom;
+  border-radius:50%;
+  background:
+    linear-gradient(rgba(150,234,255,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(150,234,255,.045) 1px,transparent 1px),
+    radial-gradient(ellipse at center,rgba(120,226,255,.15),rgba(4,8,10,.32) 44%,transparent 70%);
+  background-size:48px 48px,48px 48px,100% 100%;
+  mask-image:radial-gradient(ellipse,#000 15%,transparent 72%);
+}
+.detail-lab__reflection {
+  position:absolute;
+  z-index:-1;
+  left:12%;right:4%;bottom:-8%;height:32%;
+  background:url('/hero-detailing-car.svg') center bottom/contain no-repeat;
+  transform:scaleY(-.33) skewX(-3deg) translateZ(-15px);
+  transform-origin:bottom;
+  opacity:.12;
+  filter:blur(4px) saturate(.5);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.65),transparent 78%);
+}
+
+.detail-lab__car {
+  position:absolute;
+  z-index:5;
+  left:2%;right:-6%;bottom:3%;
+  transform:translateZ(72px);
+  filter:drop-shadow(0 30px 28px rgba(0,0,0,.55));
+}
+.detail-lab__car img { width:100%;height:auto;user-select:none;pointer-events:none; }
+.detail-lab__paint-scan {
+  position:absolute;
+  z-index:4;
+  top:25%;bottom:15%;
+  left:-4%;width:13%;
+  transform:skewX(-17deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),rgba(255,255,255,.75),rgba(109,229,255,.18),transparent);
+  filter:blur(3px);
+  mix-blend-mode:screen;
+  animation:paint-scan 6.3s cubic-bezier(.67,0,.24,1) infinite;
+}
+@keyframes paint-scan { 0%,17%{left:-10%;opacity:0} 28%{opacity:.9} 64%{left:94%;opacity:.42} 72%,100%{left:104%;opacity:0} }
+.detail-lab__inspection-line {
+  position:absolute;
+  z-index:8;
+  left:16%;right:9%;top:55%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(101,222,255,.8),white,rgba(101,222,255,.55),transparent);
+  box-shadow:0 0 18px rgba(101,222,255,.42);
+  opacity:.65;
+}
+
+.detail-tool { position:absolute;z-index:12;transform-style:preserve-3d;pointer-events:none; }
+.detail-tool--polisher { left:-4%;top:44%;width:8rem;height:9rem;transform:translateZ(130px) rotate(-17deg); }
+.detail-tool__handle {
+  position:absolute;left:1.9rem;top:.8rem;width:4.7rem;height:2rem;border-radius:1rem .45rem .45rem 1rem;
+  background:linear-gradient(180deg,#39454b,#0a0d0f);border:1px solid rgba(255,255,255,.24);box-shadow:inset 0 1px rgba(255,255,255,.12);
+}
+.detail-tool__head { position:absolute;left:3.6rem;top:2.2rem;width:3.2rem;height:3rem;border-radius:.65rem;background:linear-gradient(150deg,#222b2f,#060708);border:1px solid rgba(255,255,255,.18); }
+.detail-tool__pad {
+  position:absolute;left:2.85rem;top:4.55rem;width:4.6rem;aspect-ratio:1;border-radius:50%;
+  background:repeating-conic-gradient(#86e7ff 0 8deg,#d9f9ff 8deg 14deg,#5bc1db 14deg 20deg);
+  box-shadow:0 0 32px rgba(118,228,255,.22);animation:polisher-spin .72s linear infinite;
+}
+@keyframes polisher-spin{to{rotate:360deg}}
+
+.detail-tool--sprayer { right:-6%;top:25%;width:10rem;height:10rem;transform:translateZ(150px) rotate(9deg); }
+.detail-tool__gun { position:absolute;right:1.2rem;top:2rem;width:4rem;height:2.2rem;border-radius:.45rem 1rem 1rem .45rem;background:linear-gradient(180deg,#3d474c,#0a0d0f);border:1px solid rgba(255,255,255,.2); }
+.detail-tool__gun::after{content:"";position:absolute;right:.4rem;top:1.7rem;width:1.3rem;height:3.3rem;border-radius:.2rem;background:#101518;transform:rotate(-12deg);border:1px solid rgba(255,255,255,.13)}
+.detail-tool__nozzle { position:absolute;right:4.9rem;top:2.65rem;width:4.2rem;height:.55rem;border-radius:999px;background:linear-gradient(90deg,#111719,#718086,#d7e0e3); }
+.detail-tool__spray {
+  position:absolute;right:8.2rem;top:.8rem;width:15rem;height:8rem;
+  clip-path:polygon(100% 43%,0 0,0 100%);
+  background:repeating-linear-gradient(96deg,transparent 0 7%,rgba(203,247,255,.16) 7.2% 7.8%,transparent 8% 14%);
+  filter:blur(1px);opacity:.76;animation:spray-breathe 2.6s ease-in-out infinite;
+}
+@keyframes spray-breathe{50%{opacity:.42;transform:scaleY(.92)}}
+
+.detail-lab__mist { position:absolute;z-index:13;inset:15% 5% 10%;pointer-events:none;overflow:hidden; }
+.detail-lab__mist i { position:absolute;width:var(--d,4px);aspect-ratio:1;border-radius:50%;background:rgba(221,250,255,.78);box-shadow:0 0 8px rgba(111,226,255,.32);animation:mist-fall var(--t,4.6s) linear infinite;opacity:.65; }
+.detail-lab__mist i:nth-child(1){left:18%;top:4%;--d:3px;--t:5.1s}.detail-lab__mist i:nth-child(2){left:25%;top:24%;--d:6px;--t:6.2s}.detail-lab__mist i:nth-child(3){left:37%;top:10%;--d:4px;--t:4.5s}.detail-lab__mist i:nth-child(4){left:46%;top:31%;--d:3px;--t:5.8s}.detail-lab__mist i:nth-child(5){left:56%;top:8%;--d:5px;--t:6.5s}.detail-lab__mist i:nth-child(6){left:65%;top:19%;--d:3px;--t:4.9s}.detail-lab__mist i:nth-child(7){left:73%;top:6%;--d:5px;--t:5.4s}.detail-lab__mist i:nth-child(8){left:81%;top:25%;--d:4px;--t:6.1s}.detail-lab__mist i:nth-child(9){left:31%;top:45%;--d:3px;--t:4.7s}.detail-lab__mist i:nth-child(10){left:52%;top:51%;--d:4px;--t:5.7s}.detail-lab__mist i:nth-child(11){left:69%;top:44%;--d:3px;--t:4.3s}.detail-lab__mist i:nth-child(12){left:88%;top:39%;--d:5px;--t:6.4s}
+@keyframes mist-fall{to{transform:translate3d(-18px,15rem,0) scale(.5);opacity:0}}
+
+.detail-readout {
+  position:absolute;z-index:15;display:grid;min-width:9.2rem;padding:.72rem .8rem;border:1px solid rgba(255,255,255,.13);border-radius:.8rem;
+  background:rgba(5,8,10,.68);box-shadow:0 14px 42px rgba(0,0,0,.28);backdrop-filter:blur(14px);transform:translateZ(145px);
+}
+.detail-readout small{color:#6f8088;font-size:.54rem;font-weight:900;letter-spacing:.15em}.detail-readout strong{font-size:.76rem;margin-top:.12rem}.detail-readout span{height:1px;margin-top:.55rem;background:linear-gradient(90deg,#70ddf8,transparent);box-shadow:0 0 8px rgba(112,221,248,.38)}
+.detail-readout--paint{left:2%;top:17%}.detail-readout--care{right:-1%;top:51%}.detail-readout--local{right:9%;bottom:4%}
+
+.hero3d__rail {
+  position:absolute;left:50%;bottom:1.15rem;transform:translateX(-50%);display:flex;align-items:center;gap:.8rem;width:min(90vw,58rem);justify-content:center;
+  color:#637078;font-size:.58rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;
+}
+.hero3d__rail i{width:2.3rem;height:1px;background:linear-gradient(90deg,transparent,rgba(126,228,255,.45),transparent)}
+
+/* Service pods become recognisable car-care tools rather than generic sci-fi orbs. */
+.service3d__object { overflow:hidden; }
+.service3d__object::before {
+  content:"";position:absolute;left:50%;top:52%;width:14rem;height:14rem;transform:translate(-50%,-50%) rotateX(67deg);border:1px solid rgba(129,230,255,.1);border-radius:50%;
+  background:radial-gradient(circle,rgba(129,230,255,.08),transparent 62%);box-shadow:0 0 60px rgba(129,230,255,.035);
+}
+
+.service3d__object[data-tool="bilvask"] .service3d__disc { left:46%;top:50%;width:7rem;height:2.4rem;aspect-ratio:auto;border-radius:1.2rem .35rem .35rem 1.2rem;transform:translate(-50%,-50%) translateZ(70px) rotate(-18deg);background:linear-gradient(180deg,#455259,#0b0f11);border-color:rgba(255,255,255,.25);animation:none; }
+.service3d__object[data-tool="bilvask"] .service3d__orb { left:65%;top:43%;width:5.6rem;height:.7rem;aspect-ratio:auto;border-radius:999px;transform:translate(-50%,-50%) translateZ(110px) rotate(-18deg);background:linear-gradient(90deg,#101719,#8c9ba1,#d9e1e4);box-shadow:none; }
+.service3d__object[data-tool="bilvask"] .service3d__beam { left:66%;right:auto;top:28%;width:12rem;height:8rem;transform:translateZ(100px) rotate(-18deg);clip-path:polygon(0 46%,100% 0,100% 100%);background:repeating-linear-gradient(95deg,transparent 0 8%,rgba(196,243,255,.25) 8.5% 9%,transparent 9.4% 16%);box-shadow:none;animation:spray-breathe 2.5s ease-in-out infinite; }
+
+.service3d__object[data-tool="indvendig-bilpleje"] .service3d__disc { left:50%;top:54%;width:9rem;height:4.6rem;aspect-ratio:auto;border-radius:.9rem 2rem 1rem .9rem;transform:translate(-50%,-50%) translateZ(60px) rotateX(56deg) rotateZ(-8deg);background:linear-gradient(145deg,#303a3f,#080a0b);border-color:rgba(255,255,255,.2);animation:none; }
+.service3d__object[data-tool="indvendig-bilpleje"] .service3d__orb { left:63%;top:35%;width:2rem;height:8rem;aspect-ratio:auto;border-radius:999px;transform:translate(-50%,-50%) translateZ(95px) rotate(52deg);background:linear-gradient(90deg,#111719,#6f7c82,#14191c);box-shadow:none; }
+.service3d__object[data-tool="indvendig-bilpleje"] .service3d__beam { left:27%;right:24%;top:72%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0 1px,transparent 1px 12px);opacity:.35;box-shadow:none; }
+
+.service3d__object[data-tool="komplet-klargoering"] .service3d__disc { left:50%;top:49%;width:11rem;height:6.2rem;aspect-ratio:auto;border-radius:52% 48% 28% 31%;transform:translate(-50%,-50%) translateZ(65px) rotateX(23deg);background:linear-gradient(160deg,#334047,#080b0d 60%);border:1px solid rgba(255,255,255,.28);animation:none;box-shadow:0 20px 32px rgba(0,0,0,.36),inset 0 8px 18px rgba(255,255,255,.04); }
+.service3d__object[data-tool="komplet-klargoering"] .service3d__orb { left:36%;top:64%;width:2.8rem;transform:translate(-50%,-50%) translateZ(100px);background:radial-gradient(circle,#b9c5ca 0 12%,#151a1d 13% 52%,#0a0c0d 53%);box-shadow:none; }
+.service3d__object[data-tool="komplet-klargoering"] .service3d__beam { left:31%;right:31%;top:39%;height:2px;background:linear-gradient(90deg,transparent,#fff,var(--s3-blue),transparent); }
+
+.service3d__object[data-tool="polering"] .service3d__disc { left:50%;top:58%;width:9rem;transform:translate(-50%,-50%) translateZ(62px) rotateX(70deg);background:repeating-conic-gradient(#65d8f5 0 8deg,#d9fbff 8deg 14deg,#498ca0 14deg 21deg);border-color:rgba(255,255,255,.3);animation:service-polish 1.3s linear infinite; }
+.service3d__object[data-tool="polering"] .service3d__orb { left:50%;top:36%;width:7.5rem;height:3rem;aspect-ratio:auto;border-radius:1.4rem .6rem .6rem 1.4rem;transform:translate(-50%,-50%) translateZ(104px) rotate(-6deg);background:linear-gradient(180deg,#3d494f,#080b0d);box-shadow:0 13px 25px rgba(0,0,0,.35); }
+.service3d__object[data-tool="polering"] .service3d__beam { left:30%;right:30%;top:63%;opacity:.38; }
+@keyframes service-polish{to{transform:translate(-50%,-50%) translateZ(62px) rotateX(70deg) rotateZ(360deg)}}
+
+.service3d__object[data-tool="lakbeskyttelse"] .service3d__disc { left:50%;top:52%;width:9rem;height:10rem;aspect-ratio:auto;border-radius:50% 50% 58% 42% / 46% 48% 62% 64%;transform:translate(-50%,-50%) translateZ(55px) rotate(45deg);background:linear-gradient(145deg,rgba(114,229,255,.04),rgba(114,229,255,.18));border:1px solid rgba(129,230,255,.38);animation:none;box-shadow:inset 0 0 35px rgba(129,230,255,.06),0 0 35px rgba(129,230,255,.08); }
+.service3d__object[data-tool="lakbeskyttelse"] .service3d__orb { left:50%;top:46%;width:4.3rem;border-radius:60% 40% 55% 45% / 70% 55% 45% 30%;transform:translate(-50%,-50%) translateZ(110px) rotate(45deg);background:radial-gradient(circle at 30% 25%,white,rgba(115,230,255,.55) 12%,rgba(15,40,48,.86) 48%,#040708 72%); }
+.service3d__object[data-tool="lakbeskyttelse"] .service3d__beam { left:37%;right:37%;top:75%;opacity:.55; }
+
+.service3d__object[data-tool="saederens"] .service3d__disc { left:48%;top:53%;width:8rem;height:10rem;aspect-ratio:auto;border-radius:3.6rem 3.6rem 1.3rem 1.3rem;transform:translate(-50%,-50%) translateZ(58px) rotateY(-12deg);background:linear-gradient(145deg,#313a3f,#090b0d 66%);border-color:rgba(255,255,255,.18);animation:none;box-shadow:inset -15px 0 25px rgba(0,0,0,.35); }
+.service3d__object[data-tool="saederens"] .service3d__orb { left:66%;top:44%;width:5.8rem;height:1.7rem;aspect-ratio:auto;border-radius:999px .4rem .4rem 999px;transform:translate(-50%,-50%) translateZ(105px) rotate(-25deg);background:linear-gradient(180deg,#6b797f,#111619);box-shadow:none; }
+.service3d__object[data-tool="saederens"] .service3d__beam { left:60%;right:auto;top:54%;width:7rem;transform:translateZ(115px) rotate(-25deg);background:linear-gradient(90deg,rgba(129,230,255,.9),transparent);box-shadow:0 0 16px rgba(129,230,255,.35); }
+
+@media (max-width:1040px){
+  .detail-lab{min-height:35rem;max-width:54rem;width:100%;justify-self:center}
+  .detail-tool--polisher{left:1%}.detail-tool--sprayer{right:0}
+}
+@media (max-width:720px){
+  .detail-lab{min-height:27rem;margin-top:1rem;transform:none!important}
+  .detail-lab::before{inset:2% -7% 3%;border-radius:1.35rem}
+  .detail-lab__car{left:-12%;right:-18%;bottom:5%}
+  .detail-lab__reflection{left:-4%;right:-7%;bottom:-3%}
+  .detail-lab__ceiling{left:2%;right:2%}
+  .detail-tool--polisher{left:-8%;top:50%;scale:.72}.detail-tool--sprayer{right:-12%;top:24%;scale:.7}
+  .detail-readout{min-width:7.6rem;padding:.55rem .62rem}.detail-readout strong{font-size:.65rem}.detail-readout--paint{left:-1%;top:12%}.detail-readout--care{right:-3%;top:54%}.detail-readout--local{display:none}
+  .hero3d__rail{display:none}
+}
+@media (max-width:520px){
+  .detail-lab{min-height:23rem}
+  .detail-tool{display:none}
+  .detail-lab__car{left:-22%;right:-25%;bottom:7%}
+  .detail-readout--care{display:none}
+  .detail-readout--paint{top:10%;left:2%}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .detail-lab::after,.detail-lab__paint-scan,.detail-tool__pad,.detail-tool__spray,.detail-lab__mist i,.hero3d__ambient i,.service3d__disc{animation:none!important}
+}
