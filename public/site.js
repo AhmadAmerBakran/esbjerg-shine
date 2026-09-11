@@ -4,11 +4,27 @@
   const doc = document;
   const body = doc.body;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(pointer: fine)').matches;
+  const creativeHome = body.classList.contains('creative-home');
 
   const header = doc.querySelector('[data-header]');
-  const updateHeader = () => header?.classList.toggle('is-scrolled', scrollY > 18);
-  updateHeader();
-  addEventListener('scroll', updateHeader, { passive: true });
+  let scrollFrame = 0;
+  const updateScrollState = () => {
+    scrollFrame = 0;
+    header?.classList.toggle('is-scrolled', scrollY > 18);
+    if (creativeHome) {
+      const scrollable = Math.max(1, doc.documentElement.scrollHeight - innerHeight);
+      const progress = Math.min(1, Math.max(0, scrollY / scrollable));
+      body.style.setProperty('--scroll-progress', progress.toFixed(4));
+    }
+  };
+  const requestScrollState = () => {
+    if (scrollFrame) return;
+    scrollFrame = requestAnimationFrame(updateScrollState);
+  };
+  updateScrollState();
+  addEventListener('scroll', requestScrollState, { passive: true });
+  addEventListener('resize', requestScrollState, { passive: true });
 
   const menuButton = doc.querySelector('[data-menu-button]');
   const nav = doc.querySelector('[data-nav]');
@@ -41,8 +57,48 @@
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       });
-    }, { rootMargin: '80px 0px -4% 0px', threshold: 0.08 });
+    }, { rootMargin: '100px 0px -5% 0px', threshold: 0.07 });
     revealItems.forEach((item) => observer.observe(item));
+  }
+
+  if (creativeHome && !reducedMotion && finePointer) {
+    let pointerFrame = 0;
+    let pointerX = innerWidth / 2;
+    let pointerY = innerHeight * 0.28;
+    const paintPointer = () => {
+      pointerFrame = 0;
+      body.style.setProperty('--mx', `${pointerX}px`);
+      body.style.setProperty('--my', `${pointerY}px`);
+    };
+    addEventListener('pointermove', (event) => {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      if (!pointerFrame) pointerFrame = requestAnimationFrame(paintPointer);
+    }, { passive: true });
+
+    doc.querySelectorAll('[data-tilt]').forEach((element) => {
+      let tiltFrame = 0;
+      let nextX = 0;
+      let nextY = 0;
+      const paintTilt = () => {
+        tiltFrame = 0;
+        element.style.setProperty('--rx', `${nextY.toFixed(2)}deg`);
+        element.style.setProperty('--ry', `${nextX.toFixed(2)}deg`);
+      };
+      element.addEventListener('pointermove', (event) => {
+        const rect = element.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - 0.5;
+        const y = (event.clientY - rect.top) / rect.height - 0.5;
+        nextX = x * 4.2;
+        nextY = y * -3.2;
+        if (!tiltFrame) tiltFrame = requestAnimationFrame(paintTilt);
+      }, { passive: true });
+      element.addEventListener('pointerleave', () => {
+        nextX = 0;
+        nextY = 0;
+        if (!tiltFrame) tiltFrame = requestAnimationFrame(paintTilt);
+      }, { passive: true });
+    });
   }
 
   doc.querySelectorAll('[data-comparison]').forEach((comparison) => {
@@ -51,6 +107,41 @@
     const update = () => comparison.style.setProperty('--position', `${range.value}%`);
     range.addEventListener('input', update, { passive: true });
     update();
+  });
+
+  doc.querySelectorAll('[data-comparison-gallery]').forEach((gallery) => {
+    const sets = [...gallery.querySelectorAll('[data-comparison-set]')];
+    const dots = [...gallery.querySelectorAll('[data-comparison-dot]')];
+    const previous = gallery.querySelector('[data-comparison-prev]');
+    const next = gallery.querySelector('[data-comparison-next]');
+    const title = gallery.querySelector('[data-comparison-title]');
+    const counter = gallery.querySelector('[data-comparison-counter]');
+    if (!sets.length) return;
+
+    let active = Math.max(0, sets.findIndex((set) => set.classList.contains('is-active')));
+    const show = (index) => {
+      active = (index + sets.length) % sets.length;
+      sets.forEach((set, setIndex) => {
+        const isActive = setIndex === active;
+        set.classList.toggle('is-active', isActive);
+        set.setAttribute('aria-hidden', String(!isActive));
+        const range = set.querySelector('[data-comparison-range]');
+        if (range instanceof HTMLInputElement) range.tabIndex = isActive ? 0 : -1;
+      });
+      dots.forEach((dot, dotIndex) => {
+        const isActive = dotIndex === active;
+        dot.classList.toggle('is-active', isActive);
+        dot.setAttribute('aria-pressed', String(isActive));
+      });
+      const activeSet = sets[active];
+      if (title) title.textContent = activeSet.getAttribute('data-title') || `Eksempel ${active + 1}`;
+      if (counter) counter.textContent = `${String(active + 1).padStart(2, '0')} / ${String(sets.length).padStart(2, '0')}`;
+    };
+
+    previous?.addEventListener('click', () => show(active - 1));
+    next?.addEventListener('click', () => show(active + 1));
+    dots.forEach((dot, index) => dot.addEventListener('click', () => show(index)));
+    show(active);
   });
 
   doc.querySelectorAll('[data-year]').forEach((node) => { node.textContent = String(new Date().getFullYear()); });
