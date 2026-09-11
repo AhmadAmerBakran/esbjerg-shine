@@ -1,4 +1,4 @@
-/* Small geometry overrides kept separate while the creative concept is being evaluated. */
+/* Small geometry/performance overrides kept separate while the creative concept is being evaluated. */
 .creative-home .comparison__scene--before {
   width: 100%;
   clip-path: inset(0 calc(100% - var(--position)) 0 0);
@@ -11,6 +11,14 @@
   width: auto;
   max-width: none;
   transform: none;
+}
+
+/* Do not make the LCP text wait for IntersectionObserver/JavaScript. */
+.creative-home .shine-hero .reveal {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
 }
 
 @media (max-width: 760px) {
