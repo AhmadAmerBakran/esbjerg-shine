@@ -34,12 +34,12 @@
       const rect = scene.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - 0.5;
       const y = (event.clientY - rect.top) / rect.height - 0.5;
-      scene.style.setProperty('--scene-ry', `${x * 12}deg`);
-      scene.style.setProperty('--scene-rx', `${-3 - y * 8}deg`);
+      scene.style.setProperty('--scene-ry', `${x * 7}deg`);
+      scene.style.setProperty('--scene-rx', `${-2 - y * 5}deg`);
     }, { passive: true });
     scene.addEventListener('pointerleave', () => {
-      scene.style.setProperty('--scene-ry', '6deg');
-      scene.style.setProperty('--scene-rx', '-3deg');
+      scene.style.setProperty('--scene-ry', '4deg');
+      scene.style.setProperty('--scene-rx', '-2deg');
     });
   }
 
@@ -76,6 +76,29 @@
   }
 
   const washTransition = root.querySelector('[data-wash-transition]');
+  let navigationTimer = 0;
+
+  const resetWashTransition = () => {
+    if (navigationTimer) {
+      clearTimeout(navigationTimer);
+      navigationTimer = 0;
+    }
+    if (washTransition instanceof HTMLElement) {
+      washTransition.classList.remove('is-active');
+      washTransition.style.removeProperty('visibility');
+    }
+  };
+
+  // Browsers can restore the homepage from the back/forward cache with the exact DOM
+  // state that existed when navigation happened. Always clear the transition on restore.
+  addEventListener('pageshow', resetWashTransition);
+  addEventListener('pagehide', resetWashTransition);
+  addEventListener('popstate', resetWashTransition);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') resetWashTransition();
+  });
+  resetWashTransition();
+
   if (washTransition instanceof HTMLElement && !reducedMotion) {
     root.querySelectorAll('[data-service-link]').forEach((link) => {
       if (!(link instanceof HTMLAnchorElement)) return;
@@ -86,10 +109,13 @@
         if (destination.origin !== location.origin) return;
 
         event.preventDefault();
-        washTransition.classList.remove('is-active');
+        resetWashTransition();
         void washTransition.offsetWidth;
         washTransition.classList.add('is-active');
-        setTimeout(() => location.assign(destination.href), 720);
+        navigationTimer = window.setTimeout(() => {
+          navigationTimer = 0;
+          location.assign(destination.href);
+        }, 720);
       });
     });
   }
