@@ -1,0 +1,97 @@
+---
+import '../styles/global.css';
+import { company } from '../data/company';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+  noindex?: boolean;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  canonicalPath = Astro.url.pathname,
+  noindex = false,
+  schema
+} = Astro.props;
+
+const site = Astro.site ?? new URL('https://esbjergshine.dk');
+const canonical = new URL(canonicalPath, site).toString();
+const home = site.toString().replace(/\/$/, '');
+
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AutoWash',
+  '@id': `${home}/#virksomhed`,
+  name: company.name,
+  legalName: company.legalName,
+  url: `${home}/`,
+  telephone: company.phoneHref,
+  taxID: company.cvr,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: company.address.street,
+    postalCode: company.address.postalCode,
+    addressLocality: company.address.city,
+    addressCountry: company.address.country
+  },
+  areaServed: {
+    '@type': 'City',
+    name: 'Esbjerg'
+  },
+  sameAs: [company.facebook, company.instagram]
+};
+
+const graph = Array.isArray(schema) ? schema : schema ? [schema] : [];
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { ...localBusinessSchema, '@context': undefined },
+    {
+      '@type': 'WebSite',
+      '@id': `${home}/#website`,
+      url: `${home}/`,
+      name: company.name,
+      inLanguage: 'da-DK',
+      publisher: { '@id': `${home}/#virksomhed` }
+    },
+    ...graph
+  ]
+};
+---
+<!doctype html>
+<html lang="da-DK">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#050606" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'} />
+    <meta name="author" content={company.name} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="da-DK" href={canonical} />
+    <link rel="alternate" hreflang="x-default" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="da_DK" />
+    <meta property="og:site_name" content={company.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+
+    <title>{title}</title>
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+    <script src="/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#indhold">Gå direkte til indholdet</a>
+    <slot />
+  </body>
+</html>
