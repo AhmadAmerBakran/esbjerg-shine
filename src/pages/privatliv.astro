@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { company } from '../data/company';
+
+const title = 'Privatliv | Esbjerg Shine';
+const description = 'Læs hvordan Esbjerg Shine behandler oplysninger, når du kontakter virksomheden via hjemmesiden.';
+---
+<BaseLayout title={title} description={description} canonicalPath="/privatliv/">
+  <div id="top"></div>
+  <Header />
+  <main id="indhold">
+    <article class="shell privacy">
+      <p class="eyebrow">Privatliv</p>
+      <h1>En enkel hjemmeside.<br /><span>Så lidt data som muligt.</span></h1>
+      <p>Denne side beskriver den planlagte behandling af personoplysninger på esbjergshine.dk. Teksten skal gennemgås igen, når den endelige mailudbyder og hostingopsætning er valgt.</p>
+
+      <h2>Kontaktformular</h2>
+      <p>Når du sender kontaktformularen, bruges de oplysninger, du selv indtaster, til at besvare din henvendelse. Oplysningerne er navn, e-mail, eventuelt telefonnummer, valgt ydelse og din besked.</p>
+
+      <h2>Ingen marketingtracking som standard</h2>
+      <p>Hjemmesiden er bygget uden tredjeparts marketingpixels, eksterne skrifttyper og sociale medie-embeds. Hvis analyse senere tilføjes, skal denne privatlivstekst og eventuelle samtykkekrav opdateres først.</p>
+
+      <h2>Virksomhedsoplysninger</h2>
+      <ul>
+        <li>{company.name}, {company.entityType}</li>
+        <li>CVR {company.cvr}</li>
+        <li>{company.address.street}, {company.address.postalCode} {company.address.city}</li>
+        <li>Telefon {company.phoneDisplay}</li>
+      </ul>
+
+      <h2>Kontakt</h2>
+      <p>Har du spørgsmål til oplysninger sendt via hjemmesiden, kan du kontakte Esbjerg Shine på <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>.</p>
+    </article>
+  </main>
+  <Footer />
+</BaseLayout>
