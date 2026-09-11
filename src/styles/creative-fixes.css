@@ -1,0 +1,20 @@
+/* Small geometry overrides kept separate while the creative concept is being evaluated. */
+.creative-home .comparison__scene--before {
+  width: 100%;
+  clip-path: inset(0 calc(100% - var(--position)) 0 0);
+  border-right: 0;
+  box-shadow: none;
+}
+
+.creative-home .comparison__scene--before .comparison-placeholder {
+  position: static;
+  width: auto;
+  max-width: none;
+  transform: none;
+}
+
+@media (max-width: 760px) {
+  .creative-home .comparison__scene--before .comparison-placeholder {
+    left: auto;
+  }
+}
