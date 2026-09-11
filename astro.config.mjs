@@ -8,10 +8,5 @@ export default defineConfig({
   trailingSlash: 'always',
   build: {
     inlineStylesheets: 'never'
-  },
-  vite: {
-    build: {
-      cssMinify: 'lightningcss'
-    }
   }
 });
