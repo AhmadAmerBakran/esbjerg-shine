@@ -1,0 +1,1194 @@
+/*
+  Ultra-realism pass for the experimental 3D detailing concept.
+  This file intentionally sits after three-d-concept.css and only overrides/enhances
+  the visual branch. It can be removed as one unit if the concept is abandoned.
+*/
+
+.shine3d {
+  --real-cyan: #b8f4ff;
+  --real-steel: #a9b5bb;
+  --real-dark-steel: #263037;
+  --real-rubber: #07090a;
+  --real-glass: rgba(211, 245, 255, .12);
+  --real-spec-x: 62%;
+  --real-spec-y: 28%;
+  --real-depth: 0;
+  background:
+    radial-gradient(circle 46rem at var(--pointer-x, 70%) var(--pointer-y, 18%), rgba(151, 229, 247, .055), transparent 68%),
+    linear-gradient(180deg, #020304 0%, #050708 42%, #030405 100%);
+}
+
+/* Fine film grain and lens vignette keep large dark gradients from feeling synthetic. */
+.shine3d::after {
+  content: "";
+  position: fixed;
+  z-index: 5000;
+  inset: 0;
+  pointer-events: none;
+  opacity: .18;
+  mix-blend-mode: soft-light;
+  background:
+    radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.52) 125%),
+    repeating-radial-gradient(circle at 22% 31%, rgba(255,255,255,.055) 0 .45px, transparent .65px 2.2px);
+  background-size: 100% 100%, 7px 7px;
+}
+
+/* ---------- HEADER: laminated glass + machined metal ---------- */
+.shine3d .site-header__inner {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(217, 238, 246, .16);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.07), transparent 20%),
+    rgba(5, 8, 10, .72);
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.42),
+    inset 0 1px rgba(255,255,255,.1),
+    inset 0 -1px rgba(0,0,0,.65);
+}
+.shine3d .site-header__inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(112deg, transparent 0 32%, rgba(255,255,255,.11) 40%, transparent 49% 100%);
+  transform: translateX(-115%);
+  animation: header-reflection 9s cubic-bezier(.5,0,.2,1) infinite;
+}
+@keyframes header-reflection {
+  0%, 70%, 100% { transform: translateX(-115%); opacity: 0; }
+  77% { opacity: .5; }
+  89% { transform: translateX(120%); opacity: .08; }
+}
+.shine3d .brand__mark {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.2),
+    inset 0 -10px 24px rgba(0,0,0,.28),
+    0 10px 28px rgba(0,0,0,.28),
+    0 0 24px rgba(129,230,255,.045);
+}
+.shine3d .nav a { text-shadow: 0 1px 1px rgba(0,0,0,.45); }
+.shine3d .nav__cta {
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.9),
+    inset 0 -1px rgba(77,91,98,.28),
+    0 7px 22px rgba(0,0,0,.35);
+}
+
+/* ---------- HERO: detailing bay ---------- */
+.hero3d--studio {
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.018), transparent 24%),
+    radial-gradient(ellipse 56rem 34rem at 72% 47%, rgba(136,219,239,.08), transparent 70%),
+    #030405;
+}
+.hero3d--studio::before {
+  opacity: .58;
+  background-size: 86px 86px;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+}
+.hero3d__ambient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+.hero3d__ambient i {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 18px rgba(213,247,255,.75), 0 0 48px rgba(95,186,213,.35);
+  animation: airborne-dust 8s ease-in-out infinite;
+  opacity: .24;
+}
+.hero3d__ambient i:nth-child(1) { left: 12%; top: 28%; animation-delay: -1s; }
+.hero3d__ambient i:nth-child(2) { left: 31%; top: 61%; animation-delay: -4.2s; animation-duration: 11s; }
+.hero3d__ambient i:nth-child(3) { left: 54%; top: 19%; animation-delay: -6.3s; animation-duration: 9s; }
+.hero3d__ambient i:nth-child(4) { left: 72%; top: 72%; animation-delay: -2.8s; animation-duration: 12s; }
+.hero3d__ambient i:nth-child(5) { left: 88%; top: 33%; animation-delay: -7.4s; animation-duration: 10s; }
+.hero3d__ambient i:nth-child(6) { left: 65%; top: 49%; animation-delay: -5.2s; animation-duration: 13s; }
+@keyframes airborne-dust {
+  0%,100% { transform: translate3d(-10px, 6px, 0) scale(.7); opacity: .05; }
+  38% { opacity: .35; }
+  63% { transform: translate3d(24px, -18px, 0) scale(1.2); opacity: .2; }
+}
+
+.hero3d__copy {
+  transform: translateZ(0);
+}
+.hero3d__kicker {
+  text-shadow: 0 0 18px rgba(129,230,255,.12);
+}
+.hero3d h1 {
+  text-shadow: 0 12px 38px rgba(0,0,0,.4);
+}
+.hero3d h1 span {
+  -webkit-text-stroke: 1px rgba(235,248,252,.72);
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,.36));
+}
+.hero3d__actions .button {
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+  box-shadow: 0 10px 28px rgba(0,0,0,.3);
+}
+.hero3d__actions .button::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.16), transparent 30%);
+  opacity: .7;
+}
+.hero3d__actions .button:active {
+  transform: translateY(1px) scale(.992);
+  box-shadow: 0 4px 12px rgba(0,0,0,.32);
+}
+
+.detail-lab {
+  --scene-rx: -2deg;
+  --scene-ry: 3deg;
+  --lab-shift-x: 0px;
+  --lab-shift-y: 0px;
+  position: relative;
+  min-height: 42rem;
+  perspective: 1450px;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--scene-rx)) rotateY(var(--scene-ry)) translate3d(var(--lab-shift-x), var(--lab-shift-y), 0);
+  transition: transform .14s cubic-bezier(.2,.7,.2,1);
+  isolation: isolate;
+}
+.detail-lab::before {
+  content: "";
+  position: absolute;
+  z-index: -8;
+  inset: 3% -4% 1%;
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at var(--real-spec-x) var(--real-spec-y), rgba(185,239,252,.1), transparent 21rem),
+    linear-gradient(180deg, #12181c 0%, #070a0c 48%, #030405 100%);
+  border: 1px solid rgba(255,255,255,.075);
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.08),
+    inset 0 -90px 120px rgba(0,0,0,.42),
+    0 40px 120px rgba(0,0,0,.4);
+  overflow: hidden;
+}
+.detail-lab::after {
+  content: "";
+  position: absolute;
+  z-index: -7;
+  left: 0; right: 0; bottom: 6%;
+  height: 15%;
+  background: radial-gradient(ellipse, rgba(102,199,222,.11), transparent 67%);
+  filter: blur(16px);
+}
+
+.detail-lab__ceiling {
+  position: absolute;
+  z-index: -3;
+  left: 5%; right: 5%; top: 7%;
+  height: 27%;
+  transform: rotateX(69deg) translateZ(-48px);
+  transform-origin: top;
+  background: linear-gradient(180deg, rgba(255,255,255,.018), transparent);
+}
+.detail-lab__ceiling i {
+  position: absolute;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fff, #d8f8ff 35%, rgba(133,216,236,.2));
+  box-shadow: 0 0 8px white, 0 0 24px rgba(179,239,255,.52), 0 0 80px rgba(101,192,214,.17);
+  opacity: .82;
+  animation: inspection-flicker 7s steps(1,end) infinite;
+}
+.detail-lab__ceiling i:nth-child(1) { left: 18%; }
+.detail-lab__ceiling i:nth-child(2) { left: 39%; animation-delay: -2.4s; }
+.detail-lab__ceiling i:nth-child(3) { left: 62%; animation-delay: -4.6s; }
+.detail-lab__ceiling i:nth-child(4) { left: 82%; animation-delay: -1.2s; }
+@keyframes inspection-flicker {
+  0%, 8%, 10%, 74%, 76%, 100% { opacity: .82; }
+  9%, 75% { opacity: .63; }
+}
+
+.detail-lab__backwall {
+  position: absolute;
+  z-index: -6;
+  inset: 9% 5% 23%;
+  transform: translateZ(-90px);
+  border-radius: 1.6rem 1.6rem .5rem .5rem;
+  background:
+    linear-gradient(90deg, transparent 0 49.8%, rgba(255,255,255,.035) 50%, transparent 50.2%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.018) 0 1px, transparent 1px 84px),
+    linear-gradient(180deg, #11171b, #080b0d);
+  box-shadow: inset 0 -55px 90px rgba(0,0,0,.4);
+}
+
+.detail-lab__floor {
+  position: absolute;
+  z-index: -4;
+  left: 1%; right: 1%; bottom: 3%;
+  height: 43%;
+  transform: rotateX(69deg) translateZ(-22px);
+  transform-origin: bottom;
+  border-radius: 48%;
+  background:
+    linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.038) 1px, transparent 1px),
+    linear-gradient(180deg, #12181b, #040506 70%);
+  background-size: 58px 58px, 58px 58px, 100% 100%;
+  mask-image: radial-gradient(ellipse, black 30%, transparent 79%);
+  box-shadow: inset 0 30px 80px rgba(133,218,238,.04);
+}
+.detail-lab__floor::after {
+  content: "";
+  position: absolute;
+  inset: 9% 11% 16%;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at center, rgba(195,243,255,.08), transparent 60%),
+    linear-gradient(100deg, transparent 35%, rgba(255,255,255,.07) 49%, transparent 61%);
+  filter: blur(3px);
+  animation: floor-reflection 10s ease-in-out infinite;
+}
+@keyframes floor-reflection {
+  0%,100% { transform: translateX(-4%); opacity: .48; }
+  50% { transform: translateX(5%); opacity: .68; }
+}
+
+.detail-lab__reflection {
+  position: absolute;
+  left: 12%; right: 6%; bottom: 2.5%;
+  height: 24%;
+  z-index: -2;
+  transform: rotateX(76deg) scaleY(-.72);
+  transform-origin: bottom;
+  background:
+    linear-gradient(90deg, transparent, rgba(196,240,251,.06) 30%, rgba(255,255,255,.1) 48%, rgba(147,220,238,.05) 68%, transparent),
+    radial-gradient(ellipse, rgba(190,235,246,.07), transparent 67%);
+  filter: blur(7px);
+  opacity: .62;
+}
+
+.detail-lab__car {
+  position: absolute;
+  z-index: 4;
+  left: 49%;
+  top: 53%;
+  width: min(52rem, 95%);
+  transform: translate3d(-50%,-50%,76px);
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 34px 34px rgba(0,0,0,.7));
+}
+.detail-lab__car::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 11% 4% 14%;
+  pointer-events: none;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle 9rem at var(--real-spec-x) var(--real-spec-y), rgba(255,255,255,.21), rgba(210,246,255,.065) 38%, transparent 72%);
+  mix-blend-mode: screen;
+  filter: blur(1px);
+  opacity: .85;
+  transition: background-position .1s linear;
+}
+.detail-lab__car::after {
+  content: "";
+  position: absolute;
+  left: 15%; right: 9%; bottom: 10%;
+  height: 4%;
+  background: linear-gradient(90deg, transparent, rgba(189,239,251,.08), rgba(255,255,255,.22), rgba(152,226,243,.06), transparent);
+  filter: blur(5px);
+  transform: translateZ(-10px);
+}
+.detail-lab__car img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: translateZ(0) scale(1.015);
+  filter:
+    contrast(1.08)
+    saturate(.86)
+    brightness(.94)
+    drop-shadow(0 9px 7px rgba(0,0,0,.4));
+}
+
+.detail-lab__paint-scan {
+  position: absolute;
+  z-index: 7;
+  top: 11%; bottom: 16%;
+  width: 9%;
+  left: -12%;
+  border-radius: 50%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.08), rgba(231,252,255,.72), rgba(129,230,255,.11), transparent);
+  filter: blur(2px);
+  mix-blend-mode: screen;
+  transform: skewX(-14deg);
+  animation: paint-inspection 7.8s cubic-bezier(.62,0,.22,1) infinite;
+}
+@keyframes paint-inspection {
+  0%,18% { left:-14%; opacity:0; }
+  28% { opacity:.78; }
+  64% { left:106%; opacity:.5; }
+  72%,100% { left:106%; opacity:0; }
+}
+.detail-lab__inspection-line {
+  position: absolute;
+  z-index: 8;
+  left: 9%; right: 8%; top: 53%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(174,238,253,.35), rgba(255,255,255,.95), rgba(157,230,247,.25), transparent);
+  box-shadow: 0 0 7px rgba(255,255,255,.75), 0 0 26px rgba(129,230,255,.22);
+  opacity: .65;
+}
+
+/* Generated droplets attached by ultra-realism.js */
+.real-droplet {
+  position: absolute;
+  z-index: 15;
+  width: var(--drop-size, 7px);
+  height: calc(var(--drop-size, 7px) * 1.35);
+  left: var(--drop-x, 50%);
+  top: var(--drop-y, 25%);
+  border-radius: 55% 45% 55% 45% / 65% 65% 35% 35%;
+  background:
+    radial-gradient(circle at 32% 20%, rgba(255,255,255,.96) 0 8%, rgba(211,246,255,.38) 11%, rgba(105,186,208,.12) 46%, rgba(0,0,0,.08) 72%);
+  border: 1px solid rgba(218,248,255,.28);
+  box-shadow:
+    inset -1px -2px 4px rgba(0,0,0,.15),
+    0 1px 2px rgba(0,0,0,.28),
+    0 0 5px rgba(174,232,247,.12);
+  opacity: var(--drop-opacity, .72);
+  transform: translateZ(110px) rotate(var(--drop-rot, 0deg));
+  animation: droplet-creep var(--drop-speed, 8s) cubic-bezier(.4,0,.25,1) infinite;
+  animation-delay: var(--drop-delay, -2s);
+  pointer-events: none;
+}
+@keyframes droplet-creep {
+  0%, 20% { translate: 0 0; scale: .92; }
+  55% { translate: 1px 4px; scale: 1; }
+  72% { translate: 1px 13px; }
+  100% { translate: 2px 44px; opacity: 0; }
+}
+
+.detail-tool {
+  filter: drop-shadow(0 18px 18px rgba(0,0,0,.5));
+}
+.detail-tool--polisher {
+  animation: polisher-hand 5.4s cubic-bezier(.37,0,.2,1) infinite;
+}
+@keyframes polisher-hand {
+  0%,100% { transform: translate3d(0,0,85px) rotate(-10deg); }
+  42% { transform: translate3d(9px,-4px,88px) rotate(-7deg); }
+  70% { transform: translate3d(-5px,3px,86px) rotate(-12deg); }
+}
+.detail-tool--polisher .detail-tool__pad {
+  animation: pad-spin .34s linear infinite;
+  box-shadow: 0 4px 10px rgba(0,0,0,.42), 0 0 12px rgba(255,255,255,.07);
+}
+@keyframes pad-spin { to { rotate: 360deg; } }
+.detail-tool--sprayer .detail-tool__spray {
+  background:
+    repeating-linear-gradient(102deg, transparent 0 7px, rgba(212,248,255,.27) 8px, transparent 10px),
+    linear-gradient(90deg, rgba(228,252,255,.25), transparent 80%);
+  filter: blur(.7px) drop-shadow(0 0 8px rgba(154,228,245,.15));
+  animation: spray-pressure .19s ease-in-out infinite alternate;
+}
+@keyframes spray-pressure { from { opacity:.5; scale:1 .96; } to { opacity:.78; scale:1.04 1.03; } }
+
+.detail-lab__mist i {
+  box-shadow: inset 0 0 4px rgba(255,255,255,.3), 0 0 5px rgba(185,238,251,.1);
+  animation-timing-function: cubic-bezier(.2,.5,.2,1);
+}
+
+.detail-readout {
+  border-color: rgba(207,238,246,.14);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.018)),
+    rgba(4,7,9,.7);
+  box-shadow:
+    0 13px 36px rgba(0,0,0,.34),
+    inset 0 1px rgba(255,255,255,.08);
+}
+.detail-readout span {
+  background: linear-gradient(90deg, #68cfe8, #e6fbff);
+  box-shadow: 0 0 12px rgba(129,230,255,.38);
+}
+
+.hero3d__rail {
+  border-color: rgba(255,255,255,.08);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.018) 18%, rgba(255,255,255,.018) 82%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 8% 92%, transparent);
+}
+.hero3d__rail i {
+  box-shadow: 0 0 9px rgba(129,230,255,.38);
+}
+
+/* ---------- SERVICES: make every pod feel like a physical detailing station ---------- */
+.services3d {
+  background:
+    radial-gradient(ellipse 62rem 26rem at 50% 22%, rgba(123,216,238,.055), transparent 70%),
+    linear-gradient(180deg,#030405,#080b0d 52%,#030405);
+}
+.services3d::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .22;
+  background: linear-gradient(104deg, transparent 24%, rgba(255,255,255,.035) 48%, transparent 66%);
+  transform: translateX(-80%);
+  animation: bay-sweep 11s ease-in-out infinite;
+}
+@keyframes bay-sweep { 0%,68%,100%{transform:translateX(-85%)} 82%{transform:translateX(82%)} }
+
+.service3d {
+  transform-style: preserve-3d;
+  transition: transform .18s cubic-bezier(.2,.72,.2,1), filter .3s ease;
+}
+.service3d > a {
+  background:
+    radial-gradient(circle at var(--glow-x,68%) var(--glow-y,22%), rgba(203,244,255,.095), transparent 13rem),
+    linear-gradient(180deg, rgba(255,255,255,.035), transparent 22%),
+    linear-gradient(145deg,#11171b,#060809 64%);
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.07),
+    inset 0 -1px rgba(0,0,0,.7),
+    0 26px 70px rgba(0,0,0,.34);
+}
+.service3d > a::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .6;
+  background: linear-gradient(115deg, transparent 0 34%, rgba(255,255,255,.06) 42%, transparent 51% 100%);
+  transform: translateX(-120%);
+  transition: transform .8s cubic-bezier(.2,.7,.2,1);
+}
+.service3d:hover > a::before { transform: translateX(110%); }
+.service3d:hover { filter: brightness(1.04); }
+.service3d__object {
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 50% 88%, rgba(128,217,237,.09), transparent 41%),
+    linear-gradient(180deg, transparent 62%, rgba(0,0,0,.2));
+}
+.service3d__object::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 17%; right: 17%; bottom: 10%;
+  height: 8%;
+  border-radius: 50%;
+  background: rgba(0,0,0,.7);
+  filter: blur(10px);
+}
+
+/* Reset the old generic orb language. */
+.service3d__disc,
+.service3d__orb,
+.service3d__beam {
+  z-index: 3;
+}
+
+/* HAND WASH / pressure washer */
+.service3d--bilvask .service3d__disc {
+  width: 12.4rem;
+  height: 2.25rem;
+  left: 47%; top: 50%;
+  border-radius: 999px;
+  transform: translate(-50%,-50%) translateZ(70px) rotate(-16deg);
+  border: 1px solid rgba(255,255,255,.25);
+  background: linear-gradient(180deg,#3a454a,#0a0d0f 48%,#20292d 52%,#050708);
+  box-shadow: inset 0 1px rgba(255,255,255,.18),0 13px 24px rgba(0,0,0,.42);
+  animation: washer-hand 4.8s ease-in-out infinite;
+}
+.service3d--bilvask .service3d__disc::before {
+  content:"";
+  position:absolute;
+  right:-4.9rem; top:.78rem;
+  width:5.4rem; height:.42rem;
+  border-radius:999px;
+  background:linear-gradient(180deg,#cbd6da,#59656a 48%,#eef3f5 51%,#30393d);
+  box-shadow:0 2px 4px rgba(0,0,0,.4);
+}
+.service3d--bilvask .service3d__disc::after {
+  content:"";
+  position:absolute;
+  left:2.2rem; top:1.7rem;
+  width:2rem; height:3.6rem;
+  border-radius:.5rem 1rem .8rem .5rem;
+  transform:rotate(12deg);
+  background:linear-gradient(90deg,#090b0c,#30383b 50%,#0a0c0d);
+  border:1px solid rgba(255,255,255,.13);
+}
+.service3d--bilvask .service3d__orb {
+  left: 87%; top: 43%; width: 4.2rem;
+  transform: translate(-50%,-50%) translateZ(95px);
+  border:0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(232,252,255,.65), rgba(141,224,244,.16) 26%, transparent 70%);
+  box-shadow:none;
+  filter:blur(1px);
+  clip-path: polygon(0 43%,100% 0,100% 100%,0 57%);
+  animation: water-jet .16s ease-in-out infinite alternate;
+}
+.service3d--bilvask .service3d__beam {
+  left: 65%; right: -5%; top: 43%; height: 1.2rem;
+  transform: translateZ(88px) rotate(-13deg);
+  background: repeating-linear-gradient(90deg,rgba(218,250,255,.5) 0 2px,transparent 3px 8px);
+  filter: blur(.7px);
+  box-shadow:none;
+  opacity:.58;
+}
+@keyframes washer-hand { 50% { transform:translate(-49%,-52%) translateZ(72px) rotate(-13deg); } }
+@keyframes water-jet { to { opacity:.75; scale:1.08 .93; } }
+
+/* INTERIOR / extractor vacuum */
+.service3d--indvendig-bilpleje .service3d__disc {
+  width: 7.5rem; height: 10rem;
+  left: 48%; top: 50%;
+  border-radius: 42% 42% 22% 22%;
+  transform: translate(-50%,-50%) translateZ(65px) rotate(-5deg);
+  border: 1px solid rgba(255,255,255,.2);
+  background: linear-gradient(110deg,#20272a,#07090a 48%,#353f43 56%,#0a0c0d);
+  box-shadow: inset 8px 0 18px rgba(255,255,255,.035),0 18px 28px rgba(0,0,0,.5);
+  animation: extractor-idle 5.2s ease-in-out infinite;
+}
+.service3d--indvendig-bilpleje .service3d__disc::before {
+  content:"";
+  position:absolute;
+  left:1.05rem; right:1.05rem; top:1.1rem;
+  height:2.3rem;
+  border-radius:.7rem;
+  background:linear-gradient(180deg,#9fb8bf,#293337 35%,#071014 82%);
+  border:1px solid rgba(197,238,249,.16);
+}
+.service3d--indvendig-bilpleje .service3d__disc::after {
+  content:"";
+  position:absolute;
+  width:7rem; height:1.8rem;
+  left:5.1rem; top:4.1rem;
+  border:1.05rem solid #111719;
+  border-left:0;
+  border-bottom-color:transparent;
+  border-radius:0 80% 0 0;
+  transform:rotate(16deg);
+}
+.service3d--indvendig-bilpleje .service3d__orb {
+  width:3.2rem; height:1.1rem; left:81%; top:69%;
+  border-radius:.35rem 1.1rem 1.1rem .35rem;
+  transform:translate(-50%,-50%) translateZ(100px) rotate(15deg);
+  background:linear-gradient(180deg,#68767c,#090b0c 65%);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 8px 15px rgba(0,0,0,.38);
+}
+.service3d--indvendig-bilpleje .service3d__beam { display:none; }
+@keyframes extractor-idle { 50% { transform:translate(-50%,-52%) translateZ(68px) rotate(-4deg); } }
+
+/* COMPLETE DETAIL / car on lift */
+.service3d--komplet-klargoering .service3d__disc {
+  width: 13rem; height: 4.6rem;
+  left: 50%; top: 48%;
+  border-radius: 53% 45% 26% 28%;
+  transform:translate(-50%,-50%) translateZ(65px);
+  border:1px solid rgba(255,255,255,.26);
+  border-top:2px solid rgba(255,255,255,.76);
+  background:linear-gradient(165deg,rgba(255,255,255,.16),#12181b 20%,#050708 72%);
+  box-shadow:0 17px 24px rgba(0,0,0,.52),inset 0 1px rgba(255,255,255,.1);
+  clip-path: polygon(1% 44%,8% 19%,25% 7%,70% 4%,88% 20%,99% 42%,96% 79%,84% 91%,15% 91%,3% 74%);
+  animation: mini-car-suspension 4.6s ease-in-out infinite;
+}
+.service3d--komplet-klargoering .service3d__disc::before {
+  content:"";position:absolute;left:25%;top:-1.55rem;width:49%;height:2.25rem;
+  border-radius:70% 55% 0 0;border-top:2px solid rgba(255,255,255,.6);
+  background:linear-gradient(180deg,rgba(160,222,237,.11),#06090a);
+}
+.service3d--komplet-klargoering .service3d__orb {
+  width:2.6rem;left:28%;top:64%;
+  background:radial-gradient(circle,#738086 0 14%,#090b0c 15% 58%,#a8b2b6 60% 63%,#040506 65%);
+  box-shadow:16rem 0 0 -1px #07090a,16rem 0 0 1px #8d999e;
+}
+.service3d--komplet-klargoering .service3d__beam {
+  left:25%;right:25%;top:73%;height:.3rem;
+  background:linear-gradient(90deg,#3d464a,#889399,#3d464a);
+  box-shadow:0 .9rem 0 #20272a;
+}
+@keyframes mini-car-suspension { 50% { transform:translate(-50%,-52%) translateZ(68px); } }
+
+/* POLISHER */
+.service3d--polering .service3d__disc {
+  width: 10rem; height: 5.4rem;
+  left: 48%; top: 44%;
+  border-radius: 2rem 3.8rem 3rem 1.2rem;
+  transform: translate(-50%,-50%) translateZ(70px) rotate(-9deg);
+  background: linear-gradient(180deg,#313b40,#0b0e10 50%,#1c2428);
+  border:1px solid rgba(255,255,255,.21);
+  box-shadow:inset 0 1px rgba(255,255,255,.12),0 15px 26px rgba(0,0,0,.45);
+  animation: polisher-float 4s ease-in-out infinite;
+}
+.service3d--polering .service3d__disc::before {
+  content:"";position:absolute;left:1rem;top:-2.2rem;width:5.4rem;height:2.4rem;
+  border:.8rem solid #151b1e;border-bottom:0;border-radius:2rem 2rem 0 0;
+}
+.service3d--polering .service3d__orb {
+  width:7.1rem;left:57%;top:68%;
+  transform:translate(-50%,-50%) translateZ(105px) rotateX(66deg);
+  background:repeating-conic-gradient(#ece9df 0 13deg,#b9b5ac 14deg 25deg);
+  border:.55rem solid #242b2e;
+  box-shadow:0 10px 25px rgba(0,0,0,.42),0 0 22px rgba(255,255,255,.045);
+  animation: polish-pad .42s linear infinite;
+}
+.service3d--polering .service3d__beam {
+  width:9rem;left:51%;right:auto;top:72%;height:1.7rem;
+  transform:translate(-50%,-50%) translateZ(120px) rotateX(70deg);
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,255,255,.14),transparent 70%);
+  box-shadow:none;
+}
+@keyframes polish-pad { to { rotate:360deg; } }
+@keyframes polisher-float { 50% { transform:translate(-49%,-52%) translateZ(74px) rotate(-7deg); } }
+
+/* COATING bottle + bead */
+.service3d--lakbeskyttelse .service3d__disc {
+  width:5rem;height:9rem;left:47%;top:50%;
+  border-radius:.9rem 1.2rem 1rem .8rem;
+  transform:translate(-50%,-50%) translateZ(72px) rotate(-5deg);
+  border:1px solid rgba(255,255,255,.23);
+  background:linear-gradient(100deg,#111719,#2f3a3f 24%,#07090a 58%,#20282c 82%,#080a0b);
+  box-shadow:inset 4px 0 10px rgba(255,255,255,.05),0 16px 25px rgba(0,0,0,.47);
+  animation:bottle-float 5s ease-in-out infinite;
+}
+.service3d--lakbeskyttelse .service3d__disc::before {
+  content:"";position:absolute;left:1.1rem;right:1.1rem;top:-1.5rem;height:1.7rem;
+  border-radius:.35rem;background:linear-gradient(90deg,#222b2f,#69777d,#171d20);border:1px solid rgba(255,255,255,.18);
+}
+.service3d--lakbeskyttelse .service3d__disc::after {
+  content:"CERAMIC";position:absolute;left:.55rem;right:.55rem;top:3rem;padding:.45rem .1rem;
+  border:1px solid rgba(173,234,249,.18);color:#bdefff;text-align:center;font-size:.44rem;font-weight:900;letter-spacing:.16em;
+  background:rgba(108,203,226,.04);
+}
+.service3d--lakbeskyttelse .service3d__orb {
+  width:3.4rem;left:69%;top:41%;
+  border-radius:58% 42% 62% 38% / 66% 62% 38% 34%;
+  background:radial-gradient(circle at 32% 24%,white 0 6%,rgba(184,240,253,.55) 10%,rgba(85,171,193,.14) 48%,rgba(0,0,0,.08) 72%);
+  border:1px solid rgba(222,250,255,.42);
+  box-shadow:inset -5px -8px 14px rgba(0,0,0,.11),0 10px 22px rgba(0,0,0,.25),0 0 24px rgba(129,230,255,.1);
+  animation:coating-drop 4.6s ease-in-out infinite;
+}
+.service3d--lakbeskyttelse .service3d__beam { display:none; }
+@keyframes bottle-float { 50% { transform:translate(-50%,-53%) translateZ(75px) rotate(-3deg); } }
+@keyframes coating-drop { 50% { transform:translate(-50%,-58%) translateZ(110px) rotate(7deg) scale(.94); } }
+
+/* SEAT / extractor nozzle */
+.service3d--saederens .service3d__disc {
+  width:7.6rem;height:9rem;left:46%;top:50%;
+  border-radius:3rem 3rem 1rem 1rem;
+  transform:translate(-50%,-50%) translateZ(66px) skewX(-4deg);
+  background:
+    linear-gradient(100deg,rgba(255,255,255,.055),transparent 34%),
+    repeating-linear-gradient(90deg,#111719 0 8px,#151d20 9px 10px,#0b0e10 11px 18px);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:inset 0 1px rgba(255,255,255,.07),0 17px 27px rgba(0,0,0,.48);
+}
+.service3d--saederens .service3d__disc::before {
+  content:"";position:absolute;left:-1rem;right:-1rem;bottom:-1.5rem;height:3rem;
+  border-radius:1rem;background:linear-gradient(180deg,#151c1f,#07090a);border:1px solid rgba(255,255,255,.12);
+}
+.service3d--saederens .service3d__orb {
+  width:5.8rem;height:2.4rem;left:74%;top:43%;
+  border-radius:.55rem 2rem 2rem .55rem;
+  transform:translate(-50%,-50%) translateZ(108px) rotate(-23deg);
+  background:linear-gradient(180deg,rgba(210,245,253,.34),rgba(63,84,91,.38) 28%,#0a0d0f 72%);
+  border:1px solid rgba(213,245,252,.24);
+  box-shadow:0 12px 22px rgba(0,0,0,.4);
+  animation:nozzle-clean 3.9s ease-in-out infinite;
+}
+.service3d--saederens .service3d__beam {
+  left:55%;right:6%;top:50%;height:.18rem;
+  transform:translateZ(105px) rotate(-24deg);
+  background:linear-gradient(90deg,transparent,rgba(173,232,247,.35),transparent);
+  box-shadow:0 0 11px rgba(129,230,255,.16);
+}
+@keyframes nozzle-clean { 50% { transform:translate(-55%,-43%) translateZ(111px) rotate(-18deg); } }
+
+.service3d__body {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.018), transparent 12%),
+    rgba(5,8,9,.94);
+  box-shadow: inset 0 1px rgba(255,255,255,.035);
+}
+.service3d__arrow {
+  box-shadow: inset 0 1px rgba(255,255,255,.08), 0 9px 20px rgba(0,0,0,.26);
+}
+.service3d__arrow:active { transform: scale(.94); }
+
+/* ---------- WATER TRANSITION: more physical sheet, foam and refraction ---------- */
+.wash-transition {
+  background: rgba(3,7,9,.05);
+}
+.wash-transition.is-active {
+  animation: realistic-backdrop .86s cubic-bezier(.4,0,.2,1) forwards;
+}
+.wash-transition__sheet {
+  top:-122%;
+  height:126%;
+  border-radius:0 0 43% 57%;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), transparent 12%),
+    repeating-linear-gradient(98deg, transparent 0 11%, rgba(220,250,255,.12) 11.4% 11.8%, transparent 12.2% 22%),
+    radial-gradient(ellipse at 50% 100%,rgba(255,255,255,.92) 0 1.5%,rgba(214,248,255,.74) 7%,rgba(122,210,232,.37) 27%,rgba(34,106,124,.22) 53%,rgba(3,10,12,.78) 76%);
+  box-shadow: 0 45px 110px rgba(129,230,255,.22), inset 0 -12px 28px rgba(255,255,255,.09);
+  filter: blur(1.2px) saturate(1.14);
+}
+.wash-transition.is-active .wash-transition__sheet { animation: realistic-sheet .86s cubic-bezier(.55,0,.18,1) forwards; }
+.wash-transition__foam {
+  filter: blur(.25px) drop-shadow(0 9px 14px rgba(178,238,253,.28));
+}
+.wash-transition.is-active .wash-transition__foam { animation: realistic-foam .86s cubic-bezier(.55,0,.18,1) forwards; }
+@keyframes realistic-backdrop {
+  0% { backdrop-filter:blur(0) saturate(100%); }
+  32% { backdrop-filter:blur(2px) saturate(118%); }
+  72%,100% { backdrop-filter:blur(15px) saturate(145%) contrast(1.06); }
+}
+@keyframes realistic-sheet {
+  0% { top:-122%; transform:skewY(-1deg); }
+  62% { top:41%; transform:skewY(.7deg); }
+  100% { top:60%; transform:skewY(0); }
+}
+@keyframes realistic-foam { 0%{top:-26%;scale:1 .8} 68%{top:48%;scale:1.03 1.15} 100%{top:57%;scale:1 1} }
+
+.real-transition-drop {
+  position:absolute;
+  z-index:4;
+  width:var(--td-size,8px);
+  height:calc(var(--td-size,8px)*1.8);
+  left:var(--td-x,50%);
+  top:-8%;
+  border-radius:50% 50% 58% 42%;
+  background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(164,231,247,.16) 35%,rgba(255,255,255,.04));
+  box-shadow:0 0 4px rgba(205,247,255,.2);
+  opacity:0;
+}
+.wash-transition.is-active .real-transition-drop {
+  animation: transition-drop var(--td-speed,.72s) cubic-bezier(.35,.05,.6,1) forwards;
+  animation-delay:var(--td-delay,0s);
+}
+@keyframes transition-drop {
+  0%{opacity:0;transform:translateY(-2vh) scaleY(.7)}
+  12%{opacity:.72}
+  100%{opacity:.04;transform:translateY(108vh) scaleY(1.8)}
+}
+
+/* ---------- BEFORE / AFTER: physical display panel ---------- */
+.ba-gallery__stage {
+  filter: drop-shadow(0 38px 45px rgba(0,0,0,.45));
+}
+.ba-comparison {
+  border-color: rgba(214,240,247,.17);
+  background:#060809;
+  box-shadow:
+    0 40px 95px rgba(0,0,0,.55),
+    inset 0 1px rgba(255,255,255,.08),
+    inset 0 -1px rgba(0,0,0,.75);
+}
+.ba-comparison::before {
+  content:"";
+  position:absolute;
+  z-index:8;
+  inset:0;
+  pointer-events:none;
+  border-radius:inherit;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.025),inset 0 0 70px rgba(0,0,0,.17);
+}
+.ba-comparison::after {
+  background:linear-gradient(112deg,transparent 25%,rgba(255,255,255,.025) 39%,rgba(255,255,255,.085) 45%,transparent 53%);
+  filter:blur(.3px);
+}
+.ba-divider::before {
+  content:"";
+  position:absolute;
+  top:0;bottom:0;width:1px;
+  background:rgba(255,255,255,.76);
+  box-shadow:0 0 8px rgba(255,255,255,.7),0 0 22px rgba(129,230,255,.23);
+}
+.ba-divider span {
+  position:relative;
+  width:3.5rem;
+  background:
+    radial-gradient(circle at 35% 25%,rgba(255,255,255,.13),transparent 27%),
+    rgba(4,7,8,.82);
+  border-color:rgba(230,250,255,.72);
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.11),
+    0 12px 32px rgba(0,0,0,.5),
+    0 0 24px rgba(129,230,255,.08);
+}
+.ba-arrow {
+  background:linear-gradient(180deg,#13191c,#07090a);
+  box-shadow:inset 0 1px rgba(255,255,255,.08),0 9px 20px rgba(0,0,0,.3);
+}
+.ba-arrow:active { transform:translateY(1px) scale(.96); }
+.ba-project__meta {
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.055),transparent 28%),
+    rgba(4,7,8,.7);
+  box-shadow:inset 0 1px rgba(255,255,255,.06),0 10px 30px rgba(0,0,0,.22);
+}
+
+/* ---------- PROCESS: real shop cards, dimensional materials ---------- */
+.process3d {
+  background:
+    radial-gradient(circle at 18% 10%,rgba(255,255,255,.85),transparent 24rem),
+    linear-gradient(180deg,#eef2f3,#dfe5e7 100%);
+}
+.process-step {
+  border-color:rgba(20,35,41,.13);
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.72),transparent 27%),
+    linear-gradient(145deg,#fbfcfc,#dbe2e5);
+  box-shadow:
+    0 22px 55px rgba(20,39,47,.11),
+    inset 0 1px white,
+    inset 0 -1px rgba(20,35,41,.08);
+}
+.process-step::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(112deg,transparent 15%,rgba(255,255,255,.54) 42%,transparent 60%);
+  transform:translateX(-120%);
+  transition:transform .9s cubic-bezier(.2,.75,.2,1);
+  opacity:.52;
+}
+.process-step:hover::after { transform:translateX(105%); }
+.process-step__ring {
+  border-color:rgba(27,47,56,.16);
+  box-shadow:inset 0 0 0 1.35rem rgba(20,39,47,.035),0 18px 40px rgba(21,49,61,.07);
+}
+
+/* ---------- IDENTITY: paint booth reflection rather than generic typography ---------- */
+.identity3d {
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse 42rem 24rem at 22% 45%,rgba(124,215,237,.055),transparent 68%),
+    #030405;
+}
+.identity3d__word::after {
+  content:"";
+  position:absolute;
+  width:min(36rem,92%);height:28%;bottom:12%;
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(177,232,246,.08),transparent 65%);
+  filter:blur(10px);
+  transform:rotateX(66deg);
+}
+.identity3d__word strong {
+  text-shadow:0 25px 55px rgba(117,208,230,.08),0 2px 0 rgba(255,255,255,.08);
+}
+.identity3d__facts div {
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.04),transparent 35%),
+    rgba(255,255,255,.022);
+  box-shadow:inset 0 1px rgba(255,255,255,.05),0 12px 26px rgba(0,0,0,.18);
+}
+.identity3d__facts div::after {
+  content:"";position:absolute;inset:auto 0 0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(129,230,255,.34),transparent);
+  transform:scaleX(.15);opacity:.4;transition:transform .35s ease,opacity .35s ease;
+}
+.identity3d__facts div:hover::after { transform:scaleX(.8);opacity:.8; }
+
+/* ---------- CONTACT: a premium car-console form ---------- */
+.contact3d {
+  background:
+    radial-gradient(ellipse 48rem 26rem at 75% 24%,rgba(128,217,237,.07),transparent 70%),
+    linear-gradient(180deg,#040607,#020304);
+}
+.contact3d__panel {
+  position:relative;
+  overflow:hidden;
+  border-color:rgba(213,240,247,.14);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.035),transparent 18%),
+    rgba(7,10,12,.84);
+  box-shadow:
+    0 44px 110px rgba(0,0,0,.58),
+    inset 0 1px rgba(255,255,255,.07),
+    inset 0 -1px rgba(0,0,0,.7);
+}
+.contact3d__panel::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(112deg,transparent 15%,rgba(255,255,255,.045) 44%,transparent 58%);
+  transform:translateX(-110%);
+  animation:contact-glint 12s ease-in-out infinite;
+}
+@keyframes contact-glint { 0%,72%,100%{transform:translateX(-110%)} 86%{transform:translateX(108%)} }
+
+.contact3d__form {
+  position:relative;
+  border:1px solid rgba(255,255,255,.075);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),transparent 13%),
+    #040607;
+  box-shadow:inset 0 1px rgba(255,255,255,.04),inset 0 -25px 55px rgba(0,0,0,.18);
+}
+.contact3d__form::before {
+  content:"";
+  position:absolute;
+  left:1rem;right:1rem;top:.65rem;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(172,229,244,.24),transparent);
+}
+
+.contact3d .contact-form {
+  position:relative;
+  padding:clamp(1.15rem,2vw,1.65rem);
+  border:0;
+  background:transparent;
+  box-shadow:none;
+}
+.contact3d .field {
+  position:relative;
+  display:grid;
+  gap:.48rem;
+}
+.contact3d .field > span {
+  color:#9ba9af;
+  font-size:.63rem;
+  font-weight:850;
+  letter-spacing:.115em;
+  text-transform:uppercase;
+  transition:color .2s ease,transform .2s ease;
+}
+.contact3d .field:focus-within > span {
+  color:#d8f8ff;
+  transform:translateX(2px);
+}
+.contact3d .field input,
+.contact3d .field select,
+.contact3d .field textarea {
+  width:100%;
+  color:#edf3f5;
+  border:1px solid rgba(210,238,245,.12);
+  border-radius:.82rem;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.025),transparent 30%),
+    #070a0c;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    inset 0 2px 8px rgba(0,0,0,.3),
+    0 1px 0 rgba(255,255,255,.015);
+  transition:border-color .22s ease,box-shadow .22s ease,background .22s ease,transform .22s ease;
+}
+.contact3d .field input,
+.contact3d .field select { min-height:3.35rem;padding:.78rem .9rem; }
+.contact3d .field textarea { min-height:9.4rem;padding:.9rem;resize:vertical; }
+.contact3d .field input:hover,
+.contact3d .field select:hover,
+.contact3d .field textarea:hover { border-color:rgba(210,238,245,.2); }
+.contact3d .field input:focus,
+.contact3d .field select:focus,
+.contact3d .field textarea:focus {
+  outline:none;
+  border-color:rgba(161,231,248,.48);
+  background:
+    radial-gradient(circle at var(--field-x,50%) 0%,rgba(129,230,255,.045),transparent 45%),
+    #080c0e;
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.04),
+    inset 0 2px 8px rgba(0,0,0,.28),
+    0 0 0 3px rgba(129,230,255,.055),
+    0 8px 22px rgba(0,0,0,.22);
+  transform:translateY(-1px);
+}
+.contact3d .field select {
+  appearance:none;
+  background-image:
+    linear-gradient(45deg,transparent 50%,#83949b 50%),
+    linear-gradient(135deg,#83949b 50%,transparent 50%),
+    linear-gradient(180deg,rgba(255,255,255,.025),transparent 30%);
+  background-position:calc(100% - 18px) 49%,calc(100% - 13px) 49%,0 0;
+  background-size:5px 5px,5px 5px,100% 100%;
+  background-repeat:no-repeat;
+  padding-right:2.6rem;
+}
+.contact3d .field textarea::placeholder { color:#556168; }
+
+.contact3d .consent {
+  display:flex;
+  gap:.75rem;
+  align-items:flex-start;
+  padding:.9rem 1rem;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:.82rem;
+  background:rgba(255,255,255,.018);
+  transition:border-color .2s ease,background .2s ease;
+}
+.contact3d .consent:hover { border-color:rgba(129,230,255,.17);background:rgba(129,230,255,.018); }
+.contact3d .consent input[type="checkbox"] {
+  appearance:none;
+  flex:0 0 auto;
+  width:1.15rem;height:1.15rem;
+  margin:.15rem 0 0;
+  border:1px solid rgba(205,237,245,.28);
+  border-radius:.3rem;
+  background:linear-gradient(180deg,#0c1113,#050708);
+  box-shadow:inset 0 1px rgba(255,255,255,.04);
+  cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .15s ease;
+}
+.contact3d .consent input[type="checkbox"]:checked {
+  border-color:rgba(186,241,255,.6);
+  background:
+    linear-gradient(135deg,transparent 0 42%,#071013 43% 52%,transparent 53%),
+    linear-gradient(45deg,transparent 0 45%,#071013 46% 55%,transparent 56%),
+    linear-gradient(180deg,#d8f9ff,#8bdff3);
+  box-shadow:0 0 14px rgba(129,230,255,.15),inset 0 1px white;
+}
+.contact3d .consent input[type="checkbox"]:active { transform:scale(.9); }
+.contact3d .consent span { color:#819097;font-size:.76rem;line-height:1.55; }
+.contact3d .consent a { color:#c5edf6;text-decoration-color:rgba(197,237,246,.35); }
+
+.contact3d .form-actions {
+  margin-top:.3rem;
+}
+.contact3d .form-actions .button {
+  position:relative;
+  overflow:hidden;
+  min-height:3.45rem;
+  color:#071013;
+  background:linear-gradient(180deg,#f5fcfd,#c8eef6 54%,#a9dce8);
+  border:1px solid rgba(255,255,255,.62);
+  box-shadow:
+    inset 0 1px white,
+    inset 0 -1px rgba(36,93,108,.18),
+    0 11px 28px rgba(0,0,0,.35),
+    0 0 26px rgba(129,230,255,.06);
+}
+.contact3d .form-actions .button::after {
+  content:"";position:absolute;inset:-45% 68% -45% -65%;
+  transform:skewX(-18deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.88),transparent);
+  transition:transform .65s ease;
+}
+.contact3d .form-actions .button:hover::after { transform:translateX(480%) skewX(-18deg); }
+.contact3d .form-actions .button:active { transform:translateY(1px) scale(.993);box-shadow:inset 0 2px 5px rgba(41,89,103,.12),0 4px 11px rgba(0,0,0,.3); }
+.contact3d .form-status[data-state="success"] {
+  color:#baf5cd;
+  text-shadow:0 0 16px rgba(128,234,166,.12);
+}
+.contact3d .form-status[data-state="error"] { color:#ffbaba; }
+
+/* Form gets a subtle moving inspection-light reflection when the pointer is over it. */
+.contact3d__form .form-specular {
+  position:absolute;
+  z-index:0;
+  width:17rem;height:17rem;
+  left:var(--form-light-x,70%);top:var(--form-light-y,12%);
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  pointer-events:none;
+  background:radial-gradient(circle,rgba(180,237,251,.055),transparent 67%);
+  filter:blur(3px);
+  transition:opacity .3s ease;
+  opacity:.8;
+}
+.contact3d .contact-form { z-index:1; }
+
+/* ---------- FOOTER ---------- */
+.shine3d .site-footer {
+  position:relative;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.018),transparent 22%),
+    #020303;
+  box-shadow:inset 0 1px rgba(255,255,255,.045);
+}
+.shine3d .site-footer::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,transparent 49.9%,rgba(255,255,255,.02) 50%,transparent 50.1%),
+    radial-gradient(ellipse at 50% 0,rgba(129,230,255,.04),transparent 27rem);
+}
+
+/* ---------- REALISTIC INTERACTION STATES ---------- */
+.shine3d a,
+.shine3d button,
+.shine3d input,
+.shine3d select,
+.shine3d textarea { -webkit-tap-highlight-color:transparent; }
+.shine3d a:focus-visible,
+.shine3d button:focus-visible,
+.shine3d input:focus-visible,
+.shine3d select:focus-visible,
+.shine3d textarea:focus-visible {
+  outline:1px solid rgba(190,242,255,.86);
+  outline-offset:3px;
+  box-shadow:0 0 0 4px rgba(129,230,255,.06);
+}
+
+/* Realistic reveal: less generic fade-up, more camera-depth settle. */
+.shine3d .s3-reveal {
+  opacity:0;
+  filter:blur(5px);
+  transform:translate3d(0,26px,-18px) scale(.992);
+  transition:
+    opacity .72s cubic-bezier(.2,.7,.2,1),
+    transform .92s cubic-bezier(.16,.78,.18,1),
+    filter .75s ease;
+}
+.shine3d .s3-reveal.is-visible {
+  opacity:1;
+  filter:blur(0);
+  transform:translate3d(0,0,0) scale(1);
+}
+
+/* Responsive realism is deliberately reduced instead of merely scaled down. */
+@media (max-width: 1040px) {
+  .detail-lab { min-height:36rem; }
+  .detail-lab__car { width:min(48rem,96%); }
+}
+
+@media (max-width: 720px) {
+  .shine3d::after { opacity:.11; }
+  .detail-lab { min-height:28rem; --scene-ry:0deg; --scene-rx:0deg; }
+  .detail-lab::before { inset:5% -1% 2%; border-radius:1.4rem; }
+  .detail-lab__car { top:53%; width:108%; }
+  .detail-lab__ceiling { top:10%; }
+  .detail-readout { transform:scale(.86); transform-origin:center; }
+  .detail-tool { opacity:.76; }
+  .service3d__object { min-height:13rem; }
+  .contact3d .contact-form { padding:1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shine3d *, .shine3d *::before, .shine3d *::after {
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    scroll-behavior:auto !important;
+  }
+  .detail-lab,
+  .service3d { transform:none !important; }
+  .real-droplet,
+  .real-transition-drop { display:none !important; }
+}
