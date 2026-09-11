@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Detaljeret mørk sportslig bil i detailing-studie</title>
+  <desc id="desc">En generisk mørk bil med blank lak, tydelige hjul, glas, lygter og refleksioner til Esbjerg Shine-konceptet.</desc>
+  <defs>
+    <linearGradient id="paint" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f3940"/>
+      <stop offset=".18" stop-color="#101519"/>
+      <stop offset=".48" stop-color="#050708"/>
+      <stop offset=".72" stop-color="#12191d"/>
+      <stop offset="1" stop-color="#020303"/>
+    </linearGradient>
+    <linearGradient id="paintTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5f6b72" stop-opacity=".68"/>
+      <stop offset=".2" stop-color="#1b2328" stop-opacity=".88"/>
+      <stop offset="1" stop-color="#050708"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9fe9f7" stop-opacity=".2"/>
+      <stop offset=".18" stop-color="#314149" stop-opacity=".56"/>
+      <stop offset=".55" stop-color="#091014" stop-opacity=".95"/>
+      <stop offset="1" stop-color="#020405"/>
+    </linearGradient>
+    <linearGradient id="chrome" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4b555a"/>
+      <stop offset=".22" stop-color="#f7fbfd"/>
+      <stop offset=".45" stop-color="#68757b"/>
+      <stop offset=".72" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#313a3e"/>
+    </linearGradient>
+    <radialGradient id="tyre" cx="45%" cy="38%" r="60%">
+      <stop offset="0" stop-color="#30383c"/>
+      <stop offset=".45" stop-color="#090b0c"/>
+      <stop offset="1" stop-color="#020303"/>
+    </radialGradient>
+    <radialGradient id="rim" cx="45%" cy="38%" r="62%">
+      <stop offset="0" stop-color="#f0f5f7"/>
+      <stop offset=".18" stop-color="#67747a"/>
+      <stop offset=".45" stop-color="#22292c"/>
+      <stop offset=".75" stop-color="#8b969b"/>
+      <stop offset="1" stop-color="#121719"/>
+    </radialGradient>
+    <linearGradient id="lamp" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#baf5ff" stop-opacity=".15"/>
+      <stop offset=".35" stop-color="#f7feff"/>
+      <stop offset=".7" stop-color="#a7edff"/>
+      <stop offset="1" stop-color="#68d8ff" stop-opacity=".15"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+    <filter id="lampGlow" x="-100%" y="-200%" width="300%" height="500%">
+      <feGaussianBlur stdDeviation="11" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="625" cy="584" rx="478" ry="68" fill="#000" opacity=".58" filter="url(#shadow)"/>
+  <ellipse cx="650" cy="575" rx="394" ry="29" fill="#88e8ff" opacity=".06" filter="url(#soft)"/>
+
+  <g id="car">
+    <path d="M111 467 C146 422 206 391 300 366 C339 318 399 278 484 246 C564 215 671 203 763 218 C845 231 911 265 966 329 C1036 346 1094 377 1124 431 C1143 466 1138 511 1107 537 C1064 572 1003 584 911 586 L277 586 C198 583 142 568 112 535 C91 512 91 490 111 467Z" fill="url(#paint)" stroke="#67747a" stroke-opacity=".58" stroke-width="2"/>
+
+    <path d="M311 368 C356 310 419 271 494 244 C573 217 670 207 757 221 C820 232 873 255 918 295 L986 370 C836 351 692 346 548 349 C463 350 384 356 311 368Z" fill="url(#paintTop)" opacity=".95"/>
+
+    <path d="M440 293 C496 252 565 229 643 227 C718 225 781 244 834 281 L907 348 L379 351 C393 329 413 309 440 293Z" fill="#0a0d0f" stroke="#59656b" stroke-opacity=".45"/>
+    <path d="M466 292 C515 260 574 243 641 241 C696 239 741 250 780 270 L828 310 L673 323 L435 326 C444 311 454 301 466 292Z" fill="url(#glass)"/>
+    <path d="M792 274 C815 287 838 306 861 330 L711 327 L692 242 C733 246 766 256 792 274Z" fill="#081014" stroke="#536269" stroke-opacity=".4"/>
+    <path d="M679 242 L697 327" stroke="#c7d2d7" stroke-opacity=".25" stroke-width="3"/>
+
+    <path d="M232 424 C399 379 623 366 954 384" fill="none" stroke="url(#chrome)" stroke-opacity=".52" stroke-width="3"/>
+    <path d="M197 467 C355 437 541 426 790 431 C920 433 1017 447 1089 471" fill="none" stroke="#9cecff" stroke-opacity=".18" stroke-width="2"/>
+    <path d="M344 522 C543 533 770 532 984 508" fill="none" stroke="#e6eef1" stroke-opacity=".12" stroke-width="2"/>
+    <path d="M382 372 C455 357 538 351 623 351 C707 350 802 355 915 371" fill="none" stroke="#ffffff" stroke-opacity=".44" stroke-width="4" filter="url(#soft)"/>
+
+    <path d="M853 391 C937 385 1005 398 1061 427 L1038 455 C977 440 913 437 846 444Z" fill="#0c1114"/>
+    <path d="M896 402 C952 398 1001 407 1042 427 C1002 423 958 425 911 435Z" fill="url(#lamp)" filter="url(#lampGlow)"/>
+    <path d="M160 443 C196 423 235 409 277 398 L259 444 C220 453 184 464 152 480Z" fill="#0b1012"/>
+    <path d="M170 447 C192 436 216 427 245 419" stroke="#c9f8ff" stroke-width="5" stroke-linecap="round" opacity=".82" filter="url(#lampGlow)"/>
+
+    <path d="M924 472 C1008 466 1069 478 1114 503 C1084 530 1035 548 963 553 C934 533 920 507 924 472Z" fill="#030405" opacity=".9"/>
+    <path d="M942 493 C1001 491 1041 497 1074 511" stroke="#333c40" stroke-width="4" opacity=".75"/>
+    <path d="M940 506 C1007 505 1047 511 1082 523" stroke="#20272a" stroke-width="3" opacity=".7"/>
+    <path d="M948 519 C1003 519 1038 524 1066 533" stroke="#161c1f" stroke-width="3" opacity=".75"/>
+
+    <path d="M289 487 C356 461 419 455 474 463" fill="none" stroke="#252e32" stroke-width="2"/>
+    <path d="M742 446 C757 469 763 495 760 523" fill="none" stroke="#30393d" stroke-width="2"/>
+    <path d="M550 363 L520 511" stroke="#3d494e" stroke-opacity=".6"/>
+    <path d="M553 420 C606 414 662 414 720 418" stroke="#7e8a90" stroke-opacity=".28" stroke-width="2"/>
+    <path d="M578 428 L696 428" stroke="#000" stroke-opacity=".55" stroke-width="4" stroke-linecap="round"/>
+
+    <g transform="translate(316 523)">
+      <circle r="88" fill="url(#tyre)" stroke="#353d41" stroke-width="3"/>
+      <circle r="57" fill="url(#rim)" stroke="#a6b1b6" stroke-opacity=".5"/>
+      <circle r="18" fill="#0b0e10" stroke="#d8e0e3" stroke-opacity=".45"/>
+      <g stroke="#bcc8cd" stroke-width="8" stroke-linecap="round" opacity=".72">
+        <path d="M0 -18 L0 -49"/><path d="M17 -5 L47 -15"/><path d="M10 15 L29 40"/><path d="M-10 15 L-31 39"/><path d="M-17 -5 L-47 -16"/>
+      </g>
+    </g>
+
+    <g transform="translate(929 511)">
+      <ellipse rx="99" ry="104" fill="url(#tyre)" stroke="#353d41" stroke-width="3"/>
+      <ellipse rx="64" ry="68" fill="url(#rim)" stroke="#b7c1c5" stroke-opacity=".52"/>
+      <ellipse rx="20" ry="21" fill="#0b0e10" stroke="#d8e0e3" stroke-opacity=".45"/>
+      <g stroke="#c5d1d6" stroke-width="9" stroke-linecap="round" opacity=".72">
+        <path d="M0 -21 L0 -58"/><path d="M19 -6 L53 -18"/><path d="M12 18 L34 48"/><path d="M-12 18 L-35 48"/><path d="M-19 -6 L-53 -18"/>
+      </g>
+    </g>
+
+    <path d="M130 469 C187 438 255 421 333 411" fill="none" stroke="#f5fbfd" stroke-opacity=".3" stroke-width="5" filter="url(#soft)"/>
+    <path d="M459 273 C555 231 679 224 772 251" fill="none" stroke="#ffffff" stroke-opacity=".34" stroke-width="7" filter="url(#soft)"/>
+    <path d="M493 252 C558 229 629 220 699 224" fill="none" stroke="#c9f8ff" stroke-opacity=".18" stroke-width="3"/>
+    <path d="M356 399 C527 369 747 368 943 391" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="16" filter="url(#soft)"/>
+  </g>
+
+  <g id="water-beads" fill="#d9fbff" stroke="#ffffff" stroke-opacity=".55">
+    <circle cx="513" cy="386" r="3" opacity=".65"/>
+    <circle cx="556" cy="375" r="2.2" opacity=".8"/>
+    <circle cx="603" cy="395" r="2.5" opacity=".55"/>
+    <circle cx="680" cy="374" r="3.4" opacity=".6"/>
+    <circle cx="732" cy="393" r="2.1" opacity=".75"/>
+    <circle cx="787" cy="382" r="2.8" opacity=".58"/>
+    <circle cx="833" cy="411" r="2.4" opacity=".7"/>
+    <circle cx="430" cy="416" r="2.6" opacity=".56"/>
+  </g>
+</svg>
