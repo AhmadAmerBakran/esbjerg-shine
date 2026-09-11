@@ -1,0 +1,23 @@
+---
+import { company } from '../data/company';
+---
+<header class="site-header" data-header>
+  <div class="shell site-header__inner">
+    <a class="brand" href="/" aria-label="Esbjerg Shine – forsiden">
+      <span class="brand__mark" aria-hidden="true">ES</span>
+      <span class="brand__text"><strong>ESBJERG SHINE</strong><small>Detaljer der skinner.</small></span>
+    </a>
+
+    <nav class="nav" id="hovednavigation" aria-label="Hovednavigation" data-nav>
+      <a href="/#ydelser">Ydelser</a>
+      <a href="/#foer-efter">Før / efter</a>
+      <a href="/#om">Om os</a>
+      <a href="/#kontakt">Kontakt</a>
+      <a class="nav__cta" href={`tel:${company.phoneHref}`}>Ring nu</a>
+    </nav>
+
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="hovednavigation" aria-label="Åbn menu" data-menu-button>
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
