@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/creative.css';
 import { company } from '../data/company';
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
   description: string;
   canonicalPath?: string;
   noindex?: boolean;
+  bodyClass?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
@@ -15,6 +17,7 @@ const {
   description,
   canonicalPath = Astro.url.pathname,
   noindex = false,
+  bodyClass = '',
   schema
 } = Astro.props;
 
@@ -89,7 +92,7 @@ const structuredData = {
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
     <script src="/site.js" defer></script>
   </head>
-  <body>
+  <body class={bodyClass}>
     <a class="skip-link" href="#indhold">Gå direkte til indholdet</a>
     <slot />
   </body>
