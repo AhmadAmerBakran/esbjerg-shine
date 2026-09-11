@@ -25,105 +25,160 @@ const serviceSchema = {
   }))
 };
 ---
-<BaseLayout title={title} description={description} schema={serviceSchema}>
+<BaseLayout title={title} description={description} schema={serviceSchema} bodyClass="creative-home">
   <div id="top"></div>
   <Header />
+
   <main id="indhold">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero__glow hero__glow--one" aria-hidden="true"></div>
-      <div class="hero__glow hero__glow--two" aria-hidden="true"></div>
-      <div class="shell hero__grid">
-        <div class="hero__copy reveal">
+    <section class="shine-hero" aria-labelledby="hero-title">
+      <div class="shine-hero__word" aria-hidden="true">SHINE</div>
+
+      <div class="shell shine-hero__content">
+        <div class="shine-hero__intro reveal">
           <p class="eyebrow">Bilpleje · Esbjerg</p>
-          <h1 id="hero-title">Din bil.<br /><span>Skærpet til detaljen.</span></h1>
-          <p class="hero__lead">Fra den grundige håndvask til polering og lakbeskyttelse. Esbjerg Shine arbejder med detaljen, finishen og det resultat, du faktisk kan se.</p>
-          <div class="hero__actions">
-            <a class="button button--primary" href="#kontakt"><span>Få et uforpligtende tilbud</span><i aria-hidden="true">↗</i></a>
+          <h1 id="hero-title">Finish du <span class="outline">kan mærke.</span></h1>
+        </div>
+
+        <div class="shine-hero__side reveal" data-delay="1">
+          <p>Vask, klargøring, polering og beskyttelse — udført med blik for overfladen, lyset og de små detaljer, der ændrer hele bilen.</p>
+          <div class="shine-hero__actions">
+            <a class="button button--primary" href="#kontakt"><span>Få et tilbud</span><i aria-hidden="true">↗</i></a>
             <a class="button button--ghost" href={`tel:${company.phoneHref}`}><span>{company.phoneDisplay}</span><i aria-hidden="true">☎</i></a>
           </div>
-          <div class="hero__trust" aria-label="Det kan du forvente">
-            <span>Efter aftale</span><span>Lokalt i Esbjerg</span><span>Detaljefokus</span>
-          </div>
-        </div>
-
-        <div class="hero__visual reveal" aria-label="Plads til et kommende projektfoto">
-          <div class="hero-card">
-            <div class="hero-card__shine" aria-hidden="true"></div>
-            <div class="hero-card__car" aria-hidden="true">
-              <span class="hero-card__roof"></span><span class="hero-card__body"></span><span class="hero-card__wheel hero-card__wheel--left"></span><span class="hero-card__wheel hero-card__wheel--right"></span>
-            </div>
-            <div class="hero-card__meta"><span>ESBJERG SHINE</span><small>Projektfoto indsættes senere</small></div>
-          </div>
         </div>
       </div>
-      <a class="hero__scroll" href="#ydelser"><span>Se ydelser</span><i aria-hidden="true"></i></a>
-    </section>
 
-    <section class="ticker" aria-label="Udvalgte ydelser">
-      <div class="ticker__track" aria-hidden="true">
-        <span>Håndvask</span><i>✦</i><span>Polering</span><i>✦</i><span>Klargøring</span><i>✦</i><span>Lakbeskyttelse</span><i>✦</i><span>Indvendig bilpleje</span><i>✦</i><span>Sæderens</span><i>✦</i>
-        <span>Håndvask</span><i>✦</i><span>Polering</span><i>✦</i><span>Klargøring</span><i>✦</i><span>Lakbeskyttelse</span><i>✦</i><span>Indvendig bilpleje</span><i>✦</i><span>Sæderens</span><i>✦</i>
+      <div class="shine-stage reveal" data-delay="2" data-tilt aria-label="Visuel pladsholder til Esbjerg Shine projektfoto">
+        <div class="shine-stage__floor" aria-hidden="true"></div>
+        <div class="shine-stage__halo" aria-hidden="true"></div>
+        <div class="concept-car" aria-hidden="true">
+          <span class="concept-car__roof"></span>
+          <span class="concept-car__body"></span>
+          <span class="concept-car__cut"></span>
+          <span class="concept-car__wheel concept-car__wheel--a"></span>
+          <span class="concept-car__wheel concept-car__wheel--b"></span>
+          <span class="concept-car__beam"></span>
+        </div>
+        <span class="stage-chip stage-chip--one"><small>Overflade</small><strong>Kontrolleret finish</strong></span>
+        <span class="stage-chip stage-chip--two"><small>Lokalt</small><strong>Esbjerg · 6700</strong></span>
+        <span class="stage-chip stage-chip--three"><small>Åbning</small><strong>Efter aftale</strong></span>
+      </div>
+
+      <div class="shell shine-hero__bottom reveal" data-delay="3" aria-label="Esbjerg Shine nøgleoplysninger">
+        <div class="hero-stat"><small>01 / Fokus</small><strong>Detaljer & finish</strong></div>
+        <div class="hero-stat"><small>02 / Kontakt</small><strong>Direkte & enkelt</strong></div>
+        <div class="hero-stat"><small>03 / Lokation</small><strong>Randersvej 26, Esbjerg</strong></div>
       </div>
     </section>
 
-    <section class="section" id="ydelser" aria-labelledby="services-title">
+    <section class="creative-section treatments" id="ydelser" aria-labelledby="services-title">
       <div class="shell">
-        <header class="section-heading reveal">
-          <div><p class="eyebrow">Ydelser</p><h2 id="services-title">Bilpleje, der <span>kan ses.</span></h2></div>
-          <p>Vi starter med bilen og dit ønskede resultat. Vælg den behandling, der passer bedst, eller kontakt os hvis du er i tvivl.</p>
+        <header class="creative-section__head reveal">
+          <div>
+            <p class="eyebrow">Behandlinger</p>
+            <h2 id="services-title">Ikke en vask.<br /><span>En behandling.</span></h2>
+          </div>
+          <p>Hver bil starter et andet sted. Derfor er ydelserne bygget omkring bilens stand og det resultat, du ønsker — ikke omkring et standardforløb.</p>
         </header>
-        <div class="service-grid">
+
+        <div class="treatment-list">
           {services.map((service, index) => (
-            <article class="service-card reveal">
-              <a href={`/ydelser/${service.slug}/`} aria-label={`Læs mere om ${service.title}`}>
-                <span class="service-card__number">0{index + 1}</span>
-                <span class="service-card__visual" aria-hidden="true"><i></i><b>Projektfoto</b></span>
-                <span class="service-card__body"><small>{service.eyebrow}</small><strong>{service.title}</strong><p>{service.summary}</p><em>Læs mere <b aria-hidden="true">↗</b></em></span>
+            <article class="treatment-row reveal" data-delay={String(index % 3)}>
+              <a href={`/ydelser/${service.slug}/`}>
+                <span class="treatment-row__number">0{index + 1}</span>
+                <h3>{service.title}</h3>
+                <p>{service.summary}</p>
+                <span class="treatment-row__arrow" aria-hidden="true">↗</span>
               </a>
+              <span class="treatment-row__pulse" aria-hidden="true"></span>
             </article>
           ))}
         </div>
-        <div class="section-link reveal"><a href="/ydelser/">Se alle ydelser samlet <span aria-hidden="true">→</span></a></div>
       </div>
     </section>
 
-    <section class="section section--contrast" id="foer-efter" aria-labelledby="comparison-title">
-      <div class="shell comparison-grid">
-        <div class="comparison-copy reveal">
-          <p class="eyebrow">Før / efter</p>
-          <h2 id="comparison-title">Forskellen skal ikke forklares.<br /><span>Den skal kunne ses.</span></h2>
-          <p>Når vi får de første rigtige projektbilleder, bliver de vist her i samme vinkel før og efter behandlingen. Træk håndtaget for at sammenligne.</p>
-          <ul class="check-list"><li>Mobil- og tastaturvenlig slider</li><li>Ingen tung billedplugin</li><li>Optimerede billeder i flere størrelser</li></ul>
+    <section class="creative-section comparison-lab" id="foer-efter" aria-labelledby="comparison-title">
+      <div class="shell comparison-lab__grid">
+        <div class="comparison-lab__copy reveal">
+          <p class="eyebrow">Før / efter lab</p>
+          <h2 id="comparison-title">Se forskellen.<br /><span>Skift projekt.</span></h2>
+          <p>Én sammenligning er ikke nok. Derfor samler vi flere før- og efterforløb i samme visning. Brug pilene til at skifte bil eller behandling — og træk derefter gennem resultatet.</p>
+          <div class="comparison-lab__hint" aria-label="Sådan bruges sammenligningen">
+            <span><i aria-hidden="true"></i> Træk vandret for før / efter</span>
+            <span><i aria-hidden="true"></i> Brug pilene til næste projekt</span>
+            <span><i aria-hidden="true"></i> Fungerer med touch og tastatur</span>
+          </div>
         </div>
-        <div class="reveal"><BeforeAfter /></div>
+        <div class="reveal" data-delay="1"><BeforeAfter /></div>
       </div>
     </section>
 
-    <section class="section" id="om" aria-labelledby="about-title">
-      <div class="shell about-grid">
-        <div class="about-panel reveal" aria-hidden="true"><span class="about-panel__line"></span><strong>Detaljer<br />der skinner.</strong><small>Esbjerg · 6700</small></div>
-        <div class="about-copy reveal">
-          <p class="eyebrow">Esbjerg Shine</p>
-          <h2 id="about-title">Rolig proces.<br /><span>Skarpt resultat.</span></h2>
-          <p>Esbjerg Shine er en lokal bilplejevirksomhed i Esbjerg. Målet er enkelt: bilen skal afleveres med en finish, hvor arbejdet i detaljerne kan ses.</p>
-          <p>Behandlingen aftales efter bilens stand og dit behov. Derfor arbejder vi efter aftale frem for faste åbningstider.</p>
-          <div class="facts"><div><small>Adresse</small><a href={company.mapUrl} target="_blank" rel="noopener noreferrer">{company.address.street}<br />{company.address.postalCode} {company.address.city} ↗</a></div><div><small>Åbning</small><span>{company.openingText}</span></div><div><small>CVR</small><span>{company.cvr}</span></div></div>
+    <section class="creative-section process-section" aria-labelledby="process-title">
+      <div class="shell">
+        <div class="process-intro reveal">
+          <div>
+            <p class="eyebrow">Processen</p>
+            <h2 id="process-title">Tre trin.<br /><span>Ingen støj.</span></h2>
+          </div>
+          <p>Fra første besked til bilen står klar, skal forløbet føles lige så gennemført som finishen.</p>
+        </div>
+
+        <div class="process-rail">
+          <article class="process-step reveal" data-step="01">
+            <small>01 · Vurdering</small>
+            <h3>Vi ser på bilen.</h3>
+            <p>Du fortæller kort om bilen og det ønskede resultat. Vi vurderer stand, behov og den rigtige behandling.</p>
+          </article>
+          <article class="process-step reveal" data-step="02" data-delay="1">
+            <small>02 · Behandling</small>
+            <h3>Detaljerne får tiden.</h3>
+            <p>Arbejdet udføres systematisk, så vask, rens, polering eller beskyttelse hænger sammen som ét resultat.</p>
+          </article>
+          <article class="process-step reveal" data-step="03" data-delay="2">
+            <small>03 · Aflevering</small>
+            <h3>Finishen taler selv.</h3>
+            <p>Bilen gennemgås før aflevering, så resultatet står rent, ensartet og klar til at blive set i dagslys.</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="section section--contact" id="kontakt" aria-labelledby="contact-title">
-      <div class="shell contact-grid">
-        <div class="contact-copy reveal">
+    <section class="creative-section identity-section" id="om" aria-labelledby="about-title">
+      <div class="shell">
+        <div class="identity-statement reveal">
+          <span class="identity-statement__index">ES / 6700</span>
+          <h2 id="about-title">Det handler om <em>finish</em>, ikke bare om rent.</h2>
+        </div>
+
+        <div class="identity-grid reveal" data-delay="1">
+          <div class="identity-copy">
+            <p>Esbjerg Shine er lokal bilpleje i Esbjerg med fokus på den synlige forskel: dybere glans, renere flader, skarpere detaljer og en bil der føles ordentligt afleveret.</p>
+            <p>Vi arbejder efter aftale, så behandlingen kan tilpasses bilen frem for et fast tidsvindue.</p>
+          </div>
+          <div class="identity-facts">
+            <div class="fact-line"><small>Adresse</small><a href={company.mapUrl} target="_blank" rel="noopener noreferrer">{company.address.street}, {company.address.postalCode} {company.address.city} ↗</a></div>
+            <div class="fact-line"><small>Telefon</small><a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a></div>
+            <div class="fact-line"><small>Åbning</small><span>{company.openingText}</span></div>
+            <div class="fact-line"><small>Virksomhed</small><span>{company.entityType} · CVR {company.cvr}</span></div>
+            <div class="fact-line"><small>Social</small><span><a href={company.facebook} target="_blank" rel="noopener noreferrer">Facebook ↗</a> · <a href={company.instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="creative-section contact-stage" id="kontakt" aria-labelledby="contact-title">
+      <div class="shell contact-stage__grid">
+        <div class="contact-stage__copy reveal">
           <p class="eyebrow">Kontakt</p>
-          <h2 id="contact-title">Fortæl os om <span>din bil.</span></h2>
-          <p>Send en kort beskrivelse af bilen og den behandling, du overvejer. Vi vender tilbage med næste skridt og et tilbud.</p>
+          <h2 id="contact-title">Din bil.<br /><span>Næste.</span></h2>
+          <p>Fortæl hvad du kører i, hvordan bilen ser ud nu, og hvad du gerne vil opnå. Vi vender tilbage med næste skridt.</p>
           <a class="contact-phone" href={`tel:${company.phoneHref}`}><small>Vil du hellere ringe?</small><strong>{company.phoneDisplay}</strong></a>
           <div class="social-links"><a href={company.facebook} target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href={company.instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a></div>
         </div>
-        <div class="contact-card reveal"><ContactForm /></div>
+        <div class="contact-card reveal" data-delay="1"><ContactForm /></div>
       </div>
     </section>
   </main>
+
   <Footer />
 </BaseLayout>
