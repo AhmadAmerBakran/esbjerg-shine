@@ -1,0 +1,49 @@
+---
+import { services } from '../data/services';
+---
+<form class="contact-form" data-contact-form novalidate>
+  <input type="hidden" name="startedAt" value="" data-started-at />
+  <div class="honeypot" aria-hidden="true">
+    <label>Hjemmeside <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <div class="form-grid">
+    <label class="field">
+      <span>Navn <b aria-hidden="true">*</b></span>
+      <input type="text" name="navn" autocomplete="name" maxlength="80" required />
+    </label>
+    <label class="field">
+      <span>Telefon</span>
+      <input type="tel" name="telefon" autocomplete="tel" inputmode="tel" maxlength="30" />
+    </label>
+  </div>
+
+  <label class="field">
+    <span>E-mail <b aria-hidden="true">*</b></span>
+    <input type="email" name="email" autocomplete="email" maxlength="120" required />
+  </label>
+
+  <label class="field">
+    <span>Hvad drejer det sig om? <b aria-hidden="true">*</b></span>
+    <select name="ydelse" required>
+      <option value="">Vælg en ydelse</option>
+      {services.map((service) => <option value={service.title}>{service.title}</option>)}
+      <option value="Andet">Andet</option>
+    </select>
+  </label>
+
+  <label class="field">
+    <span>Fortæl kort om bilen og opgaven <b aria-hidden="true">*</b></span>
+    <textarea name="besked" rows="6" maxlength="2500" placeholder="Fx bilmodel, ønsket behandling og hvad du gerne vil have hjælp til." required></textarea>
+  </label>
+
+  <label class="consent">
+    <input type="checkbox" name="samtykke" required />
+    <span>Jeg accepterer, at Esbjerg Shine bruger oplysningerne til at besvare min henvendelse. <a href="/privatliv/">Læs om privatliv</a>.</span>
+  </label>
+
+  <div class="form-actions">
+    <button class="button button--primary" type="submit"><span>Send forespørgsel</span><i aria-hidden="true">↗</i></button>
+    <p class="form-status" role="status" aria-live="polite" data-form-status></p>
+  </div>
+</form>
