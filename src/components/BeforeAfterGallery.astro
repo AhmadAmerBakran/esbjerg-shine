@@ -1,0 +1,56 @@
+---
+const projects = [
+  { title: 'Lak & glans', meta: 'Polering · Projekt 01', beforeTone: 'warm', afterTone: 'ice' },
+  { title: 'Kabine', meta: 'Indvendig bilpleje · Projekt 02', beforeTone: 'dust', afterTone: 'clean' },
+  { title: 'Fælge', meta: 'Detaljerens · Projekt 03', beforeTone: 'graphite', afterTone: 'chrome' },
+  { title: 'Komplet klargøring', meta: 'Inde + ude · Projekt 04', beforeTone: 'night', afterTone: 'blue' }
+];
+---
+<div class="ba-gallery" data-ba-gallery aria-label="Før og efter projekter">
+  <div class="ba-gallery__stage">
+    {projects.map((project, index) => (
+      <article class:list={['ba-project', { 'is-active': index === 0 }]} data-ba-project data-index={index} aria-hidden={index === 0 ? 'false' : 'true'}>
+        <div class="ba-project__meta">
+          <span>{project.meta}</span>
+          <strong>{project.title}</strong>
+        </div>
+
+        <div class="ba-comparison" data-comparison style="--position: 52%;">
+          <div class={`ba-scene ba-scene--after tone-${project.afterTone}`} aria-hidden="true">
+            <div class="ba-placeholder">
+              <span>EFTER</span>
+              <small>Rigtigt projektfoto indsættes her</small>
+            </div>
+          </div>
+          <div class={`ba-scene ba-scene--before tone-${project.beforeTone}`} aria-hidden="true">
+            <div class="ba-placeholder">
+              <span>FØR</span>
+              <small>Samme vinkel · før behandling</small>
+            </div>
+          </div>
+          <div class="ba-divider" aria-hidden="true"><span>↔</span></div>
+          <input class="ba-range" type="range" min="0" max="100" value="52" aria-label={`Sammenlign før og efter for ${project.title}`} data-comparison-range />
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <div class="ba-gallery__controls">
+    <button type="button" class="ba-arrow" data-ba-prev aria-label="Forrige projekt">←</button>
+    <div class="ba-dots" role="tablist" aria-label="Vælg før og efter projekt">
+      {projects.map((project, index) => (
+        <button
+          type="button"
+          class:list={['ba-dot', { 'is-active': index === 0 }]}
+          data-ba-dot
+          data-index={index}
+          role="tab"
+          aria-selected={index === 0 ? 'true' : 'false'}
+          aria-label={`Vis ${project.title}`}
+        ></button>
+      ))}
+    </div>
+    <div class="ba-counter" aria-live="polite"><span data-ba-current>01</span><i>/</i><span>0{projects.length}</span></div>
+    <button type="button" class="ba-arrow" data-ba-next aria-label="Næste projekt">→</button>
+  </div>
+</div>
