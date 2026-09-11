@@ -23,8 +23,7 @@ const canonical = new URL(canonicalPath, site).toString();
 const home = site.toString().replace(/\/$/, '');
 
 const localBusinessSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'AutoWash',
+  '@type': 'AutomotiveBusiness',
   '@id': `${home}/#virksomhed`,
   name: company.name,
   legalName: company.legalName,
@@ -49,7 +48,7 @@ const graph = Array.isArray(schema) ? schema : schema ? [schema] : [];
 const structuredData = {
   '@context': 'https://schema.org',
   '@graph': [
-    { ...localBusinessSchema, '@context': undefined },
+    localBusinessSchema,
     {
       '@type': 'WebSite',
       '@id': `${home}/#website`,
