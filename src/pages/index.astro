@@ -7,6 +7,7 @@ import ContactForm from '../components/ContactForm.astro';
 import { company } from '../data/company';
 import { services } from '../data/services';
 import '../styles/three-d-concept.css';
+import '../styles/three-d-concept-v2.css';
 
 const title = 'Bilpleje i Esbjerg | Esbjerg Shine';
 const description = 'Esbjerg Shine tilbyder bilpleje, klargøring, polering, håndvask og lakbeskyttelse i Esbjerg. Kontakt os og få et tilbud tilpasset din bil.';
@@ -31,15 +32,9 @@ const serviceSchema = {
     <Header />
 
     <main id="indhold">
-      <section class="hero3d" aria-labelledby="hero-title">
-        <div class="bubble-field" aria-hidden="true">
-          <i style="--size:18px;--x:8%;--speed:12s;--delay:-4s;--drift:22px"></i>
-          <i style="--size:31px;--x:19%;--speed:17s;--delay:-12s;--drift:-18px"></i>
-          <i style="--size:14px;--x:37%;--speed:13s;--delay:-8s;--drift:27px"></i>
-          <i style="--size:25px;--x:54%;--speed:18s;--delay:-3s;--drift:-24px"></i>
-          <i style="--size:11px;--x:66%;--speed:11s;--delay:-7s;--drift:18px"></i>
-          <i style="--size:35px;--x:78%;--speed:19s;--delay:-14s;--drift:-30px"></i>
-          <i style="--size:17px;--x:91%;--speed:14s;--delay:-5s;--drift:16px"></i>
+      <section class="hero3d hero3d--studio" aria-labelledby="hero-title">
+        <div class="hero3d__ambient" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i>
         </div>
 
         <div class="shell hero3d__grid">
@@ -56,23 +51,39 @@ const serviceSchema = {
             </div>
           </div>
 
-          <div class="hero3d__scene" data-hero-scene aria-label="Animeret 3D-koncept af bil i detailing-studie">
-            <div class="hero3d__portal" aria-hidden="true"></div>
-            <div class="hero3d__floor" aria-hidden="true"></div>
-            <div class="car3d" aria-hidden="true">
-              <span class="car3d__roof"></span>
-              <span class="car3d__glass"></span>
-              <span class="car3d__body"></span>
-              <span class="car3d__line"></span>
-              <span class="car3d__wheel car3d__wheel--left"></span>
-              <span class="car3d__wheel car3d__wheel--right"></span>
-              <span class="car3d__scan"></span>
-              <span class="car3d__spark"></span>
+          <div class="detail-lab" data-hero-scene aria-label="Detaljeret bil i et digitalt detailing-studie">
+            <div class="detail-lab__ceiling" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
             </div>
-            <div class="hero3d__chip hero3d__chip--a"><small>Finish</small><strong>Spejlblank</strong></div>
-            <div class="hero3d__chip hero3d__chip--b"><small>Proces</small><strong>Detalje for detalje</strong></div>
-            <div class="hero3d__chip hero3d__chip--c"><small>Lokation</small><strong>6700 Esbjerg</strong></div>
+            <div class="detail-lab__backwall" aria-hidden="true"></div>
+            <div class="detail-lab__floor" aria-hidden="true"></div>
+            <div class="detail-lab__reflection" aria-hidden="true"></div>
+
+            <div class="detail-lab__car" aria-hidden="true">
+              <img src="/hero-detailing-car.svg" width="1200" height="720" alt="" decoding="async" fetchpriority="high" />
+              <span class="detail-lab__paint-scan"></span>
+              <span class="detail-lab__inspection-line"></span>
+            </div>
+
+            <div class="detail-tool detail-tool--polisher" aria-hidden="true">
+              <span class="detail-tool__handle"></span><span class="detail-tool__head"></span><span class="detail-tool__pad"></span>
+            </div>
+            <div class="detail-tool detail-tool--sprayer" aria-hidden="true">
+              <span class="detail-tool__gun"></span><span class="detail-tool__nozzle"></span><span class="detail-tool__spray"></span>
+            </div>
+
+            <div class="detail-lab__mist" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+
+            <div class="detail-readout detail-readout--paint"><small>LAK</small><strong>Glans & dybde</strong><span></span></div>
+            <div class="detail-readout detail-readout--care"><small>PLEJE</small><strong>Håndarbejde</strong><span></span></div>
+            <div class="detail-readout detail-readout--local"><small>ESBJERG</small><strong>Efter aftale</strong><span></span></div>
           </div>
+        </div>
+
+        <div class="hero3d__rail" aria-hidden="true">
+          <span>Håndvask</span><i></i><span>Polering</span><i></i><span>Coating</span><i></i><span>Klargøring</span><i></i><span>Interiør</span>
         </div>
       </section>
 
@@ -84,15 +95,15 @@ const serviceSchema = {
               <p class="eyebrow">Behandlinger</p>
               <h2 id="services-title">Vælg din <span>finish.</span></h2>
             </div>
-            <p>Hver behandling åbner med sin egen “wash transition”. Det er en bevidst del af oplevelsen: siden bliver visuelt skyllet ren, før næste behandling vises.</p>
+            <p>Hver behandling har sit eget visuelle værktøj og åbner med en kort wash-transition, så oplevelsen føles bygget til bilpleje i stedet for som en almindelig serviceside.</p>
           </header>
 
           <div class="services3d__deck">
             {services.map((service, index) => (
-              <article class="service3d s3-reveal" data-tilt style={`--i:${index + 1}`}>
+              <article class={`service3d service3d--${service.slug} s3-reveal`} data-tilt style={`--i:${index + 1}`}>
                 <a href={`/ydelser/${service.slug}/`} data-service-link aria-label={`Åbn ${service.title}`}>
                   <span class="service3d__number">0{index + 1}</span>
-                  <span class="service3d__object" aria-hidden="true">
+                  <span class="service3d__object" data-tool={service.slug} aria-hidden="true">
                     <i class="service3d__disc"></i>
                     <i class="service3d__orb"></i>
                     <i class="service3d__beam"></i>
@@ -117,7 +128,7 @@ const serviceSchema = {
           <div class="results3d__copy s3-reveal">
             <p class="eyebrow">Før / efter</p>
             <h2 id="results-title">Et resultat.<br /><span>Mange vinkler.</span></h2>
-            <p>Her bliver alle hans før/efter-projekter samlet i én 3D-ramme. Skift projekt med pilene, og træk derefter gennem billedet for at se forskellen.</p>
+            <p>Alle før/efter-projekter kan samles i én ramme. Skift projekt med pilene, og træk derefter gennem billedet for at se forskellen.</p>
             <div class="results3d__hint">Træk for at sammenligne · skift projekt med pilene</div>
           </div>
           <div class="s3-reveal"><BeforeAfterGallery /></div>
@@ -161,7 +172,7 @@ const serviceSchema = {
             <p class="eyebrow">Esbjerg Shine</p>
             <h2 id="about-title">Detaljer der <span>skinner.</span></h2>
             <p>Esbjerg Shine er lokal bilpleje i Esbjerg med fokus på håndværket omkring vask, rengøring, polering, lak og finish. Arbejdet foregår efter aftale, så behandlingen kan tilpasses bilen.</p>
-            <p>Designet her er bevidst bygget omkring blank lak, refleksioner, vand, dybde og lys i stedet for et klassisk håndværker-layout.</p>
+            <p>Det visuelle univers er bygget omkring lak, refleksioner, vand, lys, værktøj og den transformation bilen gennemgår under en behandling.</p>
             <div class="identity3d__facts">
               <div><small>Adresse</small><a href={company.mapUrl} target="_blank" rel="noopener noreferrer">{company.address.street}, {company.address.postalCode} {company.address.city} ↗</a></div>
               <div><small>Åbning</small><span>{company.openingText}</span></div>
