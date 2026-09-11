@@ -116,7 +116,8 @@ const sendMessage = async (config, token, message) => {
   return response.ok;
 };
 
-export async function onRequestPost({ request, env, waitUntil }) {
+export async function onRequestPost(context) {
+  const { request, env } = context;
   if (!sameOrigin(request)) return json({ ok: false, code: 'origin' }, 403);
   const contentType = request.headers.get('Content-Type') || '';
   if (!contentType.toLowerCase().startsWith('application/json')) return json({ ok: false, code: 'content_type' }, 415);
@@ -172,7 +173,7 @@ export async function onRequestPost({ request, env, waitUntil }) {
   }).catch(() => false);
   if (!sent) return json({ ok: false, code: 'delivery_failed' }, 502);
 
-  waitUntil(markRate(rate.key));
+  context.waitUntil(markRate(rate.key));
   return json({ ok: true });
 }
 
