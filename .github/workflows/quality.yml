@@ -26,8 +26,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: package.json
 
       - name: Install
         run: npm install --no-audit --no-fund
@@ -58,7 +56,7 @@ jobs:
           test -f dist/sitemap.xml
           grep -q 'lang="da-DK"' dist/index.html
           grep -q 'Bilpleje i Esbjerg' dist/index.html
-          grep -q 'LocalBusiness\|AutoWash' dist/index.html
+          grep -q 'AutomotiveBusiness\|AutoWash\|LocalBusiness' dist/index.html
           grep -q 'sitemap.xml' dist/robots.txt
 
       - name: Start local server
