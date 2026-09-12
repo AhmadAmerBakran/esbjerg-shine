@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { company } from '../../data/company';
 import { services, type Service } from '../../data/services';
 import '../../styles/rainline.css';
+import '../../styles/rainline-service.css';
 
 export function getStaticPaths() {
   return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
