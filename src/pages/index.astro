@@ -4,7 +4,7 @@ import BeforeAfterGallery from '../components/BeforeAfterGallery.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { company } from '../data/company';
 import { services } from '../data/services';
-import '../styles/atelier-luxe.css';
+import '../styles/rainline.css';
 
 const title = 'Bilpleje i Esbjerg | Esbjerg Shine';
 const description = 'Esbjerg Shine tilbyder bilpleje, klargøring, polering, håndvask og lakbeskyttelse i Esbjerg. Kontakt os og få et tilbud tilpasset din bil.';
@@ -24,90 +24,95 @@ const serviceSchema = {
   }))
 };
 
-const materialNames = ['WATER', 'LEATHER', 'FINISH', 'PAINT', 'CERAMIC', 'TEXTILE'];
+const materialNames: Record<string, string> = {
+  'bilvask': 'WATER / CONTACT',
+  'indvendig-bilpleje': 'CABIN / MATERIAL',
+  'komplet-klargoering': 'FULL / RESET',
+  'polering': 'PAINT / CORRECTION',
+  'lakbeskyttelse': 'COAT / PROTECT',
+  'saederens': 'TEXTILE / EXTRACTION'
+};
 ---
 <BaseLayout title={title} description={description} schema={serviceSchema}>
-  <div class="atelier" id="top" data-atelier>
-    <div class="atelier__progress" aria-hidden="true"><i data-progress></i></div>
-
-    <header class="atelier-nav" data-nav>
-      <a class="atelier-brand" href="#top" aria-label="Esbjerg Shine – forside">
-        <span class="atelier-brand__monogram">ES</span>
-        <span class="atelier-brand__name"><strong>ESBJERG SHINE</strong><small>DETAILING ATELIER · 6700</small></span>
+  <div class="rainline-site" id="top" data-rainline-site>
+    <header class="rainline-nav" data-rainline-nav>
+      <a class="rainline-brand" href="#top" aria-label="Esbjerg Shine – forside">
+        <span class="rainline-brand__monogram">ES</span>
+        <span class="rainline-brand__copy"><strong>ESBJERG SHINE</strong><small>DETAILING · ESBJERG</small></span>
       </a>
-      <nav class="atelier-menu" aria-label="Primær navigation">
-        <a href="#behandlinger">Behandlinger</a>
-        <a href="#lak">Lak</a>
+      <nav class="rainline-menu" aria-label="Primær navigation">
+        <a href="#ydelser">Ydelser</a>
         <a href="#resultater">Resultater</a>
+        <a href="#metode">Metode</a>
         <a href="#kontakt">Kontakt</a>
       </nav>
-      <a class="atelier-call" href={`tel:${company.phoneHref}`}><span>Ring</span><strong>{company.phoneDisplay}</strong></a>
+      <a class="rainline-phone" href={`tel:${company.phoneHref}`}>{company.phoneDisplay}<span aria-hidden="true">↗</span></a>
     </header>
 
     <main id="indhold">
-      <section class="atelier-hero" aria-labelledby="hero-title">
-        <div class="atelier-shell atelier-hero__layout">
-          <div class="atelier-hero__copy atelier-reveal">
-            <div class="atelier-label"><span>ESBJERG / DENMARK</span><i></i><span>DETAILING AFTER APPOINTMENT</span></div>
-            <h1 id="hero-title">Finish er<br /><em>en følelse.</em></h1>
-            <p>Bilpleje med fokus på det, der gør forskellen på tæt hold: klar lak, rene materialer, skarpe kanter og en overflade, der reagerer rigtigt i lyset.</p>
-            <div class="atelier-hero__actions">
-              <a class="atelier-link atelier-link--primary" href="#behandlinger"><span>Udforsk behandlinger</span><i>↘</i></a>
-              <a class="atelier-link" href="#kontakt"><span>Få et tilbud</span><i>↗</i></a>
+      <section class="rainline-hero" aria-labelledby="rainline-title">
+        <div class="rainline-hero__rule" aria-hidden="true"></div>
+        <div class="rainline-shell rainline-hero__grid">
+          <div class="rainline-hero__copy rl-reveal">
+            <p class="rl-kicker">ESBJERG · DETAILING · EFTER AFTALE</p>
+            <h1 id="rainline-title">Finish du kan<br /><em>se i lyset.</em></h1>
+            <p class="rainline-hero__lead">Håndvask, polering, kabinepleje og lakbeskyttelse udført med ro, præcision og respekt for materialerne.</p>
+            <div class="rainline-actions">
+              <a class="rl-action rl-action--light" href="#ydelser">Se behandlinger <span>↓</span></a>
+              <a class="rl-action" href="#kontakt">Få et tilbud <span>↗</span></a>
             </div>
+            <dl class="rainline-hero__facts">
+              <div><dt>Studio</dt><dd>Randersvej 26</dd></div>
+              <div><dt>Åbning</dt><dd>Efter aftale</dd></div>
+              <div><dt>Fokus</dt><dd>Lak · Kabine · Finish</dd></div>
+            </dl>
           </div>
 
-          <div class="coachwork atelier-reveal" data-coachwork aria-label="Interaktiv visualisering af lak og karrosserilinjer">
-            <div class="coachwork__viewport">
-              <div class="coachwork__body">
-                <div class="coachwork__shoulder"></div>
-                <div class="coachwork__crease"></div>
-                <div class="coachwork__arch"></div>
-                <div class="coachwork__vent"><i></i><i></i><i></i><i></i><i></i></div>
-                <div class="coachwork__lamp"><span></span></div>
-                <div class="coachwork__specular"></div>
-                <div class="coachwork__inspection"></div>
-                <div class="coachwork__beads" data-coach-beads></div>
+          <div class="windshield-piece rl-reveal" data-windshield-piece aria-label="Abstrakt detalje inspireret af vådt bilglas og blank lak">
+            <div class="windshield-piece__glass">
+              <div class="windshield-piece__rain" aria-hidden="true">
+                {Array.from({ length: 18 }).map((_, index) => <i style={`--i:${index}`}></i>)}
               </div>
-              <div class="coachwork__trim"><span>PAINT / 01</span><strong>BLACK CLEARCOAT</strong><i>INSPECTION LIGHT</i></div>
+              <div class="windshield-piece__reflection" aria-hidden="true"></div>
+              <div class="windshield-piece__cut" aria-hidden="true"></div>
+              <div class="windshield-piece__hood" aria-hidden="true"><i></i><b></b></div>
+              <div class="windshield-piece__light-signature" aria-hidden="true"><i></i><i></i><i></i></div>
+              <div class="windshield-piece__caption"><span>GLASS / PAINT / LIGHT</span><strong>Controlled surface. Clean reflection.</strong></div>
             </div>
-            <div class="coachwork__legend" aria-hidden="true"><span>REFLECTION</span><span>EDGE</span><span>DEPTH</span><span>FINISH</span></div>
+            <div class="windshield-piece__scale" aria-hidden="true"><span>01</span><i></i><span>06</span></div>
           </div>
         </div>
 
-        <div class="atelier-hero__lower atelier-shell" aria-hidden="true">
-          <span>HAND WASH</span><i></i><span>INTERIOR</span><i></i><span>POLISH</span><i></i><span>PROTECTION</span><i></i><span>TEXTILE</span>
-        </div>
+        <div class="rainline-hero__foot" aria-hidden="true"><span>DETAILING STUDIO / 6700 ESBJERG</span><i></i><span>SCROLL TO INSPECT</span></div>
       </section>
 
-      <section class="atelier-intro" aria-label="Esbjerg Shine filosofi">
-        <div class="atelier-shell atelier-intro__grid">
-          <p class="atelier-kicker atelier-reveal">The finish matters</p>
-          <blockquote class="atelier-reveal">Det bedste arbejde råber ikke.<br /><em>Det viser sig i detaljen.</em></blockquote>
-          <div class="atelier-intro__note atelier-reveal">
-            <span>01 — APPROACH</span>
-            <p>Ingen visuel støj. Ingen standardpakke presset ned over bilen. Behandlingen følger materialet, standen og det resultat, der giver mening.</p>
+      <section class="rainline-intro" aria-label="Esbjerg Shine tilgang">
+        <div class="rainline-shell rainline-intro__grid">
+          <p class="rl-kicker rl-reveal">DETALJEN FØRST</p>
+          <div class="rainline-intro__statement rl-reveal">
+            <h2>Ikke show. Ikke støj.<br /><em>Bare overflader, der står skarpt.</em></h2>
+            <p>En flot bil handler om flere materialer på én gang: lak, glas, plast, tekstil og læder. Derfor behandles hver del efter det, den faktisk har brug for.</p>
           </div>
+          <div class="rainline-intro__mark rl-reveal" aria-hidden="true"><span>ES</span><small>DETAIL / CARE</small></div>
         </div>
       </section>
 
-      <section class="atelier-services" id="behandlinger" aria-labelledby="services-title">
-        <div class="atelier-shell">
-          <header class="atelier-section-head atelier-reveal">
-            <div><p class="atelier-kicker">Treatments / 06</p><h2 id="services-title">Seks behandlinger.<br /><em>Seks materialer.</em></h2></div>
-            <p>Hver behandling har sit eget taktile spor. Bevæg markøren hen over materialet for at se lys, fibre, vand og overflader reagere.</p>
+      <section class="rainline-services" id="ydelser" aria-labelledby="services-title">
+        <div class="rainline-shell">
+          <header class="rainline-services__head rl-reveal">
+            <div><p class="rl-kicker">BEHANDLINGER / 06</p><h2 id="services-title">Vælg hvad bilen<br /><em>har brug for.</em></h2></div>
+            <p>Hver behandling har sin egen materialelogik. Peg på en ydelse for at se den reagere; klik, og vinduesviskeren rydder siden før behandlingen åbner.</p>
           </header>
 
-          <div class="treatment-ledger">
+          <div class="service-index">
             {services.map((service, index) => (
-              <article class={`treatment treatment--${service.slug} atelier-reveal`} data-treatment>
-                <a href={`/ydelser/${service.slug}/`} data-service-link>
-                  <div class="treatment__meta"><span>0{index + 1}</span><small>{materialNames[index]}</small></div>
-                  <div class="treatment__copy"><p>{service.eyebrow}</p><h3>{service.title}</h3><span>{service.summary}</span></div>
-                  <div class="treatment__sample" data-sample aria-hidden="true">
-                    <i class="sample__base"></i><i class="sample__detail"></i><i class="sample__light"></i><i class="sample__micro"></i>
-                  </div>
-                  <div class="treatment__open"><span>Se behandling</span><i>↗</i></div>
+              <article class={`service-index__row service-index__row--${service.slug} rl-reveal`} data-service-row>
+                <a href={`/ydelser/${service.slug}/`} data-wiper-link data-service-name={service.title}>
+                  <span class="service-index__no">0{index + 1}</span>
+                  <div class="service-index__title"><small>{materialNames[service.slug] ?? 'DETAIL / CARE'}</small><h3>{service.title}</h3></div>
+                  <p>{service.summary}</p>
+                  <div class="service-index__sample" aria-hidden="true" data-service-sample><i></i><i></i><i></i><i></i></div>
+                  <span class="service-index__open">Se ydelse <i>↗</i></span>
                 </a>
               </article>
             ))}
@@ -115,69 +120,51 @@ const materialNames = ['WATER', 'LEATHER', 'FINISH', 'PAINT', 'CERAMIC', 'TEXTIL
         </div>
       </section>
 
-      <section class="paint-bench" id="lak" aria-labelledby="paint-title" data-paint-bench>
-        <div class="atelier-shell paint-bench__layout">
-          <div class="paint-bench__copy atelier-reveal">
-            <p class="atelier-kicker">Paint / inspection</p>
-            <h2 id="paint-title">Lyset er<br /><em>den hårdeste dommer.</em></h2>
-            <p>På blank lak afslører en smal inspektionslinje vaskespor, haze og små defekter. Flyt lyset hen over panelet og se, hvordan samme lak opfører sig før og efter korrektion.</p>
-            <div class="paint-bench__key"><span><i></i>Før korrektion</span><span><i></i>Efter korrektion</span></div>
+      <section class="reflection-room" aria-labelledby="reflection-title" data-reflection-room>
+        <div class="reflection-room__surface" aria-hidden="true">
+          <div class="reflection-room__before"></div>
+          <div class="reflection-room__after"></div>
+          <div class="reflection-room__beam" data-reflection-beam></div>
+          <div class="reflection-room__trace"></div>
+        </div>
+        <div class="rainline-shell reflection-room__content">
+          <div class="reflection-room__copy rl-reveal">
+            <p class="rl-kicker">INSPEKTIONSLYS</p>
+            <h2 id="reflection-title">Lyset viser<br /><em>hvad lakken skjuler.</em></h2>
+            <p>Bevæg markøren over overfladen. Den smalle lysstribe simulerer en kontrol under inspektionslys, hvor vaskespor og manglende dybde bliver tydeligere.</p>
           </div>
-
-          <div class="paint-strip atelier-reveal" data-paint-strip aria-label="Interaktiv lakinspektion">
-            <div class="paint-strip__top"><span>BLACK CLEARCOAT / PANEL 02</span><i>MOVE LIGHT ↔</i></div>
-            <div class="paint-strip__surface">
-              <div class="paint-strip__raw"></div>
-              <div class="paint-strip__corrected"></div>
-              <div class="paint-strip__swirls"></div>
-              <div class="paint-strip__light"></div>
-              <div class="paint-strip__cut"></div>
-            </div>
-            <div class="paint-strip__scale"><span>0</span><i></i><i></i><i></i><i></i><i></i><span>100</span></div>
-          </div>
+          <div class="reflection-room__legend rl-reveal"><span>ORIGINAL SURFACE</span><i></i><span>CORRECTED SURFACE</span></div>
         </div>
       </section>
 
-      <section class="atelier-proof" id="resultater" aria-labelledby="proof-title">
-        <div class="atelier-shell atelier-proof__layout">
-          <div class="atelier-proof__copy atelier-reveal">
-            <p class="atelier-kicker">Proof / before-after</p>
-            <h2 id="proof-title">Samme vinkel.<br /><em>Ingen forklaring nødvendig.</em></h2>
-            <p>Når de rigtige projektbilleder er klar, skal de stå som dokumentation. Skift projekt med pilene og træk divideren gennem billedet.</p>
-            <div class="atelier-proof__note"><span>NO FILTER</span><i></i><span>SAME ANGLE</span><i></i><span>REAL WORK</span></div>
+      <section class="rainline-proof" id="resultater" aria-labelledby="proof-title">
+        <div class="rainline-shell rainline-proof__grid">
+          <div class="rainline-proof__copy rl-reveal">
+            <p class="rl-kicker">FØR / EFTER</p>
+            <h2 id="proof-title">Resultatet skal<br /><em>kunne kontrolleres.</em></h2>
+            <p>Én ramme, flere projekter. Skift projekt med pilene og træk divideren for at sammenligne før og efter.</p>
+            <div class="rainline-proof__note"><span>01</span><i></i><small>SAMME VINKEL · SAMME BIL · REEL FORSKEL</small></div>
           </div>
-          <div class="atelier-proof__viewer atelier-reveal"><BeforeAfterGallery /></div>
+          <div class="rainline-proof__viewer rl-reveal"><BeforeAfterGallery /></div>
         </div>
       </section>
 
-      <section class="atelier-process" aria-labelledby="process-title">
-        <div class="atelier-shell">
-          <header class="atelier-section-head atelier-reveal">
-            <div><p class="atelier-kicker">Process / 04 steps</p><h2 id="process-title">Et roligt forløb.<br /><em>Et præcist resultat.</em></h2></div>
-            <p>Få trin, tydelig kommunikation og en behandling tilpasset bilen.</p>
-          </header>
-          <ol class="atelier-process__list">
-            <li class="atelier-reveal"><span>01</span><small>KONTAKT</small><strong>Fortæl om bilen</strong><p>Model, stand og hvad du gerne vil have forbedret.</p></li>
-            <li class="atelier-reveal"><span>02</span><small>VURDERING</small><strong>Vi vælger niveauet</strong><p>Behandlingen følger bilens faktiske behov.</p></li>
-            <li class="atelier-reveal"><span>03</span><small>BEHANDLING</small><strong>Detaljen udføres</strong><p>Vask, rens, polering eller beskyttelse efter aftale.</p></li>
-            <li class="atelier-reveal"><span>04</span><small>AFLEVERING</small><strong>Finishen kontrolleres</strong><p>Resultatet vurderes i lyset, før bilen er klar.</p></li>
+      <section class="rainline-method" id="metode" aria-labelledby="method-title">
+        <div class="rainline-shell">
+          <header class="rainline-method__head rl-reveal"><p class="rl-kicker">FORLØBET</p><h2 id="method-title">Fire rolige trin.<br /><em>Ingen unødige omveje.</em></h2></header>
+          <ol class="rainline-method__list">
+            <li class="rl-reveal"><span>01</span><strong>Fortæl om bilen</strong><p>Model, stand og hvad du ønsker forbedret.</p><i>CONTACT</i></li>
+            <li class="rl-reveal"><span>02</span><strong>Vi vurderer behovet</strong><p>Behandlingen vælges efter bilen, ikke efter en fast pakke.</p><i>ASSESS</i></li>
+            <li class="rl-reveal"><span>03</span><strong>Arbejdet udføres</strong><p>Vask, rens, korrektion eller beskyttelse med fokus på finish.</p><i>DETAIL</i></li>
+            <li class="rl-reveal"><span>04</span><strong>Finishen kontrolleres</strong><p>Det samlede resultat gennemgås før aflevering.</p><i>DELIVER</i></li>
           </ol>
         </div>
       </section>
 
-      <section class="atelier-profile" aria-labelledby="profile-title">
-        <div class="atelier-shell atelier-profile__layout">
-          <div class="atelier-profile__signature atelier-reveal">
-            <span>ESBJERG SHINE</span>
-            <p>Detaljer der skinner.</p>
-            <i></i>
-          </div>
-          <div class="atelier-profile__copy atelier-reveal">
-            <p class="atelier-kicker">Local atelier</p>
-            <h2 id="profile-title">Personligt arbejde.<br /><em>Høj finish.</em></h2>
-            <p>Esbjerg Shine arbejder efter aftale fra Randersvej i Esbjerg. Det giver plads til at vurdere bilen og tilpasse arbejdet frem for at gøre alt efter samme opskrift.</p>
-          </div>
-          <dl class="atelier-profile__facts atelier-reveal">
+      <section class="rainline-profile" aria-labelledby="profile-title">
+        <div class="rainline-shell rainline-profile__grid">
+          <div class="rainline-profile__copy rl-reveal"><p class="rl-kicker">ESBJERG SHINE</p><h2 id="profile-title">Lokalt studio.<br /><em>Personlig behandling.</em></h2><p>Arbejdet foregår efter aftale på Randersvej i Esbjerg. Det giver plads til at tilpasse behandlingen til bilens faktiske stand og det ønskede resultat.</p></div>
+          <dl class="rainline-profile__specs rl-reveal">
             <div><dt>Adresse</dt><dd><a href={company.mapUrl} target="_blank" rel="noopener noreferrer">{company.address.street}<br />{company.address.postalCode} {company.address.city} ↗</a></dd></div>
             <div><dt>Åbning</dt><dd>{company.openingText}</dd></div>
             <div><dt>Telefon</dt><dd><a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a></dd></div>
@@ -186,32 +173,33 @@ const materialNames = ['WATER', 'LEATHER', 'FINISH', 'PAINT', 'CERAMIC', 'TEXTIL
         </div>
       </section>
 
-      <section class="atelier-contact" id="kontakt" aria-labelledby="contact-title">
-        <div class="atelier-shell atelier-contact__layout">
-          <div class="atelier-contact__intro atelier-reveal">
-            <p class="atelier-kicker">Request / appointment</p>
-            <h2 id="contact-title">Fortæl om<br /><em>din bil.</em></h2>
-            <p>Du behøver ikke kende den rigtige behandling. Beskriv bilen og det resultat, du ønsker, så tager vi den derfra.</p>
-            <a class="atelier-contact__phone" href={`tel:${company.phoneHref}`}><small>Ring direkte</small><strong>{company.phoneDisplay}</strong></a>
-            <div class="atelier-contact__social"><a href={company.instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href={company.facebook} target="_blank" rel="noopener noreferrer">Facebook ↗</a></div>
+      <section class="rainline-contact" id="kontakt" aria-labelledby="contact-title">
+        <div class="rainline-shell rainline-contact__grid">
+          <div class="rainline-contact__copy rl-reveal">
+            <p class="rl-kicker">KONTAKT</p>
+            <h2 id="contact-title">Hvad skal vi gøre<br /><em>ved din bil?</em></h2>
+            <p>Beskriv bilen kort. Du behøver ikke vide på forhånd, hvilken behandling der er den rigtige.</p>
+            <a class="rainline-contact__phone" href={`tel:${company.phoneHref}`}><small>RING DIREKTE</small><strong>{company.phoneDisplay}</strong></a>
+            <div class="rainline-contact__social"><a href={company.instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href={company.facebook} target="_blank" rel="noopener noreferrer">Facebook ↗</a></div>
           </div>
-          <div class="atelier-form atelier-reveal" data-form-shell>
-            <div class="atelier-form__rail"><span>ESBJERG SHINE</span><i>REQUEST 01</i></div>
-            <ContactForm />
-          </div>
+          <div class="rainline-form rl-reveal"><div class="rainline-form__top"><span>ESBJERG SHINE / REQUEST</span><i>OPEN</i></div><ContactForm /></div>
         </div>
       </section>
     </main>
 
-    <footer class="atelier-footer">
-      <div class="atelier-shell atelier-footer__inner">
-        <a class="atelier-brand" href="#top"><span class="atelier-brand__monogram">ES</span><span class="atelier-brand__name"><strong>ESBJERG SHINE</strong><small>DETALJER DER SKINNER.</small></span></a>
+    <footer class="rainline-footer">
+      <div class="rainline-shell rainline-footer__inner">
+        <a class="rainline-brand" href="#top"><span class="rainline-brand__monogram">ES</span><span class="rainline-brand__copy"><strong>ESBJERG SHINE</strong><small>DETALJER DER SKINNER.</small></span></a>
         <p>{company.address.street}, {company.address.postalCode} {company.address.city} · CVR {company.cvr}</p>
         <div><a href="/privatliv/">Privatliv</a><a href={company.instagram} target="_blank" rel="noopener noreferrer">Instagram</a><a href={company.facebook} target="_blank" rel="noopener noreferrer">Facebook</a></div>
       </div>
     </footer>
 
-    <div class="lacquer-transition" data-transition aria-hidden="true"><span></span><i></i><b></b></div>
+    <div class="wiper-transition" data-wiper-transition aria-hidden="true">
+      <canvas data-wiper-canvas></canvas>
+      <div class="wiper-transition__label"><span data-wiper-label>BEHANDLING</span><i></i></div>
+      <div class="wiper-arm" data-wiper-arm><i></i><b></b></div>
+    </div>
   </div>
-  <script is:inline src="/atelier-luxe.js" defer></script>
+  <script is:inline src="/rainline.js" defer></script>
 </BaseLayout>
