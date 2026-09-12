@@ -1,0 +1,41 @@
+/* Service detail pages for the refined agency-style lab concept. */
+.refined-service-page{background:#f5f6f4}
+.refined-service-hero{position:relative;overflow:hidden;background:#0a0c0d;color:#fff}
+.refined-service-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 78% 38%,rgba(149,226,245,.12),transparent 35%),linear-gradient(110deg,rgba(255,255,255,.018),transparent 38%)}
+.refined-service-hero__grid{position:relative;z-index:2;min-height:620px;display:grid;grid-template-columns:minmax(0,.88fr) minmax(500px,1.12fr);gap:clamp(3rem,7vw,7rem);align-items:center;padding-block:64px}
+.refined-service-crumbs{display:flex;align-items:center;gap:.6rem;margin-bottom:1.7rem;color:#69747a;font-size:.62rem}.refined-service-crumbs a{color:#a0a9ad;text-decoration:none}.refined-service-crumbs b{color:#d8eef3;font-weight:800}
+.refined-service-hero h1{margin:0;max-width:11ch;font-size:clamp(3.4rem,6vw,6.4rem);line-height:.95;letter-spacing:-.055em}
+.refined-service-hero__copy>p:not(.refined-kicker){max-width:590px;margin:1.35rem 0 0;color:#a3acb1;line-height:1.72}
+.refined-service-hero__actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2rem}
+.refined-service-hero__image{position:relative;min-height:440px;overflow:hidden;border:1px solid rgba(255,255,255,.13);background:linear-gradient(145deg,#1b2226,#060809 72%);box-shadow:0 36px 90px rgba(0,0,0,.38)}
+.refined-service-hero__image img{position:absolute;width:125%;max-width:none;left:-13%;bottom:-7%;filter:saturate(.72) contrast(1.08) brightness(.78)}
+.refined-service-hero__image>span{position:absolute;top:-15%;bottom:-15%;left:67%;width:8%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),rgba(226,251,255,.73),rgba(134,220,241,.08),transparent);filter:blur(4px);mix-blend-mode:screen;transform:skewX(-10deg);animation:service-hero-light 7.5s ease-in-out infinite}
+.refined-service-hero__image>b{position:absolute;right:16px;top:16px;color:rgba(255,255,255,.35);font-size:.66rem;letter-spacing:.12em}
+@keyframes service-hero-light{0%,55%,100%{left:12%;opacity:.1}74%{left:84%;opacity:.8}}
+
+.refined-service-content{padding:clamp(6rem,9vw,9rem) 0;background:#fff}
+.refined-service-content__grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(330px,.58fr);gap:clamp(3rem,7vw,7rem);align-items:start}
+.refined-service-copy h2{margin:0;font-size:clamp(2.7rem,4.8vw,4.7rem);line-height:1;letter-spacing:-.05em}
+.refined-service-copy>p:not(.refined-kicker){max-width:760px;margin:1.1rem 0 0;color:#687176;line-height:1.75}
+.refined-service-photo{min-height:360px;margin-top:2.5rem;display:grid;place-items:center;border:1px solid #dfe3e5;background:linear-gradient(145deg,#151b1e,#080a0b);color:#7b878d;font-size:.62rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+.refined-service-aside{display:grid;gap:1rem;position:sticky;top:108px}
+.refined-service-focus,.refined-service-quick{border:1px solid #dfe3e5;background:#f7f8f6;padding:1.25rem}
+.refined-service-focus>small,.refined-service-quick>small{display:block;color:#879096;font-size:.56rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+.refined-service-focus ul{list-style:none;margin:1rem 0 0;padding:0;border-top:1px solid #dde2e4}
+.refined-service-focus li{display:grid;grid-template-columns:auto 1fr;gap:.9rem;padding:1rem 0;border-bottom:1px solid #dde2e4}.refined-service-focus li span{color:#97a0a5;font-size:.62rem}.refined-service-focus li strong{font-size:.82rem;line-height:1.35}
+.refined-service-quick{background:#0d1012;color:#fff;border-color:#20262a}.refined-service-quick strong{display:block;margin-top:.6rem;font-size:1.35rem;letter-spacing:-.03em}.refined-service-quick p{color:#8f999e;font-size:.8rem;line-height:1.6}.refined-service-quick a{display:flex;justify-content:space-between;align-items:center;margin-top:1rem;padding-top:.9rem;border-top:1px solid rgba(255,255,255,.12);color:#eef3f5;text-decoration:none;font-size:.72rem;font-weight:800}.refined-service-quick a span{color:#aeeefa}
+
+.refined-service-related{padding:clamp(6rem,9vw,9rem) 0;background:#eef0ef}
+.refined-related-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #cfd5d8;border-left:1px solid #cfd5d8}
+.refined-related-link{position:relative;display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"no title arrow" "no meta arrow";gap:.25rem 1rem;padding:1.35rem;border-right:1px solid #cfd5d8;border-bottom:1px solid #cfd5d8;text-decoration:none;background:transparent;transition:background .22s ease,color .22s ease}
+.refined-related-link:hover{background:#101315;color:#fff}.refined-related-link>span{grid-area:no;color:#929ba0;font-size:.62rem;font-weight:850}.refined-related-link strong{grid-area:title;font-size:.88rem}.refined-related-link small{grid-area:meta;color:#80898e;font-size:.58rem}.refined-related-link i{grid-area:arrow;align-self:center;font-style:normal;color:#4c8492}
+
+.refined-service-page--bilvask .refined-service-hero__image{background:radial-gradient(circle at 70% 30%,rgba(171,234,248,.14),transparent 28%),linear-gradient(145deg,#1b2c33,#071015)}
+.refined-service-page--indvendig-bilpleje .refined-service-hero__image{background:repeating-linear-gradient(100deg,#17191a 0 16px,#212426 17px 18px,#0d0f10 19px 34px)}
+.refined-service-page--komplet-klargoering .refined-service-hero__image{background:linear-gradient(145deg,#293237,#080b0d 60%,#151d20)}
+.refined-service-page--polering .refined-service-hero__image{background:radial-gradient(circle at 64% 45%,rgba(255,255,255,.36),rgba(184,242,255,.13) 8%,transparent 25%),linear-gradient(145deg,#32393d,#07090a 65%)}
+.refined-service-page--lakbeskyttelse .refined-service-hero__image{background:radial-gradient(circle at 68% 31%,rgba(186,241,253,.12),transparent 30%),linear-gradient(145deg,#14252c,#06090b 67%)}
+.refined-service-page--saederens .refined-service-hero__image{background:repeating-linear-gradient(94deg,#151a1c 0 6px,#20272a 7px 8px,#0b0e0f 9px 14px)}
+
+@media(max-width:1000px){.refined-service-hero__grid{grid-template-columns:1fr}.refined-service-hero__image{min-height:380px}.refined-service-content__grid{grid-template-columns:1fr}.refined-service-aside{position:static;max-width:760px}.refined-related-grid{grid-template-columns:1fr}}
+@media(max-width:620px){.refined-service-hero__grid{min-height:auto;padding-block:48px}.refined-service-hero h1{font-size:clamp(3rem,15vw,4.6rem)}.refined-service-hero__image{min-height:290px}.refined-service-hero__image img{width:145%;left:-23%}.refined-service-hero__actions{display:grid}.refined-service-hero__actions .refined-button{width:100%}.refined-service-photo{min-height:260px}}
