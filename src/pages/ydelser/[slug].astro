@@ -2,8 +2,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { company } from '../../data/company';
 import { services, type Service } from '../../data/services';
-import '../../styles/auxo-refined.css';
-import '../../styles/auxo-refined-service.css';
+import '../../styles/nordic-shine.css';
+import '../../styles/nordic-shine-service.css';
 
 export function getStaticPaths() {
   return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
@@ -31,63 +31,72 @@ const schema = [
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Forside', item: `${home}/` },
-      { '@type': 'ListItem', position: 2, name: 'Ydelser', item: `${home}/#ydelser` },
+      { '@type': 'ListItem', position: 2, name: 'Ydelser', item: `${home}/ydelser/` },
       { '@type': 'ListItem', position: 3, name: service.title, item: `${home}${canonicalPath}` }
     ]
   }
 ];
 ---
 <BaseLayout title={service.seoTitle} description={service.seoDescription} canonicalPath={canonicalPath} schema={schema}>
-  <div class={`refined-site refined-service-page refined-service-page--${service.slug}`} data-refined-site id="top">
-    <div class="refined-topbar">
-      <div class="refined-shell refined-topbar__inner"><span>{company.address.street}, {company.address.postalCode} {company.address.city}</span><div><span>{company.openingText}</span><a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a></div></div>
+  <div class={`ns-site ns-service-page ns-service-page--${service.slug}`} data-ns-site id="top">
+    <div class="ns-topbar">
+      <div class="ns-wrap ns-topbar__inner"><span>Bilpleje i Esbjerg · Efter aftale</span><div><a href={company.mapUrl} target="_blank" rel="noopener noreferrer">{company.address.street}, {company.address.postalCode} {company.address.city}</a><a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a></div></div>
     </div>
-    <header class="refined-header" data-refined-header>
-      <div class="refined-shell refined-header__inner">
-        <a class="refined-brand" href="/" aria-label="Esbjerg Shine – forside"><span class="refined-brand__mark">ES</span><span><strong>ESBJERG SHINE</strong><small>DETALJER DER SKINNER.</small></span></a>
-        <nav class="refined-nav" aria-label="Primær navigation"><a href="/#ydelser">Ydelser</a><a href="/#om">Om os</a><a href="/#resultater">Før / efter</a><a href="/#kontakt">Kontakt</a></nav>
-        <a class="refined-header__cta" href={`/?service=${encodeURIComponent(service.title)}#kontakt`}>Få et tilbud <span>↗</span></a>
+    <header class="ns-header" data-ns-header>
+      <div class="ns-wrap ns-header__inner">
+        <a class="ns-brand" href="/" aria-label="Esbjerg Shine – forside"><span class="ns-brand__mark">ES</span><span class="ns-brand__text"><strong>ESBJERG SHINE</strong><small>Detaljer der skinner.</small></span></a>
+        <nav class="ns-nav" aria-label="Primær navigation"><a href="/#ydelser">Ydelser</a><a href="/#resultater">Før / efter</a><a href="/#om">Om os</a><a href="/#kontakt">Kontakt</a></nav>
+        <a class="ns-header__cta" href={`/?service=${encodeURIComponent(service.title)}#kontakt`}>Få et tilbud</a>
       </div>
     </header>
 
     <main id="indhold">
-      <section class="refined-service-hero">
-        <div class="refined-shell refined-service-hero__grid">
-          <div class="refined-service-hero__copy refined-reveal">
-            <nav class="refined-service-crumbs" aria-label="Brødkrummer"><a href="/">Forside</a><span>/</span><a href="/#ydelser">Ydelser</a><span>/</span><b>{number}</b></nav>
-            <p class="refined-kicker">{service.eyebrow}</p>
+      <section class="nss-hero">
+        <div class="ns-wrap nss-hero__grid">
+          <div class="nss-hero__copy ns-reveal">
+            <nav class="nss-crumbs" aria-label="Brødkrummer"><a href="/">Forside</a><span>/</span><a href="/ydelser/">Ydelser</a><span>/</span><b>{number}</b></nav>
+            <p class="ns-eyebrow">{service.eyebrow}</p>
             <h1>{service.title}</h1>
             <p>{service.intro}</p>
-            <div class="refined-service-hero__actions"><a class="refined-button refined-button--primary" href={`/?service=${encodeURIComponent(service.title)}#kontakt`}>Få et tilbud <span>↗</span></a><a class="refined-button refined-button--ghost" href={`tel:${company.phoneHref}`}>Ring direkte <span>↗</span></a></div>
+            <div class="ns-actions"><a class="ns-button ns-button--primary" href={`/?service=${encodeURIComponent(service.title)}#kontakt`}>Få et tilbud <span>↗</span></a><a class="ns-button ns-button--quiet" href={`tel:${company.phoneHref}`}>Ring direkte</a></div>
           </div>
-          <div class="refined-service-hero__visual refined-reveal">
-            <div class="refined-service-hero__image"><img src="/hero-detailing-car.svg" width="1200" height="720" alt="" aria-hidden="true" decoding="async" /><span></span><b>{number}</b></div>
+          <div class="nss-hero__media ns-reveal" aria-label="Plads til projektfoto for denne behandling">
+            <div class="nss-photo"><span>PROJEKTFOTO</span><small>{service.title}</small><b>{number}</b></div>
           </div>
         </div>
       </section>
 
-      <section class="refined-service-content">
-        <div class="refined-shell refined-service-content__grid">
-          <article class="refined-service-copy refined-reveal">
-            <p class="refined-kicker">BEHANDLINGEN</p>
+      <section class="nss-detail">
+        <div class="ns-wrap nss-detail__grid">
+          <article class="nss-copy ns-reveal">
+            <p class="ns-eyebrow">BEHANDLINGEN</p>
             <h2>Tilpasset bilen.<br />Ikke en standardpakke.</h2>
             <p>{service.intro}</p>
-            <p>Inden arbejdet går i gang, afstemmer vi forventningerne og ser på bilens aktuelle stand. Det gør det lettere at vælge den behandling, der giver mening, frem for at sælge mere end bilen behøver.</p>
-            <div class="refined-service-photo"><span>Projektfoto indsættes her</span></div>
+            <p>Inden arbejdet går i gang, ser vi på bilens stand og afstemmer forventningerne. På den måde vælger vi det niveau, der giver mening for bilen og det resultat, du ønsker.</p>
+            <div class="nss-project-slot"><span>Rigtigt Esbjerg Shine projektfoto indsættes her</span></div>
           </article>
-          <aside class="refined-service-aside refined-reveal">
-            <div class="refined-service-focus"><small>TYPISK FOKUS</small><ul>{service.bullets.map((item, bulletIndex) => <li><span>0{bulletIndex + 1}</span><strong>{item}</strong></li>)}</ul></div>
-            <div class="refined-service-quick"><small>ESBJERG SHINE</small><strong>Skal vi se på din bil?</strong><p>Send bilmodel, billeder og en kort beskrivelse af det ønskede resultat.</p><a href={`/?service=${encodeURIComponent(service.title)}#kontakt`}>Kontakt os <span>↗</span></a></div>
+
+          <aside class="nss-aside ns-reveal">
+            <div class="nss-focus">
+              <small>Typisk fokus</small>
+              <ul>{service.bullets.map((item, bulletIndex) => <li><span>0{bulletIndex + 1}</span><strong>{item}</strong></li>)}</ul>
+            </div>
+            <div class="nss-contact-card">
+              <small>Esbjerg Shine</small>
+              <strong>Skal vi se på din bil?</strong>
+              <p>Send bilmodel og en kort beskrivelse. Så tager vi den derfra.</p>
+              <a href={`/?service=${encodeURIComponent(service.title)}#kontakt`}>Kontakt os <span>↗</span></a>
+            </div>
           </aside>
         </div>
       </section>
 
-      <section class="refined-service-related">
-        <div class="refined-shell">
-          <header class="refined-section-head refined-reveal"><div><p class="refined-kicker">ANDRE YDELSER</p><h2>Måske har bilen<br />brug for mere.</h2></div><p>Se de øvrige behandlinger, eller kontakt os hvis du er i tvivl om hvad der passer til bilen.</p></header>
-          <div class="refined-related-grid">
+      <section class="nss-related">
+        <div class="ns-wrap">
+          <header class="ns-section-head ns-section-head--compact ns-reveal"><div><p class="ns-eyebrow">ANDRE YDELSER</p><h2>Se de øvrige behandlinger.</h2></div><p>Er du i tvivl, så kontakt os. Du behøver ikke vælge behandling på forhånd.</p></header>
+          <div class="nss-related__grid">
             {services.map((item, itemIndex) => item.slug !== service.slug && (
-              <a class="refined-related-link refined-reveal" href={`/ydelser/${item.slug}/`} data-wiper-link data-service-name={item.title}>
+              <a class="nss-related__link ns-reveal" href={`/ydelser/${item.slug}/`} data-wiper-link data-service-name={item.title}>
                 <span>0{itemIndex + 1}</span><strong>{item.title}</strong><small>{item.eyebrow}</small><i>↗</i>
               </a>
             ))}
@@ -96,9 +105,12 @@ const schema = [
       </section>
     </main>
 
-    <footer class="refined-footer"><div class="refined-shell refined-footer__top"><a class="refined-brand" href="/"><span class="refined-brand__mark">ES</span><span><strong>ESBJERG SHINE</strong><small>DETALJER DER SKINNER.</small></span></a><div class="refined-footer__nav"><a href="/#ydelser">Ydelser</a><a href="/#kontakt">Kontakt</a><a href="/privatliv/">Privatliv</a></div></div><div class="refined-shell refined-footer__bottom"><span>{company.address.street}, {company.address.postalCode} {company.address.city}</span><span>CVR {company.cvr}</span></div></footer>
+    <footer class="ns-footer">
+      <div class="ns-wrap ns-footer__main"><a class="ns-brand ns-brand--footer" href="/"><span class="ns-brand__mark">ES</span><span class="ns-brand__text"><strong>ESBJERG SHINE</strong><small>Detaljer der skinner.</small></span></a><div class="ns-footer__nav"><a href="/#ydelser">Ydelser</a><a href="/#kontakt">Kontakt</a><a href="/privatliv/">Privatliv</a></div></div>
+      <div class="ns-wrap ns-footer__bottom"><span>{company.address.street}, {company.address.postalCode} {company.address.city}</span><span>CVR {company.cvr}</span></div>
+    </footer>
 
-    <div class="wiper-transition" data-wiper-transition aria-hidden="true"><canvas data-wiper-canvas></canvas><div class="wiper-transition__label"><span data-wiper-label>BEHANDLING</span><i></i></div><div class="wiper-arm" data-wiper-arm><i></i><b></b></div></div>
+    <div class="ns-wiper" data-wiper-transition aria-hidden="true"><canvas data-wiper-canvas></canvas><div class="ns-wiper__blade" data-wiper-arm><i></i></div></div>
   </div>
-  <script is:inline src="/auxo-refined.js" defer></script>
+  <script is:inline src="/nordic-shine.js" defer></script>
 </BaseLayout>
