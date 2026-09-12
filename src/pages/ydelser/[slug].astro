@@ -1,8 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
+import { company } from '../../data/company';
 import { services, type Service } from '../../data/services';
+import '../../styles/rainline.css';
 
 export function getStaticPaths() {
   return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
@@ -13,6 +13,17 @@ const { service } = Astro.props;
 const canonicalPath = `/ydelser/${service.slug}/`;
 const site = Astro.site ?? new URL('https://esbjergshine.dk');
 const home = site.toString().replace(/\/$/, '');
+const index = services.findIndex((item) => item.slug === service.slug);
+const number = String(index + 1).padStart(2, '0');
+
+const materialNames: Record<string, string> = {
+  'bilvask': 'WATER / CONTACT',
+  'indvendig-bilpleje': 'CABIN / MATERIAL',
+  'komplet-klargoering': 'FULL / RESET',
+  'polering': 'PAINT / CORRECTION',
+  'lakbeskyttelse': 'COAT / PROTECT',
+  'saederens': 'TEXTILE / EXTRACTION'
+};
 
 const schema = [
   {
@@ -35,37 +46,80 @@ const schema = [
 ];
 ---
 <BaseLayout title={service.seoTitle} description={service.seoDescription} canonicalPath={canonicalPath} schema={schema}>
-  <div id="top"></div>
-  <Header />
-  <main id="indhold">
-    <section class="subhero subhero--service">
-      <div class="shell">
-        <nav class="breadcrumbs" aria-label="Brødkrummer"><a href="/">Forside</a><span aria-hidden="true">/</span><a href="/ydelser/">Ydelser</a><span aria-hidden="true">/</span><span aria-current="page">{service.title}</span></nav>
-        <div class="subhero__grid">
-          <div><p class="eyebrow">{service.eyebrow}</p><h1>{service.title}</h1></div>
-          <p>{service.intro}</p>
-        </div>
-      </div>
-    </section>
+  <div class={`rainline-site rainline-service-page rainline-service-page--${service.slug}`} data-rainline-site id="top">
+    <header class="rainline-nav" data-rainline-nav>
+      <a class="rainline-brand" href="/" aria-label="Esbjerg Shine – forside">
+        <span class="rainline-brand__monogram">ES</span>
+        <span class="rainline-brand__copy"><strong>ESBJERG SHINE</strong><small>DETAILING · ESBJERG</small></span>
+      </a>
+      <nav class="rainline-menu" aria-label="Primær navigation">
+        <a href="/#ydelser">Ydelser</a><a href="/#resultater">Resultater</a><a href="/#metode">Metode</a><a href="/#kontakt">Kontakt</a>
+      </nav>
+      <a class="rainline-phone" href={`tel:${company.phoneHref}`}>{company.phoneDisplay}<span aria-hidden="true">↗</span></a>
+    </header>
 
-    <section class="section section--tight">
-      <div class="shell service-detail">
-        <article class="service-detail__content">
-          <div class="service-detail__visual" aria-label="Plads til et kommende projektfoto"><span>Projektfoto kommer</span></div>
-          <h2>Behandlingen tilpasses bilen</h2>
-          <p>{service.intro}</p>
-          <p>Inden arbejdet går i gang, afstemmer vi forventningerne og ser på bilens aktuelle stand. Det gør det lettere at vælge den behandling, der giver mening, frem for at sælge mere end bilen behøver.</p>
-          <h2>Typisk fokus</h2>
-          <ul class="detail-list">{service.bullets.map((item) => <li>{item}</li>)}</ul>
-          <h2>Sådan kommer du videre</h2>
-          <p>Send gerne bilmodel, et par billeder og en kort beskrivelse af det ønskede resultat. Så kan Esbjerg Shine vurdere næste skridt og vende tilbage med et tilbud.</p>
-        </article>
-        <aside class="service-aside">
-          <div class="aside-card"><small>Få et tilbud</small><h2>Skal vi se på din bil?</h2><p>Fortæl kort hvad du ønsker, så vender vi tilbage.</p><a class="button button--primary" href={`/?service=${encodeURIComponent(service.title)}#kontakt`}><span>Kontakt os</span><i aria-hidden="true">↗</i></a></div>
-          <nav class="aside-nav" aria-label="Andre ydelser"><small>Andre ydelser</small>{services.map((item) => <a class:list={{ active: item.slug === service.slug }} aria-current={item.slug === service.slug ? 'page' : undefined} href={`/ydelser/${item.slug}/`}>{item.title}<span aria-hidden="true">→</span></a>)}</nav>
-        </aside>
-      </div>
-    </section>
-  </main>
-  <Footer />
+    <main id="indhold">
+      <section class="service-sheet">
+        <div class="service-sheet__rail" aria-hidden="true"><span>{number}</span><i></i><span>06</span></div>
+        <div class="rainline-shell service-sheet__grid">
+          <div class="service-sheet__intro rl-reveal">
+            <nav class="service-sheet__crumbs" aria-label="Brødkrummer"><a href="/">Forside</a><span>/</span><a href="/#ydelser">Ydelser</a><span>/</span><b>{number}</b></nav>
+            <p class="rl-kicker">{materialNames[service.slug] ?? 'DETAIL / CARE'}</p>
+            <h1>{service.title}</h1>
+            <p class="service-sheet__lead">{service.intro}</p>
+            <div class="service-sheet__actions"><a class="rl-action rl-action--light" href={`/?service=${encodeURIComponent(service.title)}#kontakt`}>Få et tilbud <span>↗</span></a><a class="rl-action" href={`tel:${company.phoneHref}`}>Ring direkte <span>↗</span></a></div>
+          </div>
+
+          <div class="service-material rl-reveal" aria-label={`Materialevisualisering for ${service.title}`}>
+            <div class="service-material__sample" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
+            <div class="service-material__caption"><span>ESBJERG SHINE / {number}</span><strong>{service.title}</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="service-brief">
+        <div class="rainline-shell service-brief__grid">
+          <div class="service-brief__copy rl-reveal">
+            <p class="rl-kicker">BEHANDLINGEN</p>
+            <h2>Tilpasset bilen.<br /><em>Ikke omvendt.</em></h2>
+            <p>{service.intro}</p>
+            <p>Inden arbejdet går i gang, afstemmes forventningerne og bilens aktuelle stand. Det gør det muligt at vælge den behandling, der giver mening, frem for at sælge mere end bilen behøver.</p>
+          </div>
+          <div class="service-brief__list rl-reveal">
+            <small>TYPISK FOKUS</small>
+            <ul>{service.bullets.map((item, bulletIndex) => <li><span>0{bulletIndex + 1}</span><strong>{item}</strong></li>)}</ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="service-photo-slot" aria-label="Plads til kommende projektfoto">
+        <div class="service-photo-slot__surface"><span>PROJECT IMAGE / COMING</span><i></i><b></b></div>
+        <div class="rainline-shell service-photo-slot__copy rl-reveal"><p class="rl-kicker">DOKUMENTATION</p><h2>Rigtige billeder.<br /><em>Rigtigt arbejde.</em></h2><p>Når projektbillederne er klar, bliver denne flade brugt til behandlinger udført af Esbjerg Shine — ikke generiske stockfotos.</p></div>
+      </section>
+
+      <section class="service-next">
+        <div class="rainline-shell">
+          <header class="service-next__head rl-reveal"><p class="rl-kicker">ANDRE BEHANDLINGER</p><h2>Se hvad bilen ellers<br /><em>kan have brug for.</em></h2></header>
+          <div class="service-next__list">
+            {services.map((item, itemIndex) => item.slug !== service.slug && (
+              <a class="service-next__link rl-reveal" href={`/ydelser/${item.slug}/`} data-wiper-link data-service-name={item.title}>
+                <span>0{itemIndex + 1}</span><strong>{item.title}</strong><small>{materialNames[item.slug] ?? 'DETAIL / CARE'}</small><i>↗</i>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="service-contact-band">
+        <div class="rainline-shell service-contact-band__grid rl-reveal"><div><p class="rl-kicker">NÆSTE SKRIDT</p><h2>Skal vi se på din bil?</h2></div><p>Send gerne bilmodel, et par billeder og en kort beskrivelse af det ønskede resultat. Så kan Esbjerg Shine vurdere næste skridt.</p><a class="rl-action rl-action--light" href={`/?service=${encodeURIComponent(service.title)}#kontakt`}>Kontakt os <span>↗</span></a></div>
+      </section>
+    </main>
+
+    <footer class="rainline-footer">
+      <div class="rainline-shell rainline-footer__inner"><a class="rainline-brand" href="/"><span class="rainline-brand__monogram">ES</span><span class="rainline-brand__copy"><strong>ESBJERG SHINE</strong><small>DETALJER DER SKINNER.</small></span></a><p>{company.address.street}, {company.address.postalCode} {company.address.city} · CVR {company.cvr}</p><div><a href="/privatliv/">Privatliv</a><a href={company.instagram} target="_blank" rel="noopener noreferrer">Instagram</a><a href={company.facebook} target="_blank" rel="noopener noreferrer">Facebook</a></div></div>
+    </footer>
+
+    <div class="wiper-transition" data-wiper-transition aria-hidden="true"><canvas data-wiper-canvas></canvas><div class="wiper-transition__label"><span data-wiper-label>BEHANDLING</span><i></i></div><div class="wiper-arm" data-wiper-arm><i></i><b></b></div></div>
+  </div>
+  <script is:inline src="/rainline.js" defer></script>
 </BaseLayout>
