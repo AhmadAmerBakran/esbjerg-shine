@@ -1,40 +1,29 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
+import { company } from '../../data/company';
 import { services } from '../../data/services';
+import '../../styles/auxo-refined.css';
+import '../../styles/auxo-refined-service.css';
 
 const title = 'Bilpleje og klargøring i Esbjerg | Esbjerg Shine';
 const description = 'Se ydelser inden for bilvask, indvendig bilpleje, klargøring, polering, lakbeskyttelse og sæderens hos Esbjerg Shine i Esbjerg.';
 ---
 <BaseLayout title={title} description={description} canonicalPath="/ydelser/">
-  <div id="top"></div>
-  <Header />
-  <main id="indhold">
-    <section class="subhero">
-      <div class="shell subhero__grid">
-        <div><p class="eyebrow">Ydelser</p><h1>Den rigtige behandling<br /><span>starter med bilen.</span></h1></div>
-        <p>Ingen biler er helt ens. Derfor er ydelserne opdelt efter formål, mens den konkrete behandling og omfanget aftales ud fra bilens stand og det resultat, du ønsker.</p>
-      </div>
-    </section>
+  <div class="refined-site refined-services-page" data-refined-site id="top">
+    <div class="refined-topbar"><div class="refined-shell refined-topbar__inner"><span>{company.address.street}, {company.address.postalCode} {company.address.city}</span><div><span>{company.openingText}</span><a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a></div></div></div>
+    <header class="refined-header" data-refined-header><div class="refined-shell refined-header__inner"><a class="refined-brand" href="/"><span class="refined-brand__mark">ES</span><span><strong>ESBJERG SHINE</strong><small>DETALJER DER SKINNER.</small></span></a><nav class="refined-nav" aria-label="Primær navigation"><a href="/#ydelser">Ydelser</a><a href="/#om">Om os</a><a href="/#resultater">Før / efter</a><a href="/#kontakt">Kontakt</a></nav><a class="refined-header__cta" href="/#kontakt">Få et tilbud <span>↗</span></a></div></header>
 
-    <section class="section section--tight">
-      <div class="shell service-list">
-        {services.map((service, index) => (
-          <article class="service-row reveal">
-            <a href={`/ydelser/${service.slug}/`}>
-              <span class="service-row__index">0{index + 1}</span>
-              <div><small>{service.eyebrow}</small><h2>{service.title}</h2><p>{service.summary}</p></div>
-              <span class="service-row__arrow" aria-hidden="true">↗</span>
-            </a>
-          </article>
-        ))}
-      </div>
-    </section>
+    <main id="indhold">
+      <section class="refined-services-page__hero"><div class="refined-shell"><div class="refined-services-page__hero-copy refined-reveal"><p class="refined-kicker">VORES YDELSER</p><h1>Den rigtige behandling<br />starter med bilen.</h1><p>Ingen biler er helt ens. Derfor vælger vi behandling efter bilens stand, materialer og det resultat du ønsker.</p></div></div></section>
 
-    <section class="cta-band">
-      <div class="shell cta-band__inner"><div><p class="eyebrow">I tvivl?</p><h2>Beskriv bilen. Så finder vi næste skridt.</h2></div><a class="button button--primary" href="/#kontakt"><span>Kontakt Esbjerg Shine</span><i aria-hidden="true">↗</i></a></div>
-    </section>
-  </main>
-  <Footer />
+      <section class="refined-services-page__list"><div class="refined-shell"><div class="refined-service-grid">{services.map((service, index) => (<article class={`refined-service-card refined-service-card--${service.slug} refined-reveal`}><a href={`/ydelser/${service.slug}/`} data-wiper-link data-service-name={service.title}><div class="refined-service-card__media" aria-hidden="true"><span class="refined-service-card__wash"></span><span class="refined-service-card__shine"></span><i>0{index + 1}</i></div><div class="refined-service-card__body"><small>{service.eyebrow}</small><h2>{service.title}</h2><p>{service.summary}</p><span class="refined-service-card__link">Læs mere <b>↗</b></span></div></a></article>))}</div></div></section>
+
+      <section class="refined-service-cta"><div class="refined-shell refined-service-cta__inner refined-reveal"><div><p class="refined-kicker">I TVIVL?</p><h2>Beskriv bilen.<br />Så finder vi næste skridt.</h2></div><p>Send en kort besked med bilmodel og hvad du gerne vil have forbedret. Du behøver ikke vælge den rigtige behandling på forhånd.</p><a class="refined-button refined-button--primary" href="/#kontakt">Kontakt Esbjerg Shine <span>↗</span></a></div></section>
+    </main>
+
+    <footer class="refined-footer"><div class="refined-shell refined-footer__top"><a class="refined-brand" href="/"><span class="refined-brand__mark">ES</span><span><strong>ESBJERG SHINE</strong><small>DETALJER DER SKINNER.</small></span></a><div class="refined-footer__nav"><a href="/#ydelser">Ydelser</a><a href="/#kontakt">Kontakt</a><a href="/privatliv/">Privatliv</a></div></div><div class="refined-shell refined-footer__bottom"><span>{company.address.street}, {company.address.postalCode} {company.address.city}</span><span>CVR {company.cvr}</span></div></footer>
+
+    <div class="wiper-transition" data-wiper-transition aria-hidden="true"><canvas data-wiper-canvas></canvas><div class="wiper-transition__label"><span data-wiper-label>BEHANDLING</span><i></i></div><div class="wiper-arm" data-wiper-arm><i></i><b></b></div></div>
+  </div>
+  <script is:inline src="/auxo-refined.js" defer></script>
 </BaseLayout>
