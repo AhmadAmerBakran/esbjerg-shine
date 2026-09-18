@@ -31,6 +31,43 @@
   });
   addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
 
+  const syncMediaImage = (image) => {
+    if (!(image instanceof HTMLImageElement)) return;
+    const loaded = image.complete && image.naturalWidth > 0;
+    image.classList.toggle('is-loaded', loaded);
+    image.closest('[data-media-slot]')?.classList.toggle('has-media', loaded);
+  };
+
+  doc.querySelectorAll('[data-media-image]').forEach((image) => {
+    if (!(image instanceof HTMLImageElement)) return;
+    image.addEventListener('load', () => syncMediaImage(image));
+    image.addEventListener('error', () => syncMediaImage(image));
+    syncMediaImage(image);
+  });
+
+  doc.querySelectorAll('[data-hero-media]').forEach((hero) => {
+    const video = hero.querySelector('[data-hero-video]');
+    if (!(hero instanceof HTMLElement) || !(video instanceof HTMLVideoElement)) return;
+
+    const activateVideo = async () => {
+      if (reducedMotion) {
+        video.pause();
+        hero.classList.remove('has-video');
+        return;
+      }
+      try {
+        await video.play();
+        hero.classList.add('has-video');
+      } catch {
+        hero.classList.remove('has-video');
+      }
+    };
+
+    video.addEventListener('loadeddata', activateVideo, { once: true });
+    video.addEventListener('error', () => hero.classList.remove('has-video'));
+    if (video.readyState >= 2) activateVideo();
+  });
+
   const revealItems = [...doc.querySelectorAll('.reveal')];
   if (reducedMotion || !('IntersectionObserver' in window)) {
     revealItems.forEach((item) => item.classList.add('is-visible'));
@@ -56,6 +93,8 @@
   doc.querySelectorAll('[data-comparison-gallery]').forEach((gallery) => {
     const comparison = gallery.querySelector('[data-comparison]');
     const range = gallery.querySelector('[data-comparison-range]');
+    const beforeImage = gallery.querySelector('[data-comparison-before-image]');
+    const afterImage = gallery.querySelector('[data-comparison-after-image]');
     const buttons = [...gallery.querySelectorAll('[data-comparison-set]')];
     const prev = gallery.querySelector('[data-comparison-prev]');
     const next = gallery.querySelector('[data-comparison-next]');
@@ -70,6 +109,21 @@
         button.classList.toggle('is-active', selected);
         button.setAttribute('aria-pressed', String(selected));
       });
+
+      const activeButton = buttons[active];
+      if (activeButton instanceof HTMLElement) {
+        if (beforeImage instanceof HTMLImageElement && activeButton.dataset.before) {
+          beforeImage.classList.remove('is-loaded');
+          beforeImage.closest('[data-media-slot]')?.classList.remove('has-media');
+          beforeImage.src = activeButton.dataset.before;
+        }
+        if (afterImage instanceof HTMLImageElement && activeButton.dataset.after) {
+          afterImage.classList.remove('is-loaded');
+          afterImage.closest('[data-media-slot]')?.classList.remove('has-media');
+          afterImage.src = activeButton.dataset.after;
+        }
+      }
+
       if (range instanceof HTMLInputElement) {
         range.value = '52';
         comparison.style.setProperty('--position', '52%');
