@@ -20,10 +20,9 @@ const description = 'Se ydelser inden for bilvask, indvendig bilpleje, klargøri
 
     <section class="section section--tight">
       <div class="shell service-list">
-        {services.map((service, index) => (
+        {services.map((service) => (
           <article class="service-row reveal">
             <a href={`/ydelser/${service.slug}/`}>
-              <span class="service-row__index">0{index + 1}</span>
               <div><small>{service.eyebrow}</small><h2>{service.title}</h2><p>{service.summary}</p></div>
               <span class="service-row__arrow" aria-hidden="true">↗</span>
             </a>
