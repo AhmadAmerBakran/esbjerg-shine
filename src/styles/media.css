@@ -1,0 +1,190 @@
+@layer components {
+  .media-slot {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(ellipse at 70% 28%, rgba(168,211,227,.22), transparent 9rem),
+      linear-gradient(145deg, #dbe3e7, #bfcad0 55%, #a8b5bc);
+  }
+
+  .media-slot > img {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity .25s ease;
+  }
+
+  .media-slot > img.is-loaded { opacity: 1; }
+
+  .media-slot__fallback {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background:
+      linear-gradient(120deg, rgba(255,255,255,.16), transparent 36%),
+      linear-gradient(145deg, rgba(255,255,255,.05), rgba(13,18,22,.08));
+    transition: opacity .25s ease;
+  }
+
+  .media-slot__fallback::before {
+    content: "";
+    width: min(52%, 13rem);
+    aspect-ratio: 560 / 277;
+    background: url("/media/brand/esbjerg-shine-logo.webp") center / contain no-repeat;
+    mix-blend-mode: multiply;
+    opacity: .18;
+  }
+
+  .media-slot.has-media .media-slot__fallback { opacity: 0; }
+
+  .hero-media {
+    isolation: isolate;
+    background:
+      radial-gradient(ellipse at 70% 22%, rgba(145,207,228,.14), transparent 11rem),
+      linear-gradient(151deg, #1c2228 0%, #11161b 48%, #090c0f 100%);
+  }
+
+  .hero-media__poster,
+  .hero-media__video {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+
+  .hero-media__poster.is-loaded { opacity: 1; }
+  .hero-media.has-video .hero-media__poster { opacity: 0; }
+  .hero-media.has-video .hero-media__video { opacity: 1; }
+  .hero-media__poster.is-loaded ~ .hero-media__fallback-logo,
+  .hero-media.has-video .hero-media__fallback-logo { opacity: 0; }
+  .hero-media__fallback-logo { z-index: 2; transition: opacity .25s ease; }
+  .hero-media .hero-card__meta {
+    z-index: 4;
+    padding-inline: .2rem;
+    text-shadow: 0 1px 18px rgba(0,0,0,.8);
+  }
+
+  .service-card__visual {
+    min-height: 14.5rem;
+    display: block;
+  }
+  .service-card__visual::before,
+  .service-card__visual::after { display: none !important; }
+  .service-card__visual .media-slot__fallback::before { width: min(42%, 9rem); opacity: .14; }
+
+  .service-row__media {
+    width: 8rem;
+    aspect-ratio: 8 / 5;
+    border-radius: .75rem;
+    border: 1px solid rgba(17,20,24,.08);
+    flex: 0 0 auto;
+  }
+  main > .subhero + .section--tight .service-row a {
+    grid-template-columns: 8rem minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .service-detail__visual {
+    display: block;
+    min-height: 25rem;
+    aspect-ratio: 16 / 9;
+    margin-bottom: 3rem;
+  }
+  .service-detail__visual::before,
+  .service-detail__visual::after { display: none !important; }
+  .service-detail__visual .media-slot__fallback::before {
+    mix-blend-mode: screen;
+    opacity: .2;
+  }
+
+  .about-panel {
+    display: block;
+    min-height: 35rem;
+    padding: 0;
+  }
+  .about-panel::before,
+  .about-panel::after { display: none !important; }
+  .about-panel .media-slot__fallback {
+    background:
+      radial-gradient(ellipse at 25% 20%, rgba(146,209,231,.16), transparent 14rem),
+      linear-gradient(145deg, #20282e 0%, #14191d 65%, #0b0f12 100%);
+  }
+  .about-panel .media-slot__fallback::before {
+    mix-blend-mode: screen;
+    opacity: .24;
+  }
+
+  .location-card {
+    grid-template-columns: minmax(16rem, .7fr) minmax(15rem, .72fr) minmax(0, 1.28fr);
+  }
+  .location-card__media {
+    min-height: 31rem;
+    border-inline: 1px solid rgba(17,20,24,.08);
+  }
+  .location-card__media .media-slot__fallback::before { opacity: .12; }
+
+  .comparison__scene {
+    overflow: hidden;
+  }
+  .comparison__scene--before {
+    width: 100% !important;
+    clip-path: inset(0 calc(100% - var(--position)) 0 0);
+    border-right: 0 !important;
+  }
+  .comparison__scene > img {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity .25s ease;
+  }
+  .comparison__scene > img.is-loaded { opacity: 1; }
+  .comparison__scene > img.is-loaded + .photo-placeholder { opacity: 0; }
+  .photo-placeholder {
+    z-index: 2;
+    transition: opacity .2s ease;
+  }
+}
+
+@layer utilities {
+  @media (max-width: 980px) {
+    .location-card { grid-template-columns: 1fr; }
+    .location-card__media {
+      min-height: 0;
+      aspect-ratio: 16 / 9;
+      border-inline: 0;
+      border-block: 1px solid rgba(17,20,24,.08);
+    }
+  }
+
+  @media (max-width: 640px) {
+    main > .subhero + .section--tight .service-row a {
+      grid-template-columns: 5.6rem minmax(0, 1fr) auto;
+      gap: .8rem;
+    }
+    .service-row__media { width: 5.6rem; }
+    .service-detail__visual { min-height: 17rem; }
+    .about-panel { min-height: 25rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .media-slot > img,
+    .media-slot__fallback,
+    .hero-media__poster,
+    .hero-media__video { transition: none; }
+  }
+}
