@@ -9,16 +9,35 @@ const sets = beforeAfterSets.map((set) => ({
   beforeReady: hasPublicFile(set.before),
   afterReady: hasPublicFile(set.after)
 }));
-const first = sets[0];
+
+const firstCompleteIndex = sets.findIndex((set) => set.beforeReady && set.afterReady);
+const initialIndex = firstCompleteIndex >= 0 ? firstCompleteIndex : 0;
+const initial = sets[initialIndex];
 ---
-<div class="comparison-gallery" data-comparison-gallery>
-  <div class="comparison" data-comparison data-active-set="0" style="--position: 52%;">
+<div class="comparison-gallery" data-comparison-gallery data-initial-set={String(initialIndex)}>
+  <div class="comparison" data-comparison data-active-set={String(initialIndex)} style="--position: 52%;">
     <div class="comparison__scene comparison__scene--after" aria-hidden="true">
-      <img src={first.afterReady ? first.after : undefined} alt="" loading="lazy" decoding="async" data-media-image data-comparison-after-image />
+      <img
+        src={initial.afterReady ? initial.after : undefined}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        hidden={!initial.afterReady}
+        data-media-image
+        data-comparison-after-image
+      />
       <span class="photo-placeholder photo-placeholder--after"><b>EFTER</b></span>
     </div>
     <div class="comparison__scene comparison__scene--before" aria-hidden="true">
-      <img src={first.beforeReady ? first.before : undefined} alt="" loading="lazy" decoding="async" data-media-image data-comparison-before-image />
+      <img
+        src={initial.beforeReady ? initial.before : undefined}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        hidden={!initial.beforeReady}
+        data-media-image
+        data-comparison-before-image
+      />
       <span class="photo-placeholder photo-placeholder--before"><b>FØR</b></span>
     </div>
     <div class="comparison__divider" aria-hidden="true"><span>↔</span></div>
@@ -32,10 +51,10 @@ const first = sets[0];
     <div class="comparison-gallery__dots" role="group" aria-label="Vælg før og efter sammenligning">
       {sets.map((set, index) => (
         <button
-          class:list={{ 'is-active': index === 0 }}
+          class:list={{ 'is-active': index === initialIndex }}
           type="button"
           aria-label={`Vis ${set.label.toLocaleLowerCase('da-DK')}`}
-          aria-pressed={index === 0 ? 'true' : 'false'}
+          aria-pressed={index === initialIndex ? 'true' : 'false'}
           data-comparison-set={String(index)}
           data-before={set.beforeReady ? set.before : ''}
           data-after={set.afterReady ? set.after : ''}
