@@ -33,7 +33,7 @@
 
   const syncMediaImage = (image) => {
     if (!(image instanceof HTMLImageElement)) return;
-    const loaded = image.complete && image.naturalWidth > 0;
+    const loaded = !image.hidden && image.complete && image.naturalWidth > 0;
     image.classList.toggle('is-loaded', loaded);
     image.closest('[data-media-slot]')?.classList.toggle('has-media', loaded);
   };
@@ -98,17 +98,24 @@
     const buttons = [...gallery.querySelectorAll('[data-comparison-set]')];
     const prev = gallery.querySelector('[data-comparison-prev]');
     const next = gallery.querySelector('[data-comparison-next]');
-    if (!(comparison instanceof HTMLElement) || buttons.length === 0) return;
+    if (!(gallery instanceof HTMLElement) || !(comparison instanceof HTMLElement) || buttons.length === 0) return;
 
     const setComparisonImage = (image, src) => {
       if (!(image instanceof HTMLImageElement)) return;
       image.classList.remove('is-loaded');
-      if (src) image.src = src;
-      else image.removeAttribute('src');
+      if (src) {
+        image.hidden = false;
+        if (image.getAttribute('src') !== src) image.src = src;
+      } else {
+        image.hidden = true;
+        image.removeAttribute('src');
+      }
       syncMediaImage(image);
     };
 
-    let active = 0;
+    const parsedInitial = Number.parseInt(gallery.dataset.initialSet || '0', 10);
+    let active = Number.isFinite(parsedInitial) ? Math.min(Math.max(parsedInitial, 0), buttons.length - 1) : 0;
+
     const show = (index) => {
       active = (index + buttons.length) % buttons.length;
       comparison.dataset.activeSet = String(active);
@@ -133,7 +140,7 @@
     buttons.forEach((button, index) => button.addEventListener('click', () => show(index)));
     prev?.addEventListener('click', () => show(active - 1));
     next?.addEventListener('click', () => show(active + 1));
-    show(0);
+    show(active);
   });
 
   doc.querySelectorAll('[data-map-load]').forEach((button) => {
