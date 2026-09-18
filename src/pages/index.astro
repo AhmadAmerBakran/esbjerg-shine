@@ -47,18 +47,11 @@ const serviceSchema = {
         <div class="hero__visual reveal" aria-hidden="true">
           <div class="hero-card">
             <span class="hero-card__logo"></span>
-            <div class="hero-card__meta"><span>ESBJERG · 6700</span><small>Projektfoto indsættes senere</small></div>
+            <div class="hero-card__meta"><span>ESBJERG · 6700</span><small>Detaljer der skinner.</small></div>
           </div>
         </div>
       </div>
       <a class="hero__scroll" href="#ydelser"><span>Se ydelser</span><i aria-hidden="true"></i></a>
-    </section>
-
-    <section class="ticker" aria-label="Udvalgte ydelser">
-      <div class="ticker__track" aria-hidden="true">
-        <span>Håndvask</span><i>✦</i><span>Polering</span><i>✦</i><span>Klargøring</span><i>✦</i><span>Lakbeskyttelse</span><i>✦</i><span>Indvendig bilpleje</span><i>✦</i><span>Sæderens</span><i>✦</i>
-        <span>Håndvask</span><i>✦</i><span>Polering</span><i>✦</i><span>Klargøring</span><i>✦</i><span>Lakbeskyttelse</span><i>✦</i><span>Indvendig bilpleje</span><i>✦</i><span>Sæderens</span><i>✦</i>
-      </div>
     </section>
 
     <section class="section" id="ydelser" aria-labelledby="services-title">
@@ -68,11 +61,10 @@ const serviceSchema = {
           <p>Vi starter med bilen og dit ønskede resultat. Vælg den behandling, der passer bedst, eller kontakt os hvis du er i tvivl.</p>
         </header>
         <div class="service-grid">
-          {services.map((service, index) => (
+          {services.map((service) => (
             <article class="service-card reveal">
               <a href={`/ydelser/${service.slug}/`} aria-label={`Læs mere om ${service.title}`}>
-                <span class="service-card__number">0{index + 1}</span>
-                <span class="service-card__visual" aria-hidden="true"><i></i><b>Projektfoto</b></span>
+                <span class="service-card__visual" aria-hidden="true"><i></i></span>
                 <span class="service-card__body"><small>{service.eyebrow}</small><strong>{service.title}</strong><p>{service.summary}</p><em>Læs mere <b aria-hidden="true">↗</b></em></span>
               </a>
             </article>
@@ -87,8 +79,8 @@ const serviceSchema = {
         <div class="comparison-copy reveal">
           <p class="eyebrow">Før / efter</p>
           <h2 id="comparison-title">Forskellen skal ikke forklares.<br /><span>Den skal kunne ses.</span></h2>
-          <p>Når vi får de første rigtige projektbilleder, bliver de vist her i samme vinkel før og efter behandlingen. Træk håndtaget for at sammenligne.</p>
-          <ul class="check-list"><li>Mobil- og tastaturvenlig slider</li><li>Ingen tung billedplugin</li><li>Optimerede billeder i flere størrelser</li></ul>
+          <p>God bilpleje handler om helheden: rene flader, en mere ensartet finish og detaljer, der igen står skarpt. Resultatet skal være tydeligt, uden at det bliver overgjort.</p>
+          <ul class="check-list"><li>Renere flader og skarpere linjer</li><li>Mere ensartet finish</li><li>Detaljer, der står tydeligere frem</li></ul>
         </div>
         <div class="reveal"><BeforeAfter /></div>
       </div>
