@@ -30,8 +30,6 @@ const serviceSchema = {
   <Header />
   <main id="indhold">
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero__glow hero__glow--one" aria-hidden="true"></div>
-      <div class="hero__glow hero__glow--two" aria-hidden="true"></div>
       <div class="shell hero__grid">
         <div class="hero__copy reveal">
           <p class="eyebrow">Bilpleje · Esbjerg</p>
@@ -46,13 +44,14 @@ const serviceSchema = {
           </div>
         </div>
 
-        <div class="hero__visual reveal" aria-label="Plads til et kommende projektfoto">
+        <div class="hero__visual reveal" aria-hidden="true">
           <div class="hero-card">
-            <div class="hero-card__shine" aria-hidden="true"></div>
-            <div class="hero-card__car" aria-hidden="true">
-              <span class="hero-card__roof"></span><span class="hero-card__body"></span><span class="hero-card__wheel hero-card__wheel--left"></span><span class="hero-card__wheel hero-card__wheel--right"></span>
+            <div class="hero-card__placeholder">
+              <span>Esbjerg · Bilpleje</span>
+              <strong>Projektfoto</strong>
+              <small>indsættes senere</small>
             </div>
-            <div class="hero-card__meta"><span>ESBJERG SHINE</span><small>Projektfoto indsættes senere</small></div>
+            <div class="hero-card__meta"><span>ESBJERG SHINE</span><small>Detaljer der skinner.</small></div>
           </div>
         </div>
       </div>
