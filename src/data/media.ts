@@ -1,5 +1,6 @@
 export const siteMedia = {
   hero: {
+    background: '/media/home/hero-background.webp',
     poster: '/media/home/hero-poster.webp',
     webm: '/media/video/hero-detailing.webm',
     mp4: '/media/video/hero-detailing.mp4'
