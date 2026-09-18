@@ -39,7 +39,7 @@ The site is already wired to the paths below. You do **not** need to edit any As
 
 If a file is missing, the website shows a clean branded placeholder instead of a broken image. As soon as a correctly named file is placed at the expected path and the site is refreshed, that media appears automatically.
 
-All website-ready media below belongs in `public/media/`.
+All website-ready media below belongs in `public/media/`. Empty media directories are kept in Git with `.gitkeep`, so the full folder structure is present after cloning/pulling even before all media has been added.
 
 ## 1. Brand
 
@@ -54,6 +54,7 @@ Preferred long-term replacement: original SVG/vector artwork if available.
 ## 2. Hero
 
 ```text
+public/media/home/hero-background.webp
 public/media/home/hero-poster.webp
 public/media/video/hero-detailing.webm
 public/media/video/hero-detailing.mp4
@@ -63,11 +64,14 @@ Recommended final files:
 
 | File | Purpose | Size / ratio | Format | Target weight |
 | --- | --- | --- | --- | --- |
-| `hero-poster.webp` | immediate hero image + video fallback | 1600 × 2000, 4:5 | WebP | ideally < 300 KB |
-| `hero-detailing.webm` | preferred autoplay hero video | 1080 × 1350, 4:5, 6–8 sec | WebM | ideally 1.5–3 MB |
+| `hero-background.webp` | full-width background behind the entire hero section | 2400 × 1600, 3:2 | WebP | ideally < 450 KB |
+| `hero-poster.webp` | immediate image inside the hero media card + video fallback | 1600 × 2000, 4:5 | WebP | ideally < 300 KB |
+| `hero-detailing.webm` | preferred autoplay hero-card video | 1080 × 1350, 4:5, 6–8 sec | WebM | ideally 1.5–3 MB |
 | `hero-detailing.mp4` | compatibility fallback | 1080 × 1350, 4:5, 6–8 sec | H.264 MP4 | ideally 1.5–3.5 MB |
 
-Hero video should be muted, loop-friendly and contain no audio track. The page automatically falls back to the poster image when video cannot play or reduced-motion is preferred.
+The full hero background is automatically darkened by the UI so the text and buttons remain readable. Use a wide image with the most important subject away from the main text area. If it is missing, the existing dark hero treatment remains as the placeholder.
+
+Hero-card video should be muted, loop-friendly and contain no audio track. The page automatically falls back to the poster image when video cannot play or reduced-motion is preferred.
 
 ## 3. Service cards and service pages
 
@@ -139,7 +143,7 @@ Recommended for every file:
 - ideally < 250 KB each
 - identical framing between each `before` and `after` pair
 
-The arrows and six gallery markers already switch these image pairs automatically.
+The comparison starts on the first pair where both files actually exist. The slider reveals the before image over the after image, while the arrows and six gallery markers switch between pairs.
 
 ## 5. About image
 
@@ -171,7 +175,7 @@ Recommended:
 - ideally < 300 KB
 - workshop, entrance, detailing area or a strong exterior location photo
 
-This image sits beside the address and Google Maps section. If it is not present, the branded placeholder remains.
+This image sits beside the address and the click-to-load Google Maps area. If it is not present, the branded placeholder remains.
 
 ## 7. Social / SEO preview
 
@@ -194,6 +198,7 @@ public/media/
 ├── brand/
 │   └── esbjerg-shine-logo.webp
 ├── home/
+│   ├── hero-background.webp
 │   └── hero-poster.webp
 ├── video/
 │   ├── hero-detailing.webm
@@ -238,7 +243,7 @@ public/media/
     └── esbjerg-shine-og.jpg
 ```
 
-That is **29 drop-in media files including the existing logo and both hero-video encodes**. The same six service-card images are reused intelligently on the homepage and `/ydelser/`, so no duplicate assets are required.
+That is **30 drop-in media files including the existing logo and both hero-video encodes**. The same six service-card images are reused intelligently on the homepage and `/ydelser/`, so no duplicate assets are required.
 
 ## Asset budgets
 
