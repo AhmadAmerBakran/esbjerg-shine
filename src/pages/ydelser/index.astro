@@ -2,7 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import MediaImage from '../../components/MediaImage.astro';
 import { services } from '../../data/services';
+import { getServiceMedia } from '../../data/media';
 
 const title = 'Bilpleje og klargøring i Esbjerg | Esbjerg Shine';
 const description = 'Se ydelser inden for bilvask, indvendig bilpleje, klargøring, polering, lakbeskyttelse og sæderens hos Esbjerg Shine i Esbjerg.';
@@ -20,14 +22,18 @@ const description = 'Se ydelser inden for bilvask, indvendig bilpleje, klargøri
 
     <section class="section section--tight">
       <div class="shell service-list">
-        {services.map((service) => (
-          <article class="service-row reveal">
-            <a href={`/ydelser/${service.slug}/`}>
-              <div><small>{service.eyebrow}</small><h2>{service.title}</h2><p>{service.summary}</p></div>
-              <span class="service-row__arrow" aria-hidden="true">↗</span>
-            </a>
-          </article>
-        ))}
+        {services.map((service) => {
+          const serviceMedia = getServiceMedia(service.slug);
+          return (
+            <article class="service-row reveal">
+              <a href={`/ydelser/${service.slug}/`}>
+                <MediaImage class="service-row__media" src={serviceMedia.card} alt="" width={1600} height={1000} />
+                <div><small>{service.eyebrow}</small><h2>{service.title}</h2><p>{service.summary}</p></div>
+                <span class="service-row__arrow" aria-hidden="true">↗</span>
+              </a>
+            </article>
+          );
+        })}
       </div>
     </section>
 
