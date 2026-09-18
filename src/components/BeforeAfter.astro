@@ -1,10 +1,29 @@
-<div class="comparison" data-comparison style="--position: 52%;">
-  <div class="comparison__scene comparison__scene--after" aria-hidden="true">
-    <span class="photo-placeholder photo-placeholder--after"><b>EFTER</b></span>
+<div class="comparison-gallery" data-comparison-gallery>
+  <div class="comparison" data-comparison data-active-set="0" style="--position: 52%;">
+    <div class="comparison__scene comparison__scene--after" aria-hidden="true">
+      <span class="photo-placeholder photo-placeholder--after"><b>EFTER</b></span>
+    </div>
+    <div class="comparison__scene comparison__scene--before" aria-hidden="true">
+      <span class="photo-placeholder photo-placeholder--before"><b>FØR</b></span>
+    </div>
+    <div class="comparison__divider" aria-hidden="true"><span>↔</span></div>
+    <input class="comparison__range" type="range" min="0" max="100" value="52" aria-label="Sammenlign før- og efterbillede" data-comparison-range />
   </div>
-  <div class="comparison__scene comparison__scene--before" aria-hidden="true">
-    <span class="photo-placeholder photo-placeholder--before"><b>FØR</b></span>
+
+  <div class="comparison-gallery__controls">
+    <button class="comparison-gallery__arrow" type="button" aria-label="Forrige sammenligning" data-comparison-prev>
+      <span aria-hidden="true">←</span>
+    </button>
+    <div class="comparison-gallery__dots" role="group" aria-label="Vælg før og efter sammenligning">
+      <button class="is-active" type="button" aria-label="Vis sammenligning 1" aria-pressed="true" data-comparison-set="0"><span></span></button>
+      <button type="button" aria-label="Vis sammenligning 2" aria-pressed="false" data-comparison-set="1"><span></span></button>
+      <button type="button" aria-label="Vis sammenligning 3" aria-pressed="false" data-comparison-set="2"><span></span></button>
+      <button type="button" aria-label="Vis sammenligning 4" aria-pressed="false" data-comparison-set="3"><span></span></button>
+      <button type="button" aria-label="Vis sammenligning 5" aria-pressed="false" data-comparison-set="4"><span></span></button>
+      <button type="button" aria-label="Vis sammenligning 6" aria-pressed="false" data-comparison-set="5"><span></span></button>
+    </div>
+    <button class="comparison-gallery__arrow" type="button" aria-label="Næste sammenligning" data-comparison-next>
+      <span aria-hidden="true">→</span>
+    </button>
   </div>
-  <div class="comparison__divider" aria-hidden="true"><span>↔</span></div>
-  <input class="comparison__range" type="range" min="0" max="100" value="52" aria-label="Sammenlign før- og efterbillede" data-comparison-range />
 </div>

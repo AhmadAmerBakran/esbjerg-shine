@@ -53,6 +53,35 @@
     update();
   });
 
+  doc.querySelectorAll('[data-comparison-gallery]').forEach((gallery) => {
+    const comparison = gallery.querySelector('[data-comparison]');
+    const range = gallery.querySelector('[data-comparison-range]');
+    const buttons = [...gallery.querySelectorAll('[data-comparison-set]')];
+    const prev = gallery.querySelector('[data-comparison-prev]');
+    const next = gallery.querySelector('[data-comparison-next]');
+    if (!(comparison instanceof HTMLElement) || buttons.length === 0) return;
+
+    let active = 0;
+    const show = (index) => {
+      active = (index + buttons.length) % buttons.length;
+      comparison.dataset.activeSet = String(active);
+      buttons.forEach((button, buttonIndex) => {
+        const selected = buttonIndex === active;
+        button.classList.toggle('is-active', selected);
+        button.setAttribute('aria-pressed', String(selected));
+      });
+      if (range instanceof HTMLInputElement) {
+        range.value = '52';
+        comparison.style.setProperty('--position', '52%');
+      }
+    };
+
+    buttons.forEach((button, index) => button.addEventListener('click', () => show(index)));
+    prev?.addEventListener('click', () => show(active - 1));
+    next?.addEventListener('click', () => show(active + 1));
+    show(0);
+  });
+
   doc.querySelectorAll('[data-year]').forEach((node) => { node.textContent = String(new Date().getFullYear()); });
 
   const form = doc.querySelector('[data-contact-form]');

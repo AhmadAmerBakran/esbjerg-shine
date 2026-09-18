@@ -79,7 +79,7 @@ const serviceSchema = {
         <div class="comparison-copy reveal">
           <p class="eyebrow">Før / efter</p>
           <h2 id="comparison-title">Forskellen skal ikke forklares.<br /><span>Den skal kunne ses.</span></h2>
-          <p>God bilpleje handler om helheden: rene flader, en mere ensartet finish og detaljer, der igen står skarpt. Resultatet skal være tydeligt, uden at det bliver overgjort.</p>
+          <p>God bilpleje handler om helheden: rene flader, en mere ensartet finish og detaljer, der igen står skarpt. Brug pilene eller markørerne under billedet for at bladre mellem flere resultater.</p>
           <ul class="check-list"><li>Renere flader og skarpere linjer</li><li>Mere ensartet finish</li><li>Detaljer, der står tydeligere frem</li></ul>
         </div>
         <div class="reveal"><BeforeAfter /></div>
@@ -99,6 +99,39 @@ const serviceSchema = {
       </div>
     </section>
 
+    <section class="section location-section" id="find-os" aria-labelledby="location-title">
+      <div class="shell">
+        <header class="section-heading reveal">
+          <div><p class="eyebrow">Find os</p><h2 id="location-title">Lokalt i <span>Esbjerg.</span></h2></div>
+          <p>Esbjerg Shine ligger på Randersvej. Kom efter aftale, så der er sat tid af til bilen og den behandling, vi har aftalt.</p>
+        </header>
+        <div class="location-card reveal">
+          <div class="location-card__info">
+            <div>
+              <small>Adresse</small>
+              <strong>{company.address.street}<br />{company.address.postalCode} {company.address.city}</strong>
+            </div>
+            <div>
+              <small>Åbning</small>
+              <span>{company.openingText}</span>
+            </div>
+            <div class="location-card__actions">
+              <a class="button button--dark" href={company.mapUrl} target="_blank" rel="noopener noreferrer"><span>Åbn i Google Maps</span><i aria-hidden="true">↗</i></a>
+              <a class="location-card__phone" href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>
+            </div>
+          </div>
+          <div class="map-frame">
+            <iframe
+              title="Kort til Esbjerg Shine på Randersvej 26 i Esbjerg"
+              src="https://www.google.com/maps?q=Randersvej%2026%2C%206700%20Esbjerg%2C%20Danmark&output=embed"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section section--contact" id="kontakt" aria-labelledby="contact-title">
       <div class="shell contact-grid">
         <div class="contact-copy reveal">
@@ -106,7 +139,14 @@ const serviceSchema = {
           <h2 id="contact-title">Fortæl os om <span>din bil.</span></h2>
           <p>Send en kort beskrivelse af bilen og den behandling, du overvejer. Vi vender tilbage med næste skridt og et tilbud.</p>
           <a class="contact-phone" href={`tel:${company.phoneHref}`}><small>Vil du hellere ringe?</small><strong>{company.phoneDisplay}</strong></a>
-          <div class="social-links"><a href={company.facebook} target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href={company.instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a></div>
+          <div class="social-links" aria-label="Esbjerg Shine på sociale medier">
+            <a class="social-icon" href={company.facebook} target="_blank" rel="noopener noreferrer" aria-label="Esbjerg Shine på Facebook" title="Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4.5c-.5-.1-1.8-.2-3.4-.2-3.3 0-5.6 2-5.6 5.8V13H4v4h4v7h5v-7h3.5l.6-4H13v-2.5C13 9.3 13.4 8 14 8Z"/></svg>
+            </a>
+            <a class="social-icon" href={company.instagram} target="_blank" rel="noopener noreferrer" aria-label="Esbjerg Shine på Instagram" title="Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.7" cy="6.4" r="1" class="social-icon__dot"/></svg>
+            </a>
+          </div>
         </div>
         <div class="contact-card reveal"><ContactForm /></div>
       </div>
