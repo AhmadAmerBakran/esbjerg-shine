@@ -2,7 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import MediaImage from '../../components/MediaImage.astro';
 import { services, type Service } from '../../data/services';
+import { getServiceMedia } from '../../data/media';
 
 export function getStaticPaths() {
   return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
@@ -10,6 +12,7 @@ export function getStaticPaths() {
 
 interface Props { service: Service }
 const { service } = Astro.props;
+const serviceMedia = getServiceMedia(service.slug);
 const canonicalPath = `/ydelser/${service.slug}/`;
 const site = Astro.site ?? new URL('https://esbjergshine.dk');
 const home = site.toString().replace(/\/$/, '');
@@ -21,6 +24,7 @@ const schema = [
     name: service.title,
     serviceType: service.title,
     url: `${home}${canonicalPath}`,
+    image: `${home}${serviceMedia.detail}`,
     areaServed: { '@type': 'City', name: 'Esbjerg' },
     provider: { '@id': `${home}/#virksomhed` }
   },
@@ -51,7 +55,7 @@ const schema = [
     <section class="section section--tight">
       <div class="shell service-detail">
         <article class="service-detail__content">
-          <div class="service-detail__visual" aria-hidden="true"></div>
+          <MediaImage class="service-detail__visual" src={serviceMedia.detail} alt={`${service.title} hos Esbjerg Shine i Esbjerg`} width={1920} height={1080} />
           <h2>Behandlingen tilpasses bilen</h2>
           <p>{service.intro}</p>
           <p>Inden arbejdet går i gang, afstemmer vi forventningerne og ser på bilens aktuelle stand. Det gør det lettere at vælge den behandling, der giver mening, frem for at sælge mere end bilen behøver.</p>
