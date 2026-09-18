@@ -122,13 +122,18 @@ const serviceSchema = {
             </div>
           </div>
           <MediaImage class="location-card__media" src={siteMedia.location} alt="Esbjerg Shine på Randersvej 26 i Esbjerg" width={1800} height={1200} />
-          <div class="map-frame">
-            <iframe
-              title="Kort til Esbjerg Shine på Randersvej 26 i Esbjerg"
-              src="https://www.google.com/maps?q=Randersvej%2026%2C%206700%20Esbjerg%2C%20Danmark&output=embed"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-            ></iframe>
+          <div class="map-frame" data-map-frame>
+            <button
+              class="map-frame__load"
+              type="button"
+              data-map-load
+              data-map-src="https://www.google.com/maps?q=Randersvej%2026%2C%206700%20Esbjerg%2C%20Danmark&output=embed"
+              aria-label="Vis Esbjerg Shine på Google Maps"
+            >
+              <span class="map-frame__pin" aria-hidden="true">⌖</span>
+              <strong>Randersvej 26</strong>
+              <small>Vis kort</small>
+            </button>
           </div>
         </div>
       </div>
