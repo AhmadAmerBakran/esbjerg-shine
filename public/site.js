@@ -100,6 +100,14 @@
     const next = gallery.querySelector('[data-comparison-next]');
     if (!(comparison instanceof HTMLElement) || buttons.length === 0) return;
 
+    const setComparisonImage = (image, src) => {
+      if (!(image instanceof HTMLImageElement)) return;
+      image.classList.remove('is-loaded');
+      if (src) image.src = src;
+      else image.removeAttribute('src');
+      syncMediaImage(image);
+    };
+
     let active = 0;
     const show = (index) => {
       active = (index + buttons.length) % buttons.length;
@@ -112,16 +120,8 @@
 
       const activeButton = buttons[active];
       if (activeButton instanceof HTMLElement) {
-        if (beforeImage instanceof HTMLImageElement && activeButton.dataset.before) {
-          beforeImage.classList.remove('is-loaded');
-          beforeImage.closest('[data-media-slot]')?.classList.remove('has-media');
-          beforeImage.src = activeButton.dataset.before;
-        }
-        if (afterImage instanceof HTMLImageElement && activeButton.dataset.after) {
-          afterImage.classList.remove('is-loaded');
-          afterImage.closest('[data-media-slot]')?.classList.remove('has-media');
-          afterImage.src = activeButton.dataset.after;
-        }
+        setComparisonImage(beforeImage, activeButton.dataset.before || '');
+        setComparisonImage(afterImage, activeButton.dataset.after || '');
       }
 
       if (range instanceof HTMLInputElement) {
