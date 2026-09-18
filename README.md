@@ -6,7 +6,7 @@ Performance-first Danish website for **Esbjerg Shine** (CVR 46241479), bilpleje/
 
 The site is deliberately built differently from the earlier DME Murer project: Astro generates the repetitive page structure, production assets receive build hashes, service pages come from one data source, and the browser receives only a very small progressive-enhancement script. There are no third-party fonts, trackers, UI frameworks or runtime CDN dependencies.
 
-The visual direction is dark, metallic and minimal, with restrained motion. Real project photography will replace the current purpose-built placeholders when it is available.
+The visual direction is premium graphite, warm charcoal and silver. The public website must stay customer-facing: no implementation notes, upload instructions, placeholder guidance or developer copy should appear inside visual areas or sections.
 
 ## Stack
 
@@ -32,6 +32,50 @@ SITE_URL=https://example.dk npm run build
 
 The fallback site URL in development is currently `https://esbjergshine.dk`. **Confirm the production domain before launch** and set `SITE_URL` in the build environment.
 
+## Media plan
+
+Customer-facing pages should never contain notes such as “project photo comes later”, “upload image here” or technical explanations. Temporary visual areas should remain purely decorative until the real media is available.
+
+Recommended structure:
+
+```text
+src/assets/images/
+├── home/
+│   ├── hero.jpg
+│   └── about.jpg
+├── services/
+│   ├── bilvask/
+│   ├── indvendig-bilpleje/
+│   ├── komplet-klargoering/
+│   ├── polering/
+│   ├── lakbeskyttelse/
+│   └── saederens/
+└── before-after/
+
+public/media/
+├── brand/
+│   └── esbjerg-shine-logo.webp
+├── og/
+│   └── esbjerg-shine-og.jpg
+└── video/
+    ├── hero.webm
+    └── hero.mp4
+```
+
+Recommended source sizes and crops:
+
+- Hero photo: 1600 × 2000 px, 4:5
+- Service card photo: 1600 × 1000 px, 8:5
+- Service detail photo: 1920 × 1080 px, 16:9
+- Before/after pair: 1600 × 1200 px, 4:3, identical framing for both images
+- About photo: 1200 × 1600 px, 3:4
+- Open Graph image: 1200 × 630 px
+- Logo: original SVG/vector preferred when available
+
+Photography should normally be kept as a high-quality JPEG source in `src/assets/images/` and rendered by Astro as responsive AVIF/WebP/JPEG variants. Video should be short, muted, loop-friendly and supplied as WebM with MP4 fallback. Avoid GIF.
+
+The currently integrated logo is an optimized WebP derived from the supplied raster image. Replace it with the original vector artwork later if the designer can provide it.
+
 ## Contact form
 
 The form UI is ready. The Pages Function is provisioned for a Microsoft 365 / Microsoft Graph mailbox using these production secrets:
@@ -51,7 +95,7 @@ The endpoint already includes same-origin enforcement, server-side validation, a
 1. Final production domain.
 2. Business email address and email provider.
 3. Real before/after photo pairs and service/project photos.
-4. Final transparent/cropped logo asset (the supplied black-background image can be used as source material).
+4. Original logo SVG/vector file, if available.
 5. Confirmation that the initial service list matches what Esbjerg Shine actually offers.
 6. Optional real customer reviews, with permission to publish them.
 
