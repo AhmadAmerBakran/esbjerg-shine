@@ -6,7 +6,7 @@ Performance-first Danish website for **Esbjerg Shine** (CVR 46241479), bilpleje/
 
 The site is deliberately built differently from the earlier DME Murer project: Astro generates the repetitive page structure, production assets receive build hashes, service pages come from one data source, and the browser receives only a very small progressive-enhancement script. There are no third-party fonts, trackers, UI frameworks or runtime CDN dependencies.
 
-The visual direction is premium graphite, warm charcoal and silver. The public website must stay customer-facing: no implementation notes, upload instructions, placeholder guidance or developer copy should appear inside visual areas or sections.
+The visual direction is a clean detailing-studio aesthetic: cool graphite, deep neutral blacks, glassy slate surfaces and restrained liquid-silver highlights. Avoid warm brown/beige tones that can read as dusty, and avoid sudden white sections. The public website must stay customer-facing: no implementation notes, upload instructions, placeholder guidance or developer copy should appear inside visual areas or sections.
 
 ## Stack
 
