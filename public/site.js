@@ -136,6 +136,23 @@
     show(0);
   });
 
+  doc.querySelectorAll('[data-map-load]').forEach((button) => {
+    if (!(button instanceof HTMLButtonElement)) return;
+    const frame = button.closest('[data-map-frame]');
+    const src = button.dataset.mapSrc;
+    if (!(frame instanceof HTMLElement) || !src) return;
+
+    button.addEventListener('click', () => {
+      const iframe = doc.createElement('iframe');
+      iframe.title = 'Kort til Esbjerg Shine på Randersvej 26 i Esbjerg';
+      iframe.src = src;
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      iframe.allowFullscreen = true;
+      frame.replaceChildren(iframe);
+    }, { once: true });
+  });
+
   doc.querySelectorAll('[data-year]').forEach((node) => { node.textContent = String(new Date().getFullYear()); });
 
   const form = doc.querySelector('[data-contact-form]');
