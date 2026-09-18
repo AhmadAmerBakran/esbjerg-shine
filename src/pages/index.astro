@@ -4,8 +4,11 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BeforeAfter from '../components/BeforeAfter.astro';
 import ContactForm from '../components/ContactForm.astro';
+import HeroMedia from '../components/HeroMedia.astro';
+import MediaImage from '../components/MediaImage.astro';
 import { company } from '../data/company';
 import { services } from '../data/services';
+import { getServiceMedia, siteMedia } from '../data/media';
 
 const title = 'Bilpleje i Esbjerg | Esbjerg Shine';
 const description = 'Esbjerg Shine tilbyder bilpleje, klargøring, polering, håndvask og lakbeskyttelse i Esbjerg. Kontakt os og få et tilbud tilpasset din bil.';
@@ -44,12 +47,7 @@ const serviceSchema = {
           </div>
         </div>
 
-        <div class="hero__visual reveal" aria-hidden="true">
-          <div class="hero-card">
-            <span class="hero-card__logo"></span>
-            <div class="hero-card__meta"><span>ESBJERG · 6700</span><small>Detaljer der skinner.</small></div>
-          </div>
-        </div>
+        <div class="hero__visual reveal" aria-hidden="true"><HeroMedia /></div>
       </div>
       <a class="hero__scroll" href="#ydelser"><span>Se ydelser</span><i aria-hidden="true"></i></a>
     </section>
@@ -61,14 +59,17 @@ const serviceSchema = {
           <p>Vi starter med bilen og dit ønskede resultat. Vælg den behandling, der passer bedst, eller kontakt os hvis du er i tvivl.</p>
         </header>
         <div class="service-grid">
-          {services.map((service) => (
-            <article class="service-card reveal">
-              <a href={`/ydelser/${service.slug}/`} aria-label={`Læs mere om ${service.title}`}>
-                <span class="service-card__visual" aria-hidden="true"><i></i></span>
-                <span class="service-card__body"><small>{service.eyebrow}</small><strong>{service.title}</strong><p>{service.summary}</p><em>Læs mere <b aria-hidden="true">↗</b></em></span>
-              </a>
-            </article>
-          ))}
+          {services.map((service) => {
+            const serviceMedia = getServiceMedia(service.slug);
+            return (
+              <article class="service-card reveal">
+                <a href={`/ydelser/${service.slug}/`} aria-label={`Læs mere om ${service.title}`}>
+                  <MediaImage class="service-card__visual" src={serviceMedia.card} alt="" width={1600} height={1000} />
+                  <span class="service-card__body"><small>{service.eyebrow}</small><strong>{service.title}</strong><p>{service.summary}</p><em>Læs mere <b aria-hidden="true">↗</b></em></span>
+                </a>
+              </article>
+            );
+          })}
         </div>
         <div class="section-link reveal"><a href="/ydelser/">Se alle ydelser samlet <span aria-hidden="true">→</span></a></div>
       </div>
@@ -79,7 +80,7 @@ const serviceSchema = {
         <div class="comparison-copy reveal">
           <p class="eyebrow">Før / efter</p>
           <h2 id="comparison-title">Forskellen skal ikke forklares.<br /><span>Den skal kunne ses.</span></h2>
-          <p>God bilpleje handler om helheden: rene flader, en mere ensartet finish og detaljer, der igen står skarpt. Brug pilene eller markørerne under billedet for at bladre mellem flere resultater.</p>
+          <p>God bilpleje handler om helheden: rene flader, en mere ensartet finish og detaljer, der igen står skarpt.</p>
           <ul class="check-list"><li>Renere flader og skarpere linjer</li><li>Mere ensartet finish</li><li>Detaljer, der står tydeligere frem</li></ul>
         </div>
         <div class="reveal"><BeforeAfter /></div>
@@ -88,7 +89,7 @@ const serviceSchema = {
 
     <section class="section" id="om" aria-labelledby="about-title">
       <div class="shell about-grid">
-        <div class="about-panel reveal" aria-hidden="true"><span class="about-panel__line"></span><strong>Detaljer<br />der skinner.</strong><small>Esbjerg · 6700</small></div>
+        <MediaImage class="about-panel reveal" src={siteMedia.about} alt="Bilpleje udført hos Esbjerg Shine i Esbjerg" width={1600} height={2000} />
         <div class="about-copy reveal">
           <p class="eyebrow">Esbjerg Shine</p>
           <h2 id="about-title">Rolig proces.<br /><span>Skarpt resultat.</span></h2>
@@ -120,6 +121,7 @@ const serviceSchema = {
               <a class="location-card__phone" href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>
             </div>
           </div>
+          <MediaImage class="location-card__media" src={siteMedia.location} alt="Esbjerg Shine på Randersvej 26 i Esbjerg" width={1800} height={1200} />
           <div class="map-frame">
             <iframe
               title="Kort til Esbjerg Shine på Randersvej 26 i Esbjerg"
