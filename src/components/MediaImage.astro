@@ -1,0 +1,34 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  class?: string;
+  loading?: 'eager' | 'lazy';
+  fetchPriority?: 'high' | 'low' | 'auto';
+  width?: number;
+  height?: number;
+}
+
+const {
+  src,
+  alt,
+  class: className = '',
+  loading = 'lazy',
+  fetchPriority = 'auto',
+  width,
+  height
+} = Astro.props;
+---
+<div class:list={['media-slot', className]} data-media-slot>
+  <img
+    src={src}
+    alt={alt}
+    loading={loading}
+    decoding="async"
+    fetchpriority={fetchPriority}
+    width={width}
+    height={height}
+    data-media-image
+  />
+  <span class="media-slot__fallback" aria-hidden="true"></span>
+</div>
