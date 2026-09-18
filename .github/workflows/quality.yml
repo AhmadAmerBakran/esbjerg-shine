@@ -40,13 +40,22 @@ jobs:
         env:
           SITE_URL: https://esbjergshine.dk
 
-      - name: Reject accidental large public assets
+      - name: Enforce public asset budgets
         run: |
-          oversized="$(find public -type f -size +1200k -print)"
+          oversized="$(find public -type f ! -path 'public/media/video/*' -size +1200k -print)"
           if [ -n "$oversized" ]; then
-            echo "Public files above 1.2 MB are not allowed:"
+            echo "Non-video public files above 1.2 MB are not allowed:"
             echo "$oversized"
             exit 1
+          fi
+
+          if [ -d public/media/video ]; then
+            oversized_video="$(find public/media/video -type f -size +4096k -print)"
+            if [ -n "$oversized_video" ]; then
+              echo "Video files above 4 MB are not allowed:"
+              echo "$oversized_video"
+              exit 1
+            fi
           fi
 
       - name: Verify SEO outputs
