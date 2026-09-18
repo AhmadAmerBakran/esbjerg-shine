@@ -1,9 +1,15 @@
+---
+import { beforeAfterSets } from '../data/media';
+const first = beforeAfterSets[0];
+---
 <div class="comparison-gallery" data-comparison-gallery>
   <div class="comparison" data-comparison data-active-set="0" style="--position: 52%;">
     <div class="comparison__scene comparison__scene--after" aria-hidden="true">
+      <img src={first.after} alt="" loading="lazy" decoding="async" data-media-image data-comparison-after-image />
       <span class="photo-placeholder photo-placeholder--after"><b>EFTER</b></span>
     </div>
     <div class="comparison__scene comparison__scene--before" aria-hidden="true">
+      <img src={first.before} alt="" loading="lazy" decoding="async" data-media-image data-comparison-before-image />
       <span class="photo-placeholder photo-placeholder--before"><b>FØR</b></span>
     </div>
     <div class="comparison__divider" aria-hidden="true"><span>↔</span></div>
@@ -15,12 +21,17 @@
       <span aria-hidden="true">←</span>
     </button>
     <div class="comparison-gallery__dots" role="group" aria-label="Vælg før og efter sammenligning">
-      <button class="is-active" type="button" aria-label="Vis sammenligning 1" aria-pressed="true" data-comparison-set="0"><span></span></button>
-      <button type="button" aria-label="Vis sammenligning 2" aria-pressed="false" data-comparison-set="1"><span></span></button>
-      <button type="button" aria-label="Vis sammenligning 3" aria-pressed="false" data-comparison-set="2"><span></span></button>
-      <button type="button" aria-label="Vis sammenligning 4" aria-pressed="false" data-comparison-set="3"><span></span></button>
-      <button type="button" aria-label="Vis sammenligning 5" aria-pressed="false" data-comparison-set="4"><span></span></button>
-      <button type="button" aria-label="Vis sammenligning 6" aria-pressed="false" data-comparison-set="5"><span></span></button>
+      {beforeAfterSets.map((set, index) => (
+        <button
+          class:list={{ 'is-active': index === 0 }}
+          type="button"
+          aria-label={`Vis ${set.label.toLocaleLowerCase('da-DK')}`}
+          aria-pressed={index === 0 ? 'true' : 'false'}
+          data-comparison-set={String(index)}
+          data-before={set.before}
+          data-after={set.after}
+        ><span></span></button>
+      ))}
     </div>
     <button class="comparison-gallery__arrow" type="button" aria-label="Næste sammenligning" data-comparison-next>
       <span aria-hidden="true">→</span>
