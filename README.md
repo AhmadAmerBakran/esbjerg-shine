@@ -4,17 +4,18 @@ Performance-first Danish website for **Esbjerg Shine** (CVR 46241479), bilpleje/
 
 ## Direction
 
-The site is deliberately built differently from the earlier DME Murer project: Astro generates the repetitive page structure, production assets receive build hashes, service pages come from one data source, and the browser receives only a very small progressive-enhancement script. There are no third-party fonts, trackers, UI frameworks or runtime CDN dependencies.
+The site is built with Astro and a very small progressive-enhancement script. Service pages come from one data source, production assets are cacheable, and there are no UI frameworks or runtime CDN dependencies.
 
-The visual direction is a clean detailing-studio aesthetic: cool graphite, deep neutral blacks, glassy slate surfaces and restrained liquid-silver highlights. Avoid warm brown/beige tones that can read as dusty, and avoid sudden white sections. The public website must stay customer-facing: no implementation notes, upload instructions, placeholder guidance or developer copy should appear inside visual areas or sections.
+The visual direction is a clean detailing-studio aesthetic: cool graphite, deep neutral blacks, cool silver, clean light surfaces and restrained blue highlights. Public pages must stay customer-facing: no upload instructions or developer notes should appear inside the UI.
 
 ## Stack
 
 - Astro 7, fully static output
+- Manrope Variable, self-hosted through the project dependency
 - plain CSS and a small vanilla JavaScript enhancement file
 - Cloudflare Pages-compatible `_headers` and `_routes.json`
 - Cloudflare Pages Function for the contact endpoint
-- Danish metadata, canonical URLs, sitemap, robots.txt, `AutoWash`/LocalBusiness-compatible structured data and individual service pages
+- Danish metadata, canonical URLs, sitemap, robots.txt, structured data and individual service pages
 - GitHub Actions build + Lighthouse quality gate
 
 ## Local development
@@ -30,51 +31,227 @@ Production build:
 SITE_URL=https://example.dk npm run build
 ```
 
-The fallback site URL in development is currently `https://esbjergshine.dk`. **Confirm the production domain before launch** and set `SITE_URL` in the build environment.
+The fallback site URL in development is currently `https://esbjergshine.dk`. Confirm the production domain before launch and set `SITE_URL` in the build environment.
 
-## Media plan
+# Drop-in media system
 
-Customer-facing pages should never contain notes such as “project photo comes later”, “upload image here” or technical explanations. Temporary visual areas should remain purely decorative until the real media is available.
+The site is already wired to the paths below. You do **not** need to edit any Astro, CSS or JavaScript when real media is ready.
 
-Recommended structure:
+If a file is missing, the website shows a clean branded placeholder instead of a broken image. As soon as a correctly named file is placed at the expected path and the site is refreshed, that media appears automatically.
+
+All website-ready media below belongs in `public/media/`.
+
+## 1. Brand
+
+Already in use:
 
 ```text
-src/assets/images/
-├── home/
-│   ├── hero.jpg
-│   └── about.jpg
-├── services/
-│   ├── bilvask/
-│   ├── indvendig-bilpleje/
-│   ├── komplet-klargoering/
-│   ├── polering/
-│   ├── lakbeskyttelse/
-│   └── saederens/
-└── before-after/
+public/media/brand/esbjerg-shine-logo.webp
+```
 
+Preferred long-term replacement: original SVG/vector artwork if available.
+
+## 2. Hero
+
+```text
+public/media/home/hero-poster.webp
+public/media/video/hero-detailing.webm
+public/media/video/hero-detailing.mp4
+```
+
+Recommended final files:
+
+| File | Purpose | Size / ratio | Format | Target weight |
+| --- | --- | --- | --- | --- |
+| `hero-poster.webp` | immediate hero image + video fallback | 1600 × 2000, 4:5 | WebP | ideally < 300 KB |
+| `hero-detailing.webm` | preferred autoplay hero video | 1080 × 1350, 4:5, 6–8 sec | WebM | ideally 1.5–3 MB |
+| `hero-detailing.mp4` | compatibility fallback | 1080 × 1350, 4:5, 6–8 sec | H.264 MP4 | ideally 1.5–3.5 MB |
+
+Hero video should be muted, loop-friendly and contain no audio track. The page automatically falls back to the poster image when video cannot play or reduced-motion is preferred.
+
+## 3. Service cards and service pages
+
+Every service has two already-linked media slots: one homepage/list card image and one larger service-detail image.
+
+```text
+public/media/services/
+├── bilvask/
+│   ├── card.webp
+│   └── detail.webp
+├── indvendig-bilpleje/
+│   ├── card.webp
+│   └── detail.webp
+├── komplet-klargoering/
+│   ├── card.webp
+│   └── detail.webp
+├── polering/
+│   ├── card.webp
+│   └── detail.webp
+├── lakbeskyttelse/
+│   ├── card.webp
+│   └── detail.webp
+└── saederens/
+    ├── card.webp
+    └── detail.webp
+```
+
+Recommended output:
+
+| Filename | Used on | Size / ratio | Format | Target weight |
+| --- | --- | --- | --- | --- |
+| `card.webp` | homepage service card + `/ydelser/` list | 1600 × 1000, 8:5 | WebP | ideally < 220 KB |
+| `detail.webp` | individual service page | 1920 × 1080, 16:9 | WebP | ideally < 320 KB |
+
+Suggested subjects:
+
+- `bilvask`: foam, hand wash, rinse or wet glossy exterior
+- `indvendig-bilpleje`: dashboard, cockpit or detailed interior work
+- `komplet-klargoering`: finished whole-car 3/4 view
+- `polering`: machine polisher working on paint
+- `lakbeskyttelse`: coating application, gloss or water beading
+- `saederens`: seat extraction/cleaning or clean upholstery
+
+## 4. Before / after gallery
+
+The homepage comparison component is already connected to six selectable pairs. Keep every before/after pair at exactly the same crop, camera position and dimensions.
+
+```text
+public/media/before-after/
+├── 01-polering-before.webp
+├── 01-polering-after.webp
+├── 02-indvendig-before.webp
+├── 02-indvendig-after.webp
+├── 03-saederens-before.webp
+├── 03-saederens-after.webp
+├── 04-bilvask-before.webp
+├── 04-bilvask-after.webp
+├── 05-klargoering-before.webp
+├── 05-klargoering-after.webp
+├── 06-lakbeskyttelse-before.webp
+└── 06-lakbeskyttelse-after.webp
+```
+
+Recommended for every file:
+
+- 1600 × 1200 px
+- 4:3
+- WebP
+- ideally < 250 KB each
+- identical framing between each `before` and `after` pair
+
+The arrows and six gallery markers already switch these image pairs automatically.
+
+## 5. About image
+
+```text
+public/media/about/esbjerg-shine-work.webp
+```
+
+Recommended:
+
+- 1600 × 2000 px
+- 4:5
+- WebP
+- ideally < 300 KB
+- authentic photo of Esbjerg Shine working on a vehicle
+
+This is already connected to the homepage About section.
+
+## 6. Location image
+
+```text
+public/media/location/esbjerg-shine-location.webp
+```
+
+Recommended:
+
+- 1800 × 1200 px
+- 3:2
+- WebP
+- ideally < 300 KB
+- workshop, entrance, detailing area or a strong exterior location photo
+
+This image sits beside the address and Google Maps section. If it is not present, the branded placeholder remains.
+
+## 7. Social / SEO preview
+
+```text
+public/media/social/esbjerg-shine-og.jpg
+```
+
+Required crop:
+
+- 1200 × 630 px
+- JPG
+- ideally < 400 KB
+
+This is already connected to Open Graph, Twitter/X large-card metadata and the business structured data. Use a strong finished-car image with the Esbjerg Shine logo; keep any text minimal.
+
+## Complete media checklist
+
+```text
 public/media/
 ├── brand/
 │   └── esbjerg-shine-logo.webp
-├── og/
-│   └── esbjerg-shine-og.jpg
-└── video/
-    ├── hero.webm
-    └── hero.mp4
+├── home/
+│   └── hero-poster.webp
+├── video/
+│   ├── hero-detailing.webm
+│   └── hero-detailing.mp4
+├── services/
+│   ├── bilvask/
+│   │   ├── card.webp
+│   │   └── detail.webp
+│   ├── indvendig-bilpleje/
+│   │   ├── card.webp
+│   │   └── detail.webp
+│   ├── komplet-klargoering/
+│   │   ├── card.webp
+│   │   └── detail.webp
+│   ├── polering/
+│   │   ├── card.webp
+│   │   └── detail.webp
+│   ├── lakbeskyttelse/
+│   │   ├── card.webp
+│   │   └── detail.webp
+│   └── saederens/
+│       ├── card.webp
+│       └── detail.webp
+├── before-after/
+│   ├── 01-polering-before.webp
+│   ├── 01-polering-after.webp
+│   ├── 02-indvendig-before.webp
+│   ├── 02-indvendig-after.webp
+│   ├── 03-saederens-before.webp
+│   ├── 03-saederens-after.webp
+│   ├── 04-bilvask-before.webp
+│   ├── 04-bilvask-after.webp
+│   ├── 05-klargoering-before.webp
+│   ├── 05-klargoering-after.webp
+│   ├── 06-lakbeskyttelse-before.webp
+│   └── 06-lakbeskyttelse-after.webp
+├── about/
+│   └── esbjerg-shine-work.webp
+├── location/
+│   └── esbjerg-shine-location.webp
+└── social/
+    └── esbjerg-shine-og.jpg
 ```
 
-Recommended source sizes and crops:
+That is **29 drop-in media files including the existing logo and both hero-video encodes**. The same six service-card images are reused intelligently on the homepage and `/ydelser/`, so no duplicate assets are required.
 
-- Hero photo: 1600 × 2000 px, 4:5
-- Service card photo: 1600 × 1000 px, 8:5
-- Service detail photo: 1920 × 1080 px, 16:9
-- Before/after pair: 1600 × 1200 px, 4:3, identical framing for both images
-- About photo: 1200 × 1600 px, 3:4
-- Open Graph image: 1200 × 630 px
-- Logo: original SVG/vector preferred when available
+## Asset budgets
 
-Photography should normally be kept as a high-quality JPEG source in `src/assets/images/` and rendered by Astro as responsive AVIF/WebP/JPEG variants. Video should be short, muted, loop-friendly and supplied as WebM with MP4 fallback. Avoid GIF.
+The CI quality gate rejects oversized final media:
 
-The currently integrated logo is an optimized WebP derived from the supplied raster image. Replace it with the original vector artwork later if the designer can provide it.
+- non-video files in `public/`: maximum 1.2 MB each
+- files under `public/media/video/`: maximum 4 MB each
+
+The recommended targets above are intentionally much smaller than the hard limits.
+
+## Photography direction
+
+Use consistent cool-neutral lighting, clean blacks, glossy paint, glass, water, polished metal and controlled reflections. Avoid yellow workshop light, beige/brown casts, heavy HDR, random stock styles and visibly dusty environments.
 
 ## Contact form
 
@@ -86,15 +263,13 @@ The form UI is ready. The Pages Function is provisioned for a Microsoft 365 / Mi
 - `CONTACT_MAILBOX`
 - `CONTACT_TO`
 
-This mail transport is intentionally not treated as final until Esbjerg Shine's actual business email/provider is confirmed. If the company uses another provider, replace the delivery adapter rather than weakening the form security.
-
-The endpoint already includes same-origin enforcement, server-side validation, an allowlist, honeypot, request-size limits and short IP-hash throttling. It does not log form content.
+The endpoint includes same-origin enforcement, server-side validation, an allowlist, honeypot, request-size limits and short IP-hash throttling. It does not log form content.
 
 ## Information still needed before production
 
 1. Final production domain.
 2. Business email address and email provider.
-3. Real before/after photo pairs and service/project photos.
+3. Real media listed above.
 4. Original logo SVG/vector file, if available.
 5. Confirmation that the initial service list matches what Esbjerg Shine actually offers.
 6. Optional real customer reviews, with permission to publish them.
@@ -110,15 +285,15 @@ The current information is consistently represented as:
 - Randersvej 26, 6700 Esbjerg
 - Åbningstider efter aftale
 
-The website uses the physical address in visible content and structured data for local relevance. We intentionally do **not** generate dozens of thin city pages. Search Console, Google Business Profile consistency and real project content will matter more than doorway-style pages.
+The website uses the physical address in visible content and structured data for local relevance. We intentionally do not generate thin city pages.
 
 ## Performance target
 
-GitHub Actions builds the site and runs Lighthouse on mobile and desktop. The initial floor is:
+GitHub Actions builds the site and runs Lighthouse on mobile and desktop. The floor is:
 
 - Performance: 95+
 - Accessibility: 98+
 - Best Practices: 95+
 - SEO: 100
 
-Those are lab gates, not a substitute for field Core Web Vitals. After launch, monitor real-user LCP, INP and CLS and keep the 75th percentile in the good range.
+After launch, monitor real-user LCP, INP and CLS and keep the 75th percentile in the good range.
