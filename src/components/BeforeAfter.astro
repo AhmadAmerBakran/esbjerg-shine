@@ -1,15 +1,24 @@
 ---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { beforeAfterSets } from '../data/media';
-const first = beforeAfterSets[0];
+
+const hasPublicFile = (src: string) => existsSync(join(process.cwd(), 'public', src.replace(/^\//, '')));
+const sets = beforeAfterSets.map((set) => ({
+  ...set,
+  beforeReady: hasPublicFile(set.before),
+  afterReady: hasPublicFile(set.after)
+}));
+const first = sets[0];
 ---
 <div class="comparison-gallery" data-comparison-gallery>
   <div class="comparison" data-comparison data-active-set="0" style="--position: 52%;">
     <div class="comparison__scene comparison__scene--after" aria-hidden="true">
-      <img src={first.after} alt="" loading="lazy" decoding="async" data-media-image data-comparison-after-image />
+      <img src={first.afterReady ? first.after : undefined} alt="" loading="lazy" decoding="async" data-media-image data-comparison-after-image />
       <span class="photo-placeholder photo-placeholder--after"><b>EFTER</b></span>
     </div>
     <div class="comparison__scene comparison__scene--before" aria-hidden="true">
-      <img src={first.before} alt="" loading="lazy" decoding="async" data-media-image data-comparison-before-image />
+      <img src={first.beforeReady ? first.before : undefined} alt="" loading="lazy" decoding="async" data-media-image data-comparison-before-image />
       <span class="photo-placeholder photo-placeholder--before"><b>FØR</b></span>
     </div>
     <div class="comparison__divider" aria-hidden="true"><span>↔</span></div>
@@ -21,15 +30,15 @@ const first = beforeAfterSets[0];
       <span aria-hidden="true">←</span>
     </button>
     <div class="comparison-gallery__dots" role="group" aria-label="Vælg før og efter sammenligning">
-      {beforeAfterSets.map((set, index) => (
+      {sets.map((set, index) => (
         <button
           class:list={{ 'is-active': index === 0 }}
           type="button"
           aria-label={`Vis ${set.label.toLocaleLowerCase('da-DK')}`}
           aria-pressed={index === 0 ? 'true' : 'false'}
           data-comparison-set={String(index)}
-          data-before={set.before}
-          data-after={set.after}
+          data-before={set.beforeReady ? set.before : ''}
+          data-after={set.afterReady ? set.after : ''}
         ><span></span></button>
       ))}
     </div>
