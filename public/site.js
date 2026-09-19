@@ -125,7 +125,7 @@
       addEventListener('pointerdown', requestVideo, { once: true, passive: true });
       addEventListener('touchstart', requestVideo, { once: true, passive: true });
       addEventListener('keydown', requestVideo, { once: true });
-      addEventListener('scroll', requestVideo, { once: true, passive: true });
+      addEventListener('wheel', requestVideo, { once: true, passive: true });
 
       if (!compactHero) {
         const scheduleVideo = () => setTimeout(requestVideo, 4000);
