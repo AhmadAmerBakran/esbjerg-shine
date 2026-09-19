@@ -34,6 +34,7 @@ jobs:
       - name: JavaScript syntax
         run: |
           node --check public/site.js
+          node --check public/site-hero.js
           node --check public/site-deferred.js
           node --check functions/api/contact.js
 
@@ -81,7 +82,14 @@ jobs:
           exit 1
 
       - name: Lighthouse mobile
-        run: npx --yes lighthouse@13.4.1 http://127.0.0.1:4173/ --quiet --chrome-flags="--headless --no-sandbox" --output=json --output-path=lighthouse-mobile.json
+        run: |
+          for i in 1 2 3; do
+            npx --yes lighthouse@13.4.1 http://127.0.0.1:4173/ \
+              --quiet \
+              --chrome-flags="--headless --no-sandbox" \
+              --output=json \
+              --output-path="lighthouse-mobile-${i}.json"
+          done
 
       - name: Lighthouse desktop
         run: npx --yes lighthouse@13.4.1 http://127.0.0.1:4173/ --quiet --preset=desktop --chrome-flags="--headless --no-sandbox" --output=json --output-path=lighthouse-desktop.json
@@ -90,6 +98,7 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
+
           const thresholds = { performance: .95, accessibility: .98, 'best-practices': .95, seo: 1 };
           const diagnostics = [
             'first-contentful-paint',
@@ -99,27 +108,49 @@ jobs:
             'cumulative-layout-shift',
             'total-byte-weight'
           ];
+          const mobileFiles = ['lighthouse-mobile-1.json', 'lighthouse-mobile-2.json', 'lighthouse-mobile-3.json'];
+          const mobileReports = mobileFiles.map((file) => ({ file, report: JSON.parse(fs.readFileSync(file, 'utf8')) }));
 
-          for (const file of ['lighthouse-mobile.json', 'lighthouse-desktop.json']) {
-            const report = JSON.parse(fs.readFileSync(file, 'utf8'));
-            for (const [name, minimum] of Object.entries(thresholds)) {
-              const score = report.categories?.[name]?.score ?? 0;
-              console.log(`${file} ${name}: ${Math.round(score * 100)} / minimum ${Math.round(minimum * 100)}`);
-              if (score < minimum) process.exitCode = 1;
-            }
+          for (const { file, report } of mobileReports) {
+            const performance = report.categories?.performance?.score ?? 0;
+            console.log(`${file} performance: ${Math.round(performance * 100)}`);
             for (const id of diagnostics) {
               const audit = report.audits?.[id];
               if (audit) console.log(`${file} ${id}: ${audit.displayValue ?? audit.numericValue ?? 'n/a'}`);
             }
+          }
 
-            if (file.includes('mobile')) {
-              const mainThread = report.audits?.['mainthread-work-breakdown']?.details?.items ?? [];
-              console.log('mobile main-thread breakdown:', JSON.stringify(mainThread.slice(0, 10)));
-              const bootup = report.audits?.['bootup-time']?.details?.items ?? [];
-              console.log('mobile script bootup:', JSON.stringify(bootup.slice(0, 10)));
-              const longTasks = report.audits?.['long-tasks']?.details?.items ?? [];
-              console.log('mobile long tasks:', JSON.stringify(longTasks.slice(0, 10)));
-            }
+          const rankedMobile = mobileReports
+            .map((entry) => ({ ...entry, performance: entry.report.categories?.performance?.score ?? 0 }))
+            .sort((a, b) => a.performance - b.performance);
+          const representativeMobile = rankedMobile[1];
+          console.log(`mobile performance median: ${Math.round(representativeMobile.performance * 100)} / minimum ${Math.round(thresholds.performance * 100)}`);
+          if (representativeMobile.performance < thresholds.performance) process.exitCode = 1;
+
+          for (const [name, minimum] of Object.entries(thresholds)) {
+            if (name === 'performance') continue;
+            const scores = mobileReports.map(({ report }) => report.categories?.[name]?.score ?? 0);
+            const score = Math.min(...scores);
+            console.log(`mobile ${name}: ${Math.round(score * 100)} / minimum ${Math.round(minimum * 100)}`);
+            if (score < minimum) process.exitCode = 1;
+          }
+
+          const mainThread = representativeMobile.report.audits?.['mainthread-work-breakdown']?.details?.items ?? [];
+          console.log('mobile main-thread breakdown:', JSON.stringify(mainThread.slice(0, 10)));
+          const bootup = representativeMobile.report.audits?.['bootup-time']?.details?.items ?? [];
+          console.log('mobile script bootup:', JSON.stringify(bootup.slice(0, 10)));
+          const longTasks = representativeMobile.report.audits?.['long-tasks']?.details?.items ?? [];
+          console.log('mobile long tasks:', JSON.stringify(longTasks.slice(0, 10)));
+
+          const desktop = JSON.parse(fs.readFileSync('lighthouse-desktop.json', 'utf8'));
+          for (const [name, minimum] of Object.entries(thresholds)) {
+            const score = desktop.categories?.[name]?.score ?? 0;
+            console.log(`lighthouse-desktop.json ${name}: ${Math.round(score * 100)} / minimum ${Math.round(minimum * 100)}`);
+            if (score < minimum) process.exitCode = 1;
+          }
+          for (const id of diagnostics) {
+            const audit = desktop.audits?.[id];
+            if (audit) console.log(`lighthouse-desktop.json ${id}: ${audit.displayValue ?? audit.numericValue ?? 'n/a'}`);
           }
           NODE
 
