@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+<BaseLayout title="Siden blev ikke fundet | Esbjerg Shine" description="Siden kunne ikke findes." noindex={true} canonicalPath="/404/">
+  <div id="top"></div>
+  <Header />
+  <main id="indhold">
+    <section class="subhero">
+      <div class="shell subhero__grid">
+        <div><p class="eyebrow">404</p><h1>Siden er kørt<br /><span>en anden vej.</span></h1></div>
+        <div><p>Adressen findes ikke, eller siden er flyttet.</p><p style="margin-top:1.2rem"><a class="button button--primary" href="/"><span>Til forsiden</span><i aria-hidden="true">→</i></a></p></div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,42 @@
+@layer components {
+  .brand--header { flex: 0 0 auto; }
+
+  .brand__logo,
+  .hero-card__logo {
+    display: block;
+    background-image: url("/media/brand/esbjerg-shine-logo.webp");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    mix-blend-mode: normal;
+  }
+
+  .brand__logo--header {
+    width: 7.7rem;
+    aspect-ratio: 560 / 277;
+  }
+
+  .brand__logo--footer {
+    width: min(13rem, 58vw);
+    aspect-ratio: 560 / 277;
+  }
+
+  .hero-card__logo {
+    position: absolute;
+    inset: 13% 7% 22%;
+    opacity: .98;
+  }
+}
+
+@layer utilities {
+  @media (max-width: 980px) {
+    .brand__logo--header { width: 7rem; }
+    .hero-card__logo { inset: 12% 6% 21%; }
+  }
+
+  @media (max-width: 640px) {
+    .brand__logo--header { width: 6.3rem; }
+    .brand__logo--footer { width: 11.5rem; }
+    .hero-card__logo { inset: 15% 7% 24%; }
+  }
+}

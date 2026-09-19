@@ -1,0 +1,122 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import '@fontsource-variable/manrope';
+import '../styles/global.css';
+import '../styles/brand.css';
+import '../styles/logo.css';
+import '../styles/media.css';
+import '../styles/surfaces.css';
+import { company } from '../data/company';
+import { siteMedia } from '../data/media';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+  noindex?: boolean;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  canonicalPath = Astro.url.pathname,
+  noindex = false,
+  schema
+} = Astro.props;
+
+const site = Astro.site ?? new URL('https://esbjergshine.dk');
+const canonical = new URL(canonicalPath, site).toString();
+const home = site.toString().replace(/\/$/, '');
+const hasPublicFile = (src: string) => existsSync(join(process.cwd(), 'public', src.replace(/^\//, '')));
+const shareMedia = hasPublicFile(siteMedia.social)
+  ? { src: siteMedia.social, width: 1200, height: 630 }
+  : hasPublicFile(siteMedia.hero.background)
+    ? { src: siteMedia.hero.background, width: 2400, height: 1600 }
+    : { src: siteMedia.logo, width: 560, height: 277 };
+const socialImage = new URL(shareMedia.src, site).toString();
+const logoImage = new URL(siteMedia.logo, site).toString();
+const socialAlt = 'Esbjerg Shine – professionel bilpleje i Esbjerg';
+
+const localBusinessSchema = {
+  '@type': 'AutomotiveBusiness',
+  '@id': `${home}/#virksomhed`,
+  name: company.name,
+  legalName: company.legalName,
+  url: `${home}/`,
+  telephone: company.phoneHref,
+  taxID: company.cvr,
+  hasMap: company.mapUrl,
+  logo: logoImage,
+  image: socialImage,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: company.address.street,
+    postalCode: company.address.postalCode,
+    addressLocality: company.address.city,
+    addressCountry: company.address.country
+  },
+  areaServed: {
+    '@type': 'City',
+    name: 'Esbjerg'
+  },
+  sameAs: [company.facebook, company.instagram]
+};
+
+const graph = Array.isArray(schema) ? schema : schema ? [schema] : [];
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    localBusinessSchema,
+    {
+      '@type': 'WebSite',
+      '@id': `${home}/#website`,
+      url: `${home}/`,
+      name: company.name,
+      inLanguage: 'da-DK',
+      publisher: { '@id': `${home}/#virksomhed` }
+    },
+    ...graph
+  ]
+};
+---
+<!doctype html>
+<html lang="da-DK">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0b0d" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'} />
+    <meta name="author" content={company.name} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="da-DK" href={canonical} />
+    <link rel="alternate" hreflang="x-default" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="da_DK" />
+    <meta property="og:site_name" content={company.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content={String(shareMedia.width)} />
+    <meta property="og:image:height" content={String(shareMedia.height)} />
+    <meta property="og:image:alt" content={socialAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={socialAlt} />
+
+    <title>{title}</title>
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+    <script src="/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#indhold">Gå direkte til indholdet</a>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,44 @@
+---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { siteMedia } from '../data/media';
+
+const hasPublicFile = (src: string) => existsSync(join(process.cwd(), 'public', src.replace(/^\//, '')));
+const hasPoster = hasPublicFile(siteMedia.hero.poster);
+const hasWebm = hasPublicFile(siteMedia.hero.webm);
+const hasMp4 = hasPublicFile(siteMedia.hero.mp4);
+const hasVideo = hasWebm || hasMp4;
+---
+<div class="hero-card hero-media" data-hero-media>
+  {hasPoster && (
+    <img
+      class="hero-media__poster"
+      data-src={siteMedia.hero.poster}
+      alt=""
+      width="1600"
+      height="2000"
+      loading="lazy"
+      decoding="async"
+      fetchpriority="low"
+      data-hero-poster
+      data-media-image
+      aria-hidden="true"
+    />
+  )}
+  {hasVideo && (
+    <video
+      class="hero-media__video"
+      muted
+      loop
+      playsinline
+      preload="none"
+      data-hero-video
+      aria-hidden="true"
+    >
+      {hasWebm && <source data-src={siteMedia.hero.webm} type="video/webm" />}
+      {hasMp4 && <source data-src={siteMedia.hero.mp4} type="video/mp4" />}
+    </video>
+  )}
+  <span class="hero-card__logo hero-media__fallback-logo" aria-hidden="true"></span>
+  <div class="hero-card__meta"><span>ESBJERG · 6700</span><small>Detaljer der skinner.</small></div>
+</div>

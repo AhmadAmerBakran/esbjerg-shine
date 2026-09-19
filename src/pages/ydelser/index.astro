@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import MediaImage from '../../components/MediaImage.astro';
+import { services } from '../../data/services';
+import { getServiceMedia } from '../../data/media';
+
+const title = 'Bilpleje og klargøring i Esbjerg | Esbjerg Shine';
+const description = 'Se ydelser inden for bilvask, indvendig bilpleje, klargøring, polering, lakbeskyttelse og sæderens hos Esbjerg Shine i Esbjerg.';
+---
+<BaseLayout title={title} description={description} canonicalPath="/ydelser/">
+  <div id="top"></div>
+  <Header />
+  <main id="indhold">
+    <section class="subhero">
+      <div class="shell subhero__grid">
+        <div><p class="eyebrow">Ydelser</p><h1>Den rigtige behandling<br /><span>starter med bilen.</span></h1></div>
+        <p>Ingen biler er helt ens. Derfor er ydelserne opdelt efter formål, mens den konkrete behandling og omfanget aftales ud fra bilens stand og det resultat, du ønsker.</p>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="shell service-list">
+        {services.map((service) => {
+          const serviceMedia = getServiceMedia(service.slug);
+          return (
+            <article class="service-row reveal">
+              <a href={`/ydelser/${service.slug}/`}>
+                <MediaImage class="service-row__media" src={serviceMedia.card} alt="" width={1600} height={1000} />
+                <div><small>{service.eyebrow}</small><h2>{service.title}</h2><p>{service.summary}</p></div>
+                <span class="service-row__arrow" aria-hidden="true">↗</span>
+              </a>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div class="shell cta-band__inner"><div><p class="eyebrow">I tvivl?</p><h2>Beskriv bilen. Så finder vi næste skridt.</h2></div><a class="button button--primary" href="/#kontakt"><span>Kontakt Esbjerg Shine</span><i aria-hidden="true">↗</i></a></div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
