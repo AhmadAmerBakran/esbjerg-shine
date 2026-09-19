@@ -34,6 +34,7 @@ jobs:
       - name: JavaScript syntax
         run: |
           node --check public/site.js
+          node --check public/site-deferred.js
           node --check functions/api/contact.js
 
       - name: Build static site
@@ -118,14 +119,12 @@ jobs:
               console.log('mobile script bootup:', JSON.stringify(bootup.slice(0, 10)));
               const longTasks = report.audits?.['long-tasks']?.details?.items ?? [];
               console.log('mobile long tasks:', JSON.stringify(longTasks.slice(0, 10)));
-              const lcpElement = report.audits?.['largest-contentful-paint-element']?.details?.items ?? [];
-              console.log('mobile LCP element:', JSON.stringify(lcpElement.slice(0, 3)));
             }
           }
           NODE
 
       - name: Upload Lighthouse reports
-        if: always()
+        if: always() && github.event_name == 'workflow_dispatch'
         continue-on-error: true
         uses: actions/upload-artifact@v6
         with:
