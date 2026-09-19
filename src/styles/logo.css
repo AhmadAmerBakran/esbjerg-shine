@@ -8,7 +8,7 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    mix-blend-mode: screen;
+    mix-blend-mode: normal;
   }
 
   .brand__logo--header {
