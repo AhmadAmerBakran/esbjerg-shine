@@ -36,8 +36,8 @@ const hasVideo = hasWebm || hasMp4;
       data-hero-video
       aria-hidden="true"
     >
-      {hasWebm && <source src={siteMedia.hero.webm} type="video/webm" />}
       {hasMp4 && <source src={siteMedia.hero.mp4} type="video/mp4" />}
+      {hasWebm && <source src={siteMedia.hero.webm} type="video/webm" />}
     </video>
   )}
   <span class="hero-card__logo hero-media__fallback-logo" aria-hidden="true"></span>
