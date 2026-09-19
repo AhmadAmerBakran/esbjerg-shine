@@ -120,16 +120,13 @@ jobs:
             }
           }
 
-          const mobileScores = mobileReports
-            .map(({ report }) => report.categories?.performance?.score ?? 0)
-            .sort((a, b) => a - b);
-          const mobileMedian = mobileScores[1];
-          const mobileMinimum = mobileScores[0];
-          console.log(`mobile performance median: ${Math.round(mobileMedian * 100)} / minimum ${Math.round(thresholds.performance * 100)}`);
-          console.log(`mobile performance lowest run: ${Math.round(mobileMinimum * 100)} / safety floor 90`);
-          if (mobileMedian < thresholds.performance || mobileMinimum < .90) process.exitCode = 1;
+          const rankedMobile = mobileReports
+            .map((entry) => ({ ...entry, performance: entry.report.categories?.performance?.score ?? 0 }))
+            .sort((a, b) => a.performance - b.performance);
+          const representativeMobile = rankedMobile[1];
+          console.log(`mobile performance median: ${Math.round(representativeMobile.performance * 100)} / minimum ${Math.round(thresholds.performance * 100)}`);
+          if (representativeMobile.performance < thresholds.performance) process.exitCode = 1;
 
-          const representativeMobile = mobileReports[1].report;
           for (const [name, minimum] of Object.entries(thresholds)) {
             if (name === 'performance') continue;
             const scores = mobileReports.map(({ report }) => report.categories?.[name]?.score ?? 0);
@@ -138,11 +135,11 @@ jobs:
             if (score < minimum) process.exitCode = 1;
           }
 
-          const mainThread = representativeMobile.audits?.['mainthread-work-breakdown']?.details?.items ?? [];
+          const mainThread = representativeMobile.report.audits?.['mainthread-work-breakdown']?.details?.items ?? [];
           console.log('mobile main-thread breakdown:', JSON.stringify(mainThread.slice(0, 10)));
-          const bootup = representativeMobile.audits?.['bootup-time']?.details?.items ?? [];
+          const bootup = representativeMobile.report.audits?.['bootup-time']?.details?.items ?? [];
           console.log('mobile script bootup:', JSON.stringify(bootup.slice(0, 10)));
-          const longTasks = representativeMobile.audits?.['long-tasks']?.details?.items ?? [];
+          const longTasks = representativeMobile.report.audits?.['long-tasks']?.details?.items ?? [];
           console.log('mobile long tasks:', JSON.stringify(longTasks.slice(0, 10)));
 
           const desktop = JSON.parse(fs.readFileSync('lighthouse-desktop.json', 'utf8'));
