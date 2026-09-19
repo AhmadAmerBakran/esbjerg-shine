@@ -1,11 +1,11 @@
 @layer base {
   :root {
-    --surface-deep: #0b0e10;
-    --surface-1: #101519;
-    --surface-2: #131a1f;
-    --surface-3: #172026;
-    --surface-panel: #161e23;
-    --surface-panel-2: #1b252b;
+    --surface-deep: #0a0d0f;
+    --surface-1: #0f1418;
+    --surface-2: #12191d;
+    --surface-3: #151e23;
+    --surface-panel: #151c21;
+    --surface-panel-2: #192228;
     --surface-text: #f3f6f7;
     --surface-muted: #aab4ba;
     --surface-subtle: #7f8c93;
@@ -24,14 +24,14 @@
   #ydelser {
     color: var(--surface-text);
     background:
-      radial-gradient(ellipse at 78% 8%, rgba(110, 193, 223, .038), transparent 32rem),
-      radial-gradient(ellipse at 12% 26%, rgba(255,255,255,.014), transparent 30rem),
+      radial-gradient(ellipse at 78% 8%, rgba(110, 193, 223, .034), transparent 32rem),
+      radial-gradient(ellipse at 12% 26%, rgba(255,255,255,.012), transparent 30rem),
       linear-gradient(180deg,
         #0c0e11 0%,
-        #0c0e10 16%,
-        #0d1013 34%,
-        #0f1417 60%,
-        #11171b 100%);
+        #0b0d0f 16%,
+        #0c0f12 34%,
+        #0e1215 60%,
+        #101519 100%);
   }
 
   /* Keep the first content heading visually related to the hero typography. */
@@ -57,24 +57,32 @@
 
   /* The cards feel like surfaces inside the same space, not a new theme. */
   .service-card > a {
-    border-color: rgba(226, 235, 239, .085);
+    border-color: rgba(226, 235, 239, .082);
     background:
-      linear-gradient(145deg, rgba(255,255,255,.014), transparent 44%),
-      linear-gradient(155deg, rgba(23,31,36,.9) 0%, rgba(14,19,23,.94) 100%);
+      linear-gradient(145deg, rgba(255,255,255,.012), transparent 44%),
+      linear-gradient(155deg, rgba(21,28,33,.92) 0%, rgba(12,17,20,.95) 100%);
     color: var(--surface-text);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, .2);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .22);
   }
 
   .service-card > a:hover {
-    border-color: rgba(226, 235, 239, .17);
-    box-shadow: 0 25px 56px rgba(0, 0, 0, .28);
+    border-color: rgba(226, 235, 239, .16);
+    box-shadow: 0 25px 56px rgba(0, 0, 0, .3);
   }
 
   .service-card__visual.media-slot,
   .service-row__media.media-slot {
     background:
-      radial-gradient(ellipse at 72% 24%, rgba(138, 205, 229, .1), transparent 9rem),
-      linear-gradient(145deg, #223038 0%, #1b252b 52%, #141b20 100%);
+      radial-gradient(ellipse at 72% 24%, rgba(138, 205, 229, .09), transparent 9rem),
+      linear-gradient(145deg, #1f2b32 0%, #192228 52%, #12191d 100%);
+  }
+
+  /* All empty homepage service visuals intentionally use the same treatment.
+     This overrides the older alternating nth-child placeholder backgrounds. */
+  .service-grid .service-card .service-card__visual.media-slot {
+    background:
+      radial-gradient(ellipse at 72% 24%, rgba(138, 205, 229, .09), transparent 9rem),
+      linear-gradient(145deg, #1f2b32 0%, #192228 52%, #12191d 100%);
   }
 
   .service-card__visual .media-slot__fallback::before,
@@ -94,15 +102,15 @@
   /* Subsequent sections deepen from the same graphite family. */
   .section--contrast {
     background:
-      radial-gradient(ellipse at 18% 12%, rgba(110, 193, 223, .035), transparent 26rem),
-      linear-gradient(180deg, #11171b 0%, #0f1418 24%, #0c1013 54%, #0a0c0e 100%);
+      radial-gradient(ellipse at 18% 12%, rgba(110, 193, 223, .03), transparent 26rem),
+      linear-gradient(180deg, #101519 0%, #0e1216 24%, #0b0f12 54%, #090b0d 100%);
   }
 
   #om {
     color: var(--surface-text);
     background:
-      radial-gradient(ellipse at 82% 20%, rgba(110, 193, 223, .045), transparent 28rem),
-      linear-gradient(180deg, #0a0c0e 0%, #0c1013 20%, #10161a 50%, #141b20 100%);
+      radial-gradient(ellipse at 82% 20%, rgba(110, 193, 223, .04), transparent 28rem),
+      linear-gradient(180deg, #090b0d 0%, #0b0f12 20%, #0f1519 50%, #12191d 100%);
   }
 
   #om .eyebrow,
@@ -139,25 +147,25 @@
   .location-section {
     color: var(--surface-text);
     background:
-      radial-gradient(ellipse at 18% 18%, rgba(110, 193, 223, .042), transparent 26rem),
-      linear-gradient(180deg, #141b20 0%, #151d22 50%, #172027 100%);
-    border-top-color: rgba(230, 237, 241, .05);
+      radial-gradient(ellipse at 18% 18%, rgba(110, 193, 223, .038), transparent 26rem),
+      linear-gradient(180deg, #12191d 0%, #131b20 50%, #151e23 100%);
+    border-top-color: rgba(230, 237, 241, .048);
   }
 
   .location-card {
-    border-color: rgba(226, 235, 239, .1);
+    border-color: rgba(226, 235, 239, .095);
     background:
-      linear-gradient(135deg, rgba(255,255,255,.016), transparent 44%),
-      #101519;
+      linear-gradient(135deg, rgba(255,255,255,.014), transparent 44%),
+      #0f1418;
     color: var(--surface-text);
-    box-shadow: 0 22px 58px rgba(0, 0, 0, .28);
+    box-shadow: 0 22px 58px rgba(0, 0, 0, .3);
   }
 
   .location-card__info small { color: #839198; }
   .location-card__info strong { color: #f3f6f7; }
   .location-card__info span { color: #a6b0b5; }
   .location-card__phone { color: #d8e0e4; }
-  .location-card__media { border-color: rgba(226, 235, 239, .1); }
+  .location-card__media { border-color: rgba(226, 235, 239, .095); }
 
   .location-card .button--dark {
     background: #eef2f4;
@@ -172,8 +180,8 @@
 
   .location-card__media.media-slot {
     background:
-      radial-gradient(ellipse at 72% 28%, rgba(143, 208, 231, .1), transparent 10rem),
-      linear-gradient(145deg, #223038, #1b252b 58%, #141b20);
+      radial-gradient(ellipse at 72% 28%, rgba(143, 208, 231, .09), transparent 10rem),
+      linear-gradient(145deg, #1f2b32, #192228 58%, #12191d);
   }
 
   .location-card__media .media-slot__fallback::before {
@@ -183,33 +191,33 @@
 
   .map-frame {
     background:
-      linear-gradient(rgba(213, 226, 232, .042) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(213, 226, 232, .042) 1px, transparent 1px),
-      radial-gradient(circle at 54% 43%, rgba(79, 158, 188, .11), transparent 7rem),
-      #131b20;
+      linear-gradient(rgba(213, 226, 232, .04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(213, 226, 232, .04) 1px, transparent 1px),
+      radial-gradient(circle at 54% 43%, rgba(79, 158, 188, .1), transparent 7rem),
+      #12191d;
     background-size: 46px 46px, 46px 46px, auto, auto;
   }
 
   .map-frame__load { color: #e9eef0; }
-  .map-frame__load::before { border-color: rgba(226, 235, 239, .09); }
+  .map-frame__load::before { border-color: rgba(226, 235, 239, .085); }
   .map-frame__load small { color: #89969d; }
   .map-frame__pin {
     background: #eef3f5;
     color: #11161a;
-    box-shadow: 0 12px 30px rgba(0,0,0,.32);
+    box-shadow: 0 12px 30px rgba(0,0,0,.34);
   }
 
   .section--contact {
     background:
-      linear-gradient(180deg, #172027 0%, #12191e 26%, #0e1215 56%, #0b0d10 100%);
+      linear-gradient(180deg, #151e23 0%, #11171b 26%, #0d1114 56%, #0b0d10 100%);
   }
 
   /* Service listing and detail pages continue the same graphite system. */
   main > .subhero + .section--tight {
     color: var(--surface-text);
     background:
-      radial-gradient(ellipse at 84% 18%, rgba(110, 193, 223, .045), transparent 27rem),
-      linear-gradient(180deg, #101419 0%, #0f1418 22%, #12181c 54%, #141b20 100%);
+      radial-gradient(ellipse at 84% 18%, rgba(110, 193, 223, .04), transparent 27rem),
+      linear-gradient(180deg, #101419 0%, #0e1317 22%, #11171b 54%, #12191d 100%);
   }
 
   main > .subhero + .section--tight .service-row {
@@ -217,12 +225,12 @@
   }
 
   main > .subhero + .section--tight .service-row a {
-    border-color: rgba(226, 235, 239, .08);
+    border-color: rgba(226, 235, 239, .078);
     color: var(--surface-text);
   }
 
   main > .subhero + .section--tight .service-row a:hover {
-    background: rgba(255,255,255,.026);
+    background: rgba(255,255,255,.024);
   }
 
   main > .subhero + .section--tight .service-row small,
@@ -240,23 +248,23 @@
   main > .subhero + .section--tight .detail-list li,
   main > .subhero + .section--tight .aside-card,
   main > .subhero + .section--tight .aside-nav {
-    border-color: rgba(226, 235, 239, .1);
+    border-color: rgba(226, 235, 239, .095);
     background:
-      linear-gradient(145deg, rgba(255,255,255,.013), transparent 42%),
-      #171f24;
+      linear-gradient(145deg, rgba(255,255,255,.012), transparent 42%),
+      #151e23;
     color: var(--surface-text);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, .2);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, .22);
   }
 
   main > .subhero + .section--tight .detail-list li { color: #c7d0d4; }
 
   main > .subhero + .section--tight .aside-nav a {
-    border-color: rgba(226, 235, 239, .08);
+    border-color: rgba(226, 235, 239, .078);
     color: #b1bcc1;
   }
 
   main > .subhero + .section--tight .aside-nav a:hover {
-    background: rgba(255,255,255,.026);
+    background: rgba(255,255,255,.024);
   }
 
   main > .subhero + .section--tight .aside-nav a.active { color: #fff; }
@@ -270,16 +278,16 @@
   }
 
   .cta-band {
-    background: #11171b;
+    background: #101519;
   }
 
   .cta-band__inner {
-    border-color: rgba(226, 235, 239, .1);
+    border-color: rgba(226, 235, 239, .095);
     background:
-      linear-gradient(145deg, rgba(255,255,255,.016), transparent 45%),
-      #171f24;
+      linear-gradient(145deg, rgba(255,255,255,.014), transparent 45%),
+      #151e23;
     color: var(--surface-text);
-    box-shadow: 0 18px 44px rgba(0,0,0,.22);
+    box-shadow: 0 18px 44px rgba(0,0,0,.24);
   }
 
   .cta-band .eyebrow { color: #89969d; }
@@ -293,8 +301,8 @@
   .privacy-main {
     color: var(--surface-text);
     background:
-      radial-gradient(ellipse at 82% 18%, rgba(110, 193, 223, .045), transparent 27rem),
-      linear-gradient(180deg, #0d1013 0%, #0f1418 22%, #12181c 54%, #141b20 100%);
+      radial-gradient(ellipse at 82% 18%, rgba(110, 193, 223, .04), transparent 27rem),
+      linear-gradient(180deg, #0d1013 0%, #0e1317 22%, #11171b 54%, #12191d 100%);
   }
 
   .privacy-main .privacy h1,
