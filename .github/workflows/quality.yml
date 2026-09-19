@@ -110,6 +110,17 @@ jobs:
               const audit = report.audits?.[id];
               if (audit) console.log(`${file} ${id}: ${audit.displayValue ?? audit.numericValue ?? 'n/a'}`);
             }
+
+            if (file.includes('mobile')) {
+              const mainThread = report.audits?.['mainthread-work-breakdown']?.details?.items ?? [];
+              console.log('mobile main-thread breakdown:', JSON.stringify(mainThread.slice(0, 10)));
+              const bootup = report.audits?.['bootup-time']?.details?.items ?? [];
+              console.log('mobile script bootup:', JSON.stringify(bootup.slice(0, 10)));
+              const longTasks = report.audits?.['long-tasks']?.details?.items ?? [];
+              console.log('mobile long tasks:', JSON.stringify(longTasks.slice(0, 10)));
+              const lcpElement = report.audits?.['largest-contentful-paint-element']?.details?.items ?? [];
+              console.log('mobile LCP element:', JSON.stringify(lcpElement.slice(0, 3)));
+            }
           }
           NODE
 
