@@ -4,6 +4,7 @@
   const doc = document;
   const body = doc.body;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const saveData = navigator.connection?.saveData === true;
 
   const header = doc.querySelector('[data-header]');
   const updateHeader = () => header?.classList.toggle('is-scrolled', scrollY > 18);
@@ -46,12 +47,23 @@
   });
 
   doc.querySelectorAll('[data-hero-media]').forEach((hero) => {
+    const poster = hero.querySelector('[data-hero-poster]');
     const video = hero.querySelector('[data-hero-video]');
-    if (!(hero instanceof HTMLElement) || !(video instanceof HTMLVideoElement)) return;
+    if (!(hero instanceof HTMLElement)) return;
+
+    let mediaNear = false;
+    let videoRequested = false;
+    let videoWanted = false;
+
+    const loadPoster = () => {
+      if (!(poster instanceof HTMLImageElement)) return;
+      const src = poster.dataset.src;
+      if (src && !poster.getAttribute('src')) poster.src = src;
+    };
 
     const activateVideo = async () => {
-      if (reducedMotion) {
-        video.pause();
+      if (!(video instanceof HTMLVideoElement) || reducedMotion || saveData) {
+        video?.pause();
         hero.classList.remove('has-video');
         return;
       }
@@ -63,9 +75,63 @@
       }
     };
 
-    video.addEventListener('loadeddata', activateVideo, { once: true });
-    video.addEventListener('error', () => hero.classList.remove('has-video'));
-    if (video.readyState >= 2) activateVideo();
+    const loadVideo = () => {
+      if (!(video instanceof HTMLVideoElement) || videoRequested || reducedMotion || saveData || !mediaNear || doc.hidden) return;
+      const sources = [...video.querySelectorAll('source[data-src]')];
+      if (sources.length === 0) return;
+
+      videoRequested = true;
+      sources.forEach((source) => {
+        if (!(source instanceof HTMLSourceElement)) return;
+        const src = source.dataset.src;
+        if (src) source.src = src;
+      });
+      video.addEventListener('loadeddata', activateVideo, { once: true });
+      video.load();
+    };
+
+    const requestVideo = () => {
+      videoWanted = true;
+      loadVideo();
+    };
+
+    const markNear = () => {
+      mediaNear = true;
+      loadPoster();
+      if (videoWanted) loadVideo();
+    };
+
+    if ('IntersectionObserver' in window) {
+      const mediaObserver = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        markNear();
+        mediaObserver.disconnect();
+      }, { rootMargin: '160px 0px', threshold: 0.01 });
+      mediaObserver.observe(hero);
+    } else {
+      markNear();
+    }
+
+    // On wider screens the poster is part of the first viewport; start only that
+    // lightweight visual immediately. The heavier video waits until critical work is done.
+    if (matchMedia('(min-width: 760px)').matches) loadPoster();
+
+    if (video instanceof HTMLVideoElement) {
+      video.addEventListener('error', () => hero.classList.remove('has-video'));
+
+      addEventListener('pointerdown', requestVideo, { once: true, passive: true });
+      addEventListener('touchstart', requestVideo, { once: true, passive: true });
+      addEventListener('keydown', requestVideo, { once: true });
+      addEventListener('scroll', requestVideo, { once: true, passive: true });
+
+      const scheduleVideo = () => setTimeout(requestVideo, 4000);
+      if (doc.readyState === 'complete') scheduleVideo();
+      else addEventListener('load', scheduleVideo, { once: true });
+
+      doc.addEventListener('visibilitychange', () => {
+        if (!doc.hidden && videoWanted) loadVideo();
+      });
+    }
   });
 
   const revealItems = [...doc.querySelectorAll('.reveal')];
