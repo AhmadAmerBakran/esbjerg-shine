@@ -16,6 +16,28 @@
 }
 
 @layer components {
+  /* Keep above-the-fold hero content out of the generic reveal animation.
+     The final styling is unchanged; the hero simply paints immediately. */
+  .hero__copy.reveal,
+  .hero__visual.reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* Skip expensive rendering for sections that are well below the first viewport.
+     The intrinsic sizes keep scrolling/anchors stable until each section is near. */
+  #ydelser,
+  #foer-efter,
+  #om,
+  #find-os,
+  #kontakt {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1100px;
+  }
+
+  #ydelser { contain-intrinsic-size: auto 1600px; }
+
   /*
     The body continues the hero's graphite atmosphere instead of starting a
     visibly new visual system. Depth changes happen slowly and accents stay
@@ -315,6 +337,14 @@
 }
 
 @layer utilities {
+  @media (max-width: 980px) {
+    #ydelser { contain-intrinsic-size: auto 3400px; }
+    #foer-efter,
+    #om,
+    #find-os,
+    #kontakt { contain-intrinsic-size: auto 1200px; }
+  }
+
   @media (prefers-contrast: more) {
     :root {
       --surface-muted: #c7d0d4;
