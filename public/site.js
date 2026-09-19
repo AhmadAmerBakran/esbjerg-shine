@@ -51,6 +51,7 @@
     const video = hero.querySelector('[data-hero-video]');
     if (!(hero instanceof HTMLElement)) return;
 
+    const compactHero = matchMedia('(max-width: 980px)').matches;
     let mediaNear = false;
     let videoRequested = false;
     let videoWanted = false;
@@ -92,12 +93,13 @@
 
     const requestVideo = () => {
       videoWanted = true;
+      if (mediaNear) loadPoster();
       loadVideo();
     };
 
     const markNear = () => {
       mediaNear = true;
-      loadPoster();
+      if (!compactHero || videoWanted) loadPoster();
       if (videoWanted) loadVideo();
     };
 
@@ -112,9 +114,10 @@
       markNear();
     }
 
-    // On wider screens the poster is part of the first viewport; start only that
-    // lightweight visual immediately. The heavier video waits until critical work is done.
-    if (matchMedia('(min-width: 760px)').matches) loadPoster();
+    // On desktop the poster is part of the first viewport and can load normally.
+    // On compact layouts the media card sits after the hero copy, so its heavier
+    // poster/video waits for a real interaction instead of competing with first paint.
+    if (!compactHero) loadPoster();
 
     if (video instanceof HTMLVideoElement) {
       video.addEventListener('error', () => hero.classList.remove('has-video'));
@@ -124,9 +127,11 @@
       addEventListener('keydown', requestVideo, { once: true });
       addEventListener('scroll', requestVideo, { once: true, passive: true });
 
-      const scheduleVideo = () => setTimeout(requestVideo, 4000);
-      if (doc.readyState === 'complete') scheduleVideo();
-      else addEventListener('load', scheduleVideo, { once: true });
+      if (!compactHero) {
+        const scheduleVideo = () => setTimeout(requestVideo, 4000);
+        if (doc.readyState === 'complete') scheduleVideo();
+        else addEventListener('load', scheduleVideo, { once: true });
+      }
 
       doc.addEventListener('visibilitychange', () => {
         if (!doc.hidden && videoWanted) loadVideo();
