@@ -17,93 +17,118 @@
 
 @layer components {
   /*
-    The page body stays in the same cool graphite family as the hero/footer.
-    Sections are separated by depth, not by switching to bright white surfaces.
+    The body continues the hero's graphite atmosphere instead of starting a
+    visibly new visual system. Depth changes happen slowly and accents stay
+    restrained until the media/cards begin.
   */
   #ydelser {
     color: var(--surface-text);
     background:
-      radial-gradient(ellipse at 82% 18%, rgba(110, 193, 223, .09), transparent 27rem),
-      linear-gradient(180deg, #0c0e11 0%, #10161a 5.5rem, #151d22 11rem, #151d22 100%);
+      radial-gradient(ellipse at 78% 8%, rgba(110, 193, 223, .045), transparent 32rem),
+      radial-gradient(ellipse at 12% 26%, rgba(255,255,255,.018), transparent 30rem),
+      linear-gradient(180deg,
+        #0c0e11 0%,
+        #0c0f12 14%,
+        #0e1215 32%,
+        #11171b 58%,
+        #141b20 100%);
   }
 
-  #ydelser .eyebrow,
-  #om .eyebrow,
-  .location-section .eyebrow {
-    color: var(--surface-accent);
+  /* Keep the first content heading visually related to the hero typography. */
+  #ydelser .eyebrow {
+    color: #a2abb0;
   }
 
-  #ydelser .eyebrow::before,
-  #om .eyebrow::before,
-  .location-section .eyebrow::before {
-    background: var(--surface-accent);
+  #ydelser .eyebrow::before {
+    background: #8e989e;
   }
 
-  #ydelser h2,
-  #om h2,
-  .location-section h2 {
-    color: var(--surface-text);
+  #ydelser h2 {
+    color: #f4f6f7;
   }
 
-  #ydelser h2 span,
-  #om h2 span,
-  .location-section h2 span {
-    color: #aab5bb;
+  #ydelser h2 span {
+    color: #b8c0c5;
   }
 
-  #ydelser .section-heading > p,
-  #om .section-heading > p,
-  .location-section .section-heading > p,
-  .about-copy > p:not(.eyebrow) {
-    color: var(--surface-muted);
+  #ydelser .section-heading > p {
+    color: #a8b1b6;
   }
 
+  /* The cards feel like surfaces inside the same space, not a new theme. */
   .service-card > a {
-    border-color: var(--surface-line);
+    border-color: rgba(226, 235, 239, .095);
     background:
-      linear-gradient(145deg, rgba(255,255,255,.025), transparent 42%),
-      linear-gradient(155deg, #1d272d 0%, #161d22 100%);
+      linear-gradient(145deg, rgba(255,255,255,.018), transparent 44%),
+      linear-gradient(155deg, rgba(28,37,42,.88) 0%, rgba(18,24,28,.92) 100%);
     color: var(--surface-text);
-    box-shadow: 0 18px 44px rgba(0, 0, 0, .18);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .16);
   }
 
   .service-card > a:hover {
-    border-color: rgba(121, 195, 223, .28);
-    box-shadow: 0 28px 62px rgba(0, 0, 0, .28);
+    border-color: rgba(226, 235, 239, .19);
+    box-shadow: 0 25px 56px rgba(0, 0, 0, .24);
   }
 
   .service-card__visual.media-slot,
   .service-row__media.media-slot {
     background:
-      radial-gradient(ellipse at 72% 24%, rgba(138, 205, 229, .16), transparent 9rem),
-      linear-gradient(145deg, #2c3a42 0%, #222e35 52%, #182127 100%);
+      radial-gradient(ellipse at 72% 24%, rgba(138, 205, 229, .12), transparent 9rem),
+      linear-gradient(145deg, #27343b 0%, #202a30 52%, #171f24 100%);
   }
 
   .service-card__visual .media-slot__fallback::before,
   .service-row__media .media-slot__fallback::before {
     mix-blend-mode: screen;
-    opacity: .2;
+    opacity: .18;
   }
 
-  .service-card__body small { color: #84939b; }
+  .service-card__body small { color: #849097; }
   .service-card__body strong { color: #f4f7f8; }
-  .service-card__body p { color: #aab4ba; }
-  .service-card__body em { color: #dbe3e7; }
+  .service-card__body p { color: #a8b1b6; }
+  .service-card__body em { color: #d7dee2; }
   .service-card__body em b,
-  .section-link a span { color: var(--surface-accent); }
-  .section-link a { color: #c4cdd1; }
+  .section-link a span { color: #a7c8d4; }
+  .section-link a { color: #bdc6ca; }
 
+  /* Subsequent sections deepen from the same graphite family. */
   .section--contrast {
     background:
-      radial-gradient(ellipse at 18% 12%, rgba(110, 193, 223, .055), transparent 24rem),
-      linear-gradient(180deg, #151d22 0%, #11171b 4.8rem, #0d1114 9.5rem, #0b0d10 100%);
+      radial-gradient(ellipse at 18% 12%, rgba(110, 193, 223, .045), transparent 26rem),
+      linear-gradient(180deg, #141b20 0%, #11171b 22%, #0e1215 52%, #0b0d10 100%);
   }
 
   #om {
     color: var(--surface-text);
     background:
-      radial-gradient(ellipse at 82% 20%, rgba(110, 193, 223, .075), transparent 26rem),
-      linear-gradient(180deg, #0b0d10 0%, #10161a 5.5rem, #151d22 11rem, #182127 100%);
+      radial-gradient(ellipse at 82% 20%, rgba(110, 193, 223, .055), transparent 28rem),
+      linear-gradient(180deg, #0b0d10 0%, #0e1215 18%, #12191d 48%, #171f24 100%);
+  }
+
+  #om .eyebrow,
+  .location-section .eyebrow {
+    color: #a3adb2;
+  }
+
+  #om .eyebrow::before,
+  .location-section .eyebrow::before {
+    background: #87949a;
+  }
+
+  #om h2,
+  .location-section h2 {
+    color: var(--surface-text);
+  }
+
+  #om h2 span,
+  .location-section h2 span {
+    color: #aab5bb;
+  }
+
+  #om .section-heading > p,
+  .location-section .section-heading > p,
+  .about-copy > p:not(.eyebrow) {
+    color: var(--surface-muted);
   }
 
   .facts { border-top-color: var(--surface-line); }
@@ -114,15 +139,15 @@
   .location-section {
     color: var(--surface-text);
     background:
-      radial-gradient(ellipse at 18% 18%, rgba(110, 193, 223, .07), transparent 24rem),
-      linear-gradient(180deg, #182127 0%, #1a242a 52%, #1c272e 100%);
-    border-top-color: rgba(230, 237, 241, .07);
+      radial-gradient(ellipse at 18% 18%, rgba(110, 193, 223, .05), transparent 26rem),
+      linear-gradient(180deg, #171f24 0%, #182126 48%, #1a242a 100%);
+    border-top-color: rgba(230, 237, 241, .055);
   }
 
   .location-card {
     border-color: var(--surface-line);
     background:
-      linear-gradient(135deg, rgba(255,255,255,.025), transparent 44%),
+      linear-gradient(135deg, rgba(255,255,255,.02), transparent 44%),
       #12181c;
     color: var(--surface-text);
     box-shadow: 0 22px 58px rgba(0, 0, 0, .25);
@@ -147,20 +172,20 @@
 
   .location-card__media.media-slot {
     background:
-      radial-gradient(ellipse at 72% 28%, rgba(143, 208, 231, .14), transparent 10rem),
-      linear-gradient(145deg, #2a3941, #202d34 58%, #182127);
+      radial-gradient(ellipse at 72% 28%, rgba(143, 208, 231, .12), transparent 10rem),
+      linear-gradient(145deg, #28363d, #202b31 58%, #182127);
   }
 
   .location-card__media .media-slot__fallback::before {
     mix-blend-mode: screen;
-    opacity: .2;
+    opacity: .18;
   }
 
   .map-frame {
     background:
-      linear-gradient(rgba(213, 226, 232, .055) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(213, 226, 232, .055) 1px, transparent 1px),
-      radial-gradient(circle at 54% 43%, rgba(79, 158, 188, .15), transparent 7rem),
+      linear-gradient(rgba(213, 226, 232, .05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(213, 226, 232, .05) 1px, transparent 1px),
+      radial-gradient(circle at 54% 43%, rgba(79, 158, 188, .13), transparent 7rem),
       #172126;
     background-size: 46px 46px, 46px 46px, auto, auto;
   }
@@ -176,15 +201,15 @@
 
   .section--contact {
     background:
-      linear-gradient(180deg, #1c272e 0%, #161d22 4.8rem, #101418 9.5rem, #0b0d10 100%);
+      linear-gradient(180deg, #1a242a 0%, #151c21 24%, #101418 54%, #0b0d10 100%);
   }
 
   /* Service listing and detail pages continue the same graphite system. */
   main > .subhero + .section--tight {
     color: var(--surface-text);
     background:
-      radial-gradient(ellipse at 84% 18%, rgba(110, 193, 223, .075), transparent 25rem),
-      linear-gradient(180deg, #101419 0%, #12191e 5.2rem, #171f24 10.5rem, #171f24 100%);
+      radial-gradient(ellipse at 84% 18%, rgba(110, 193, 223, .055), transparent 27rem),
+      linear-gradient(180deg, #101419 0%, #11171b 20%, #151c21 52%, #171f24 100%);
   }
 
   main > .subhero + .section--tight .service-row {
@@ -197,7 +222,7 @@
   }
 
   main > .subhero + .section--tight .service-row a:hover {
-    background: rgba(255,255,255,.035);
+    background: rgba(255,255,255,.03);
   }
 
   main > .subhero + .section--tight .service-row small,
@@ -217,7 +242,7 @@
   main > .subhero + .section--tight .aside-nav {
     border-color: var(--surface-line);
     background:
-      linear-gradient(145deg, rgba(255,255,255,.018), transparent 42%),
+      linear-gradient(145deg, rgba(255,255,255,.016), transparent 42%),
       #1a2328;
     color: var(--surface-text);
     box-shadow: 0 14px 34px rgba(0, 0, 0, .16);
@@ -231,12 +256,12 @@
   }
 
   main > .subhero + .section--tight .aside-nav a:hover {
-    background: rgba(255,255,255,.035);
+    background: rgba(255,255,255,.03);
   }
 
   main > .subhero + .section--tight .aside-nav a.active { color: #fff; }
   main > .subhero + .section--tight .service-row__arrow,
-  main > .subhero + .section--tight .aside-nav a span { color: var(--surface-accent); }
+  main > .subhero + .section--tight .aside-nav a span { color: #a7c8d4; }
 
   main > .subhero + .section--tight .service-aside .button--primary {
     background: #f1f4f5;
@@ -251,13 +276,13 @@
   .cta-band__inner {
     border-color: var(--surface-line);
     background:
-      linear-gradient(145deg, rgba(255,255,255,.025), transparent 45%),
+      linear-gradient(145deg, rgba(255,255,255,.02), transparent 45%),
       #1b242a;
     color: var(--surface-text);
     box-shadow: 0 18px 44px rgba(0,0,0,.18);
   }
 
-  .cta-band .eyebrow { color: #8aa0aa; }
+  .cta-band .eyebrow { color: #8f9ba1; }
   .cta-band .button--primary {
     background: #f1f4f5;
     border-color: #f1f4f5;
@@ -268,8 +293,8 @@
   .privacy-main {
     color: var(--surface-text);
     background:
-      radial-gradient(ellipse at 82% 18%, rgba(110, 193, 223, .075), transparent 25rem),
-      linear-gradient(180deg, #0d1013 0%, #12191e 5.5rem, #171f24 10.8rem, #171f24 100%);
+      radial-gradient(ellipse at 82% 18%, rgba(110, 193, 223, .055), transparent 27rem),
+      linear-gradient(180deg, #0d1013 0%, #11171b 20%, #151c21 52%, #171f24 100%);
   }
 
   .privacy-main .privacy h1,
@@ -277,8 +302,8 @@
   .privacy-main .privacy h1 span { color: #a7b2b8; }
   .privacy-main .privacy p,
   .privacy-main .privacy li { color: #abb5ba; }
-  .privacy-main .privacy a { color: #8ed0e8; }
-  .privacy-main .eyebrow { color: var(--surface-accent); }
+  .privacy-main .privacy a { color: #a5cbd9; }
+  .privacy-main .eyebrow { color: #9ba7ad; }
 }
 
 @layer utilities {
