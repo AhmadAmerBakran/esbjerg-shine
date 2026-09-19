@@ -3,7 +3,7 @@ name: Website quality gate
 on:
   pull_request:
   push:
-    branches: [master, initial-build]
+    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -90,12 +90,25 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const thresholds = { performance: .95, accessibility: .98, 'best-practices': .95, seo: 1 };
+          const diagnostics = [
+            'first-contentful-paint',
+            'largest-contentful-paint',
+            'speed-index',
+            'total-blocking-time',
+            'cumulative-layout-shift',
+            'total-byte-weight'
+          ];
+
           for (const file of ['lighthouse-mobile.json', 'lighthouse-desktop.json']) {
             const report = JSON.parse(fs.readFileSync(file, 'utf8'));
             for (const [name, minimum] of Object.entries(thresholds)) {
               const score = report.categories?.[name]?.score ?? 0;
               console.log(`${file} ${name}: ${Math.round(score * 100)} / minimum ${Math.round(minimum * 100)}`);
               if (score < minimum) process.exitCode = 1;
+            }
+            for (const id of diagnostics) {
+              const audit = report.audits?.[id];
+              if (audit) console.log(`${file} ${id}: ${audit.displayValue ?? audit.numericValue ?? 'n/a'}`);
             }
           }
           NODE
