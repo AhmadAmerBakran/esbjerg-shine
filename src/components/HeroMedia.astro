@@ -13,13 +13,14 @@ const hasVideo = hasWebm || hasMp4;
   {hasPoster && (
     <img
       class="hero-media__poster"
-      src={siteMedia.hero.poster}
+      data-src={siteMedia.hero.poster}
       alt=""
       width="1600"
       height="2000"
-      loading="eager"
+      loading="lazy"
       decoding="async"
-      fetchpriority="high"
+      fetchpriority="low"
+      data-hero-poster
       data-media-image
       aria-hidden="true"
     />
@@ -27,17 +28,15 @@ const hasVideo = hasWebm || hasMp4;
   {hasVideo && (
     <video
       class="hero-media__video"
-      autoplay
       muted
       loop
       playsinline
-      preload="metadata"
-      poster={hasPoster ? siteMedia.hero.poster : undefined}
+      preload="none"
       data-hero-video
       aria-hidden="true"
     >
-      {hasWebm && <source src={siteMedia.hero.webm} type="video/webm" />}
-      {hasMp4 && <source src={siteMedia.hero.mp4} type="video/mp4" />}
+      {hasWebm && <source data-src={siteMedia.hero.webm} type="video/webm" />}
+      {hasMp4 && <source data-src={siteMedia.hero.mp4} type="video/mp4" />}
     </video>
   )}
   <span class="hero-card__logo hero-media__fallback-logo" aria-hidden="true"></span>
