@@ -15,17 +15,17 @@ export const services: Service[] = [
     slug: 'bilvask',
     title: 'Håndvask & udvendig bilpleje',
     eyebrow: 'Ren bil. Skarp finish.',
-    summary: 'Grundig udvendig håndvask med fælgerens, forvask, shampoo, skånsom aftørring og dækshine.',
+    summary: 'Grundig udvendig håndvask med fælgrens, forvask, shampoo, skånsom aftørring og dækshine.',
     intro: 'Vi går bilen igennem trin for trin, så snavs løsnes inden selve håndvasken, og lakken behandles så skånsomt som muligt. Fælgene får deres egen rengøring, bilen håndvaskes med shampoo og afsluttes med omhyggelig aftørring og dækshine.',
     bullets: [
-      'Fælgerens – fælgene rengøres grundigt for bremsestøv og snavs',
+      'Fælgrens – fælgene rengøres grundigt for bremsestøv og snavs',
       'Forvask – skidt og snavs opløses og fjernes, så den efterfølgende håndvask bliver mere skånsom',
       'Håndvask med shampoo – bilen vaskes grundigt i hånden med kvalitetsshampoo',
       'Skylning og aftørring – bilen skylles grundigt og tørres forsigtigt med rene mikrofiberklude',
       'Dækshine – dækkene får som afslutning en ren, mørk og blank finish'
     ],
     seoTitle: 'Bilvask i Esbjerg | Esbjerg Shine',
-    seoDescription: 'Grundig håndvask og udvendig bilpleje i Esbjerg med fælgerens, forvask, shampoo, skånsom aftørring og dækshine hos Esbjerg Shine.'
+    seoDescription: 'Grundig håndvask og udvendig bilpleje i Esbjerg med fælgrens, forvask, shampoo, skånsom aftørring og dækshine hos Esbjerg Shine.'
   },
   {
     slug: 'indvendig-bilpleje',
