@@ -1,4 +1,6 @@
 ---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
@@ -16,6 +18,7 @@ const serviceMedia = getServiceMedia(service.slug);
 const canonicalPath = `/ydelser/${service.slug}/`;
 const site = Astro.site ?? new URL('https://esbjergshine.dk');
 const home = site.toString().replace(/\/$/, '');
+const hasDetailImage = existsSync(join(process.cwd(), 'public', serviceMedia.detail.replace(/^\//, '')));
 
 const schema = [
   {
@@ -24,7 +27,7 @@ const schema = [
     name: service.title,
     serviceType: service.title,
     url: `${home}${canonicalPath}`,
-    image: `${home}${serviceMedia.detail}`,
+    ...(hasDetailImage ? { image: `${home}${serviceMedia.detail}` } : {}),
     areaServed: { '@type': 'City', name: 'Esbjerg' },
     provider: { '@id': `${home}/#virksomhed` }
   },
@@ -59,6 +62,7 @@ const schema = [
           <h2>Behandlingen tilpasses bilen</h2>
           <p>{service.intro}</p>
           <p>Inden arbejdet går i gang, afstemmer vi forventningerne og ser på bilens aktuelle stand. Det gør det lettere at vælge den behandling, der giver mening, frem for at sælge mere end bilen behøver.</p>
+          {service.notice && <ul class="detail-list" aria-label="Vigtigt"><li><strong>Vigtigt:</strong> {service.notice}</li></ul>}
           <h2>Typisk fokus</h2>
           <ul class="detail-list">{service.bullets.map((item) => <li>{item}</li>)}</ul>
           <h2>Sådan kommer du videre</h2>

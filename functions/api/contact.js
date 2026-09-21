@@ -3,7 +3,7 @@ const ALLOWED_SERVICES = new Set([
   'Indvendig bilpleje',
   'Komplet klargøring',
   'Polering & lakforbedring',
-  'Lakbeskyttelse & coating',
+  'Motorvask',
   'Sæde- & tekstilrens',
   'Andet'
 ]);
