@@ -1,0 +1,54 @@
+name: Import real client media
+
+on:
+  push:
+    branches: [initial-build]
+    paths:
+      - '.media-import-manifest'
+
+permissions:
+  contents: write
+
+jobs:
+  import-media:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: initial-build
+          fetch-depth: 0
+
+      - name: Reconstruct WebP files from temporary Git blobs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          while IFS='|' read -r target shas; do
+            [ -n "$target" ] || continue
+            mkdir -p "$(dirname "$target")"
+            b64_file="$(mktemp)"
+            : > "$b64_file"
+            for sha in $shas; do
+              curl -fsSL \
+                -H "Authorization: Bearer ${GH_TOKEN}" \
+                -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/${REPOSITORY}/git/blobs/${sha}" \
+                | python3 -c 'import sys,json,base64; d=json.load(sys.stdin); sys.stdout.buffer.write(base64.b64decode(d["content"]))' \
+                >> "$b64_file"
+            done
+            base64 --decode "$b64_file" > "$target"
+            rm -f "$b64_file"
+          done < .media-import-manifest
+
+      - name: Commit real client media and remove importer
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/media
+          git rm .media-import-manifest .github/workflows/import-real-media.yml
+          git commit -m "Replace site media with real client work"
+          git push origin HEAD:initial-build
