@@ -18,7 +18,7 @@ jobs:
           ref: initial-build
           fetch-depth: 0
 
-      - name: Reconstruct optimized media archive
+      - name: Reconstruct real client media
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -39,13 +39,19 @@ jobs:
           tar -xf "$archive"
           rm -f "$archive"
 
+          while IFS= read -r src; do
+            dst="${src%.avif}.webp"
+            ffmpeg -hide_banner -loglevel error -y -i "$src" -c:v libwebp -q:v 80 "$dst"
+            rm -f "$src"
+          done < <(find public/media -type f -name '*.avif' -print)
+
       - name: Commit real client media and remove importer
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/media
+          git add -A public/media
           git rm .media-import-manifest .github/workflows/import-real-media.yml
           git commit -m "Replace matching site media with real client work"
           git push origin HEAD:initial-build
