@@ -25,8 +25,8 @@ jobs:
           REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          archive_b64="$(mktemp)"
-          : > "$archive_b64"
+          archive="/tmp/esbjerg-shine-real-media.tar"
+          : > "$archive"
           while IFS= read -r sha; do
             [ -n "$sha" ] || continue
             curl -fsSL \
@@ -34,11 +34,10 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/${REPOSITORY}/git/blobs/${sha}" \
               | python3 -c 'import sys,json,base64; d=json.load(sys.stdin); sys.stdout.buffer.write(base64.b64decode(d["content"]))' \
-              >> "$archive_b64"
+              >> "$archive"
           done < .media-import-manifest
-          base64 --decode "$archive_b64" > /tmp/esbjerg-shine-real-media.tar
-          tar -xf /tmp/esbjerg-shine-real-media.tar
-          rm -f "$archive_b64" /tmp/esbjerg-shine-real-media.tar
+          tar -xf "$archive"
+          rm -f "$archive"
 
       - name: Commit real client media and remove importer
         shell: bash
