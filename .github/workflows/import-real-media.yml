@@ -18,29 +18,27 @@ jobs:
           ref: initial-build
           fetch-depth: 0
 
-      - name: Reconstruct WebP files from temporary Git blobs
+      - name: Reconstruct optimized media archive
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          while IFS='|' read -r target shas; do
-            [ -n "$target" ] || continue
-            mkdir -p "$(dirname "$target")"
-            b64_file="$(mktemp)"
-            : > "$b64_file"
-            for sha in $shas; do
-              curl -fsSL \
-                -H "Authorization: Bearer ${GH_TOKEN}" \
-                -H "Accept: application/vnd.github+json" \
-                "https://api.github.com/repos/${REPOSITORY}/git/blobs/${sha}" \
-                | python3 -c 'import sys,json,base64; d=json.load(sys.stdin); sys.stdout.buffer.write(base64.b64decode(d["content"]))' \
-                >> "$b64_file"
-            done
-            base64 --decode "$b64_file" > "$target"
-            rm -f "$b64_file"
+          archive_b64="$(mktemp)"
+          : > "$archive_b64"
+          while IFS= read -r sha; do
+            [ -n "$sha" ] || continue
+            curl -fsSL \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${REPOSITORY}/git/blobs/${sha}" \
+              | python3 -c 'import sys,json,base64; d=json.load(sys.stdin); sys.stdout.buffer.write(base64.b64decode(d["content"]))' \
+              >> "$archive_b64"
           done < .media-import-manifest
+          base64 --decode "$archive_b64" > /tmp/esbjerg-shine-real-media.tar
+          tar -xf /tmp/esbjerg-shine-real-media.tar
+          rm -f "$archive_b64" /tmp/esbjerg-shine-real-media.tar
 
       - name: Commit real client media and remove importer
         shell: bash
@@ -50,5 +48,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add public/media
           git rm .media-import-manifest .github/workflows/import-real-media.yml
-          git commit -m "Replace site media with real client work"
+          git commit -m "Replace matching site media with real client work"
           git push origin HEAD:initial-build
