@@ -45,26 +45,54 @@ jobs:
           download 'https://images.pexels.com/photos/3689314/pexels-photo-3689314.jpeg' "$tmp/motorvask-card.jpg"
           download 'https://images.pexels.com/photos/24819303/pexels-photo-24819303.jpeg' "$tmp/motorvask-detail.jpg"
 
-          make_card() {
-            ffmpeg -hide_banner -loglevel error -y -i "$1" \
-              -vf "crop='min(iw,ih*8/5)':'min(ih,iw*5/8)',scale='min(iw,2560)':-2,setsar=1" \
-              -c:v libwebp -preset picture -q:v 86 "$2"
-          }
+          python3 -m pip install --disable-pip-version-check --quiet pillow
 
-          make_detail() {
-            ffmpeg -hide_banner -loglevel error -y -i "$1" \
-              -vf "crop='min(iw,ih*16/9)':'min(ih,iw*9/16)',scale='min(iw,3840)':-2,setsar=1" \
-              -c:v libwebp -preset picture -q:v 88 "$2"
-          }
+          TMP_DIR="$tmp" python3 - <<'PY'
+          import os
+          from pathlib import Path
+          from PIL import Image, ImageOps
 
-          make_card "$tmp/bilvask-card.jpg" public/media/services/bilvask/card.webp
-          make_detail "$tmp/bilvask-detail.jpg" public/media/services/bilvask/detail.webp
-          make_card "$tmp/komplet-card.jpg" public/media/services/komplet-klargoering/card.webp
-          make_detail "$tmp/komplet-detail.jpg" public/media/services/komplet-klargoering/detail.webp
-          make_card "$tmp/polering-card.jpg" public/media/services/polering/card.webp
-          make_detail "$tmp/polering-detail.jpg" public/media/services/polering/detail.webp
-          make_card "$tmp/motorvask-card.jpg" public/media/services/motorvask/card.webp
-          make_detail "$tmp/motorvask-detail.jpg" public/media/services/motorvask/detail.webp
+          tmp = Path(os.environ['TMP_DIR'])
+
+          def prepare(source: Path, destination: Path, ratio: float, max_width: int, quality: int):
+              image = ImageOps.exif_transpose(Image.open(source)).convert('RGB')
+              width, height = image.size
+              current_ratio = width / height
+
+              if current_ratio > ratio:
+                  crop_width = round(height * ratio)
+                  left = (width - crop_width) // 2
+                  image = image.crop((left, 0, left + crop_width, height))
+              else:
+                  crop_height = round(width / ratio)
+                  top = (height - crop_height) // 2
+                  image = image.crop((0, top, width, top + crop_height))
+
+              if image.width > max_width:
+                  target_height = round(image.height * max_width / image.width)
+                  image = image.resize((max_width, target_height), Image.Resampling.LANCZOS)
+
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              image.save(destination, 'WEBP', quality=quality, method=6)
+
+          cards = [
+              ('bilvask-card.jpg', 'public/media/services/bilvask/card.webp'),
+              ('komplet-card.jpg', 'public/media/services/komplet-klargoering/card.webp'),
+              ('polering-card.jpg', 'public/media/services/polering/card.webp'),
+              ('motorvask-card.jpg', 'public/media/services/motorvask/card.webp'),
+          ]
+          details = [
+              ('bilvask-detail.jpg', 'public/media/services/bilvask/detail.webp'),
+              ('komplet-detail.jpg', 'public/media/services/komplet-klargoering/detail.webp'),
+              ('polering-detail.jpg', 'public/media/services/polering/detail.webp'),
+              ('motorvask-detail.jpg', 'public/media/services/motorvask/detail.webp'),
+          ]
+
+          for source, destination in cards:
+              prepare(tmp / source, Path(destination), 8 / 5, 2560, 88)
+          for source, destination in details:
+              prepare(tmp / source, Path(destination), 16 / 9, 3840, 90)
+          PY
 
       - name: Commit service media and remove importer
         shell: bash
