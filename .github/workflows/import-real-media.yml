@@ -1,4 +1,4 @@
-name: Import real client media
+name: Import natural service media
 
 on:
   push:
@@ -18,40 +18,69 @@ jobs:
           ref: initial-build
           fetch-depth: 0
 
-      - name: Reconstruct real client media
+      - name: Download and prepare natural service photos
         shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
         run: |
           set -euo pipefail
-          archive="/tmp/esbjerg-shine-real-media.tar"
-          : > "$archive"
-          while IFS= read -r sha; do
-            [ -n "$sha" ] || continue
-            curl -fsSL \
-              -H "Authorization: Bearer ${GH_TOKEN}" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${REPOSITORY}/git/blobs/${sha}" \
-              | python3 -c 'import sys,json,base64; d=json.load(sys.stdin); sys.stdout.buffer.write(base64.b64decode(d["content"]))' \
-              >> "$archive"
-          done < .media-import-manifest
-          tar -xf "$archive"
-          rm -f "$archive"
 
-          while IFS= read -r src; do
-            dst="${src%.avif}.webp"
-            ffmpeg -hide_banner -loglevel error -y -i "$src" -c:v libwebp -q:v 80 "$dst"
-            rm -f "$src"
-          done < <(find public/media -type f -name '*.avif' -print)
+          mkdir -p \
+            public/media/services/bilvask \
+            public/media/services/komplet-klargoering \
+            public/media/services/polering \
+            public/media/services/motorvask
 
-      - name: Commit real client media and remove importer
+          tmp="$(mktemp -d)"
+          trap 'rm -rf "$tmp"' EXIT
+
+          download() {
+            curl -fL --retry 3 --retry-delay 2 --connect-timeout 20 "$1" -o "$2"
+          }
+
+          download 'https://images.pexels.com/photos/33093191/pexels-photo-33093191.jpeg' "$tmp/bilvask-card.jpg"
+          download 'https://images.pexels.com/photos/4665702/pexels-photo-4665702.jpeg' "$tmp/bilvask-detail.jpg"
+          download 'https://images.pexels.com/photos/10240827/pexels-photo-10240827.jpeg' "$tmp/komplet-card.jpg"
+          download 'https://images.pexels.com/photos/5288726/pexels-photo-5288726.jpeg' "$tmp/komplet-detail.jpg"
+          download 'https://images.pexels.com/photos/12870109/pexels-photo-12870109.jpeg' "$tmp/polering-card.jpg"
+          download 'https://images.pexels.com/photos/15169668/pexels-photo-15169668.jpeg' "$tmp/polering-detail.jpg"
+          download 'https://images.pexels.com/photos/3689314/pexels-photo-3689314.jpeg' "$tmp/motorvask-card.jpg"
+          download 'https://images.pexels.com/photos/24819303/pexels-photo-24819303.jpeg' "$tmp/motorvask-detail.jpg"
+
+          make_card() {
+            ffmpeg -hide_banner -loglevel error -y -i "$1" \
+              -vf "crop='min(iw,ih*8/5)':'min(ih,iw*5/8)',scale='min(iw,2560)':-2,setsar=1" \
+              -c:v libwebp -preset picture -q:v 86 "$2"
+          }
+
+          make_detail() {
+            ffmpeg -hide_banner -loglevel error -y -i "$1" \
+              -vf "crop='min(iw,ih*16/9)':'min(ih,iw*9/16)',scale='min(iw,3840)':-2,setsar=1" \
+              -c:v libwebp -preset picture -q:v 88 "$2"
+          }
+
+          make_card "$tmp/bilvask-card.jpg" public/media/services/bilvask/card.webp
+          make_detail "$tmp/bilvask-detail.jpg" public/media/services/bilvask/detail.webp
+          make_card "$tmp/komplet-card.jpg" public/media/services/komplet-klargoering/card.webp
+          make_detail "$tmp/komplet-detail.jpg" public/media/services/komplet-klargoering/detail.webp
+          make_card "$tmp/polering-card.jpg" public/media/services/polering/card.webp
+          make_detail "$tmp/polering-detail.jpg" public/media/services/polering/detail.webp
+          make_card "$tmp/motorvask-card.jpg" public/media/services/motorvask/card.webp
+          make_detail "$tmp/motorvask-detail.jpg" public/media/services/motorvask/detail.webp
+
+      - name: Commit service media and remove importer
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A public/media
+          git add \
+            public/media/services/bilvask/card.webp \
+            public/media/services/bilvask/detail.webp \
+            public/media/services/komplet-klargoering/card.webp \
+            public/media/services/komplet-klargoering/detail.webp \
+            public/media/services/polering/card.webp \
+            public/media/services/polering/detail.webp \
+            public/media/services/motorvask/card.webp \
+            public/media/services/motorvask/detail.webp
           git rm .media-import-manifest .github/workflows/import-real-media.yml
-          git commit -m "Replace matching site media with real client work"
+          git commit -m "Replace service photos with natural real imagery"
           git push origin HEAD:initial-build
