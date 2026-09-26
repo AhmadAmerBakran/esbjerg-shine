@@ -5,7 +5,6 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
 ---
 <form class="contact-form" data-contact-form data-turnstile-sitekey={turnstileSiteKey} novalidate>
   <input type="hidden" name="startedAt" value="" data-started-at />
-  <input type="hidden" name="turnstileToken" value="" data-turnstile-token />
   <div class="honeypot" aria-hidden="true">
     <label>Hjemmeside <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
   </div>
@@ -45,7 +44,17 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
     <span>Jeg accepterer, at Esbjerg Shine bruger oplysningerne til at besvare min henvendelse. <a href="/privatliv/">Læs om privatliv</a>.</span>
   </label>
 
-  <div data-turnstile-slot aria-live="polite"></div>
+  {turnstileSiteKey && (
+    <div
+      class="cf-turnstile"
+      data-sitekey={turnstileSiteKey}
+      data-action="contact"
+      data-appearance="interaction-only"
+      data-theme="auto"
+      data-response-field-name="turnstileToken"
+    ></div>
+  )}
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <div class="form-actions">
     <button class="button button--primary" type="submit"><span>Send forespørgsel</span><i aria-hidden="true">↗</i></button>
