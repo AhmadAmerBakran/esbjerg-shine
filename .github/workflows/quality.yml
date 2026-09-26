@@ -20,10 +20,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Node
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'
           cache: npm
@@ -31,45 +31,66 @@ jobs:
       - name: Install
         run: npm ci --no-audit --no-fund
 
+      - name: Dependency audit
+        run: npm audit --audit-level=low
+
       - name: JavaScript syntax
         run: |
           node --check public/site.js
           node --check public/site-hero.js
           node --check public/site-deferred.js
           node --check functions/api/contact.js
+          node --check scripts/optimize-dist-media.mjs
+          node --check scripts/test-contact.mjs
 
-      - name: Build static site
+      - name: Contact endpoint regression tests
+        run: npm run test:contact
+
+      - name: Build production site
         run: npm run build
         env:
           SITE_URL: https://esbjergshine.dk
 
-      - name: Enforce public asset budgets
+      - name: Enforce deployment asset budgets
         run: |
-          oversized="$(find public -type f ! -path 'public/media/video/*' -size +1200k -print)"
+          oversized="$(find dist/media -type f ! -path 'dist/media/video/*' -size +600k -print)"
           if [ -n "$oversized" ]; then
-            echo "Non-video public files above 1.2 MB are not allowed:"
+            echo "Production non-video media above 600 KB are not allowed:"
             echo "$oversized"
             exit 1
           fi
 
-          if [ -d public/media/video ]; then
-            oversized_video="$(find public/media/video -type f -size +4096k -print)"
+          if [ -d dist/media/video ]; then
+            oversized_video="$(find dist/media/video -type f -size +4096k -print)"
             if [ -n "$oversized_video" ]; then
-              echo "Video files above 4 MB are not allowed:"
+              echo "Production video files above 4 MB are not allowed:"
               echo "$oversized_video"
               exit 1
             fi
           fi
 
-      - name: Verify SEO outputs
+      - name: Verify deployment and SEO outputs
         run: |
           test -f dist/index.html
           test -f dist/robots.txt
           test -f dist/sitemap.xml
+          test -f dist/_headers
+          test -f dist/_routes.json
+          test -f dist/media/home/hero-background-mobile.webp
           grep -q 'lang="da-DK"' dist/index.html
           grep -q 'Bilpleje i Esbjerg' dist/index.html
-          grep -q 'AutomotiveBusiness\|AutoWash\|LocalBusiness' dist/index.html
+          grep -q 'AutomotiveBusiness' dist/index.html
+          grep -q 'hero-background-mobile.webp 1200w' dist/index.html
+          grep -q 'fetchpriority="high"' dist/index.html
           grep -q 'sitemap.xml' dist/robots.txt
+          grep -q 'Disallow: /api/' dist/robots.txt
+          grep -q 'https://esbjergshine.dk/ydelser/polering/' dist/sitemap.xml
+          grep -q 'Content-Security-Policy:' dist/_headers
+          grep -q 'Strict-Transport-Security:' dist/_headers
+          if grep -Rni --exclude='*.map' 'lakforbedring' dist; then
+            echo 'Obsolete lakforbedring copy found in production output.'
+            exit 1
+          fi
 
       - name: Start local server
         run: |
@@ -108,6 +129,13 @@ jobs:
             'cumulative-layout-shift',
             'total-byte-weight'
           ];
+          const detailAudits = [
+            'largest-contentful-paint-element',
+            'lcp-breakdown-insight',
+            'lcp-discovery-insight',
+            'cls-culprits-insight',
+            'layout-shift-elements'
+          ];
           const mobileFiles = ['lighthouse-mobile-1.json', 'lighthouse-mobile-2.json', 'lighthouse-mobile-3.json'];
           const mobileReports = mobileFiles.map((file) => ({ file, report: JSON.parse(fs.readFileSync(file, 'utf8')) }));
 
@@ -117,6 +145,10 @@ jobs:
             for (const id of diagnostics) {
               const audit = report.audits?.[id];
               if (audit) console.log(`${file} ${id}: ${audit.displayValue ?? audit.numericValue ?? 'n/a'}`);
+            }
+            for (const id of detailAudits) {
+              const audit = report.audits?.[id];
+              if (audit?.details) console.log(`${file} ${id}: ${JSON.stringify(audit.details).slice(0, 12000)}`);
             }
           }
 
@@ -155,9 +187,9 @@ jobs:
           NODE
 
       - name: Upload Lighthouse reports
-        if: always() && github.event_name == 'workflow_dispatch'
+        if: always() && (failure() || github.event_name == 'workflow_dispatch')
         continue-on-error: true
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: lighthouse-reports
           path: lighthouse-*.json

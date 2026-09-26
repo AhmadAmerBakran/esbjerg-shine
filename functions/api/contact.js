@@ -2,36 +2,58 @@ const ALLOWED_SERVICES = new Set([
   'Håndvask & udvendig bilpleje',
   'Indvendig bilpleje',
   'Komplet klargøring',
-  'Polering & lakforbedring',
+  'Polering',
   'Motorvask',
   'Sæde- & tekstilrens',
   'Andet'
 ]);
 
-const MAX_BODY_CHARS = 12_000;
-const RATE_LIMIT_SECONDS = 75;
+const MAX_BODY_BYTES = 12_000;
+const RATE_LIMIT_SECONDS = 90;
+const MIN_FORM_AGE_MS = 1_000;
+const MAX_FORM_AGE_MS = 24 * 60 * 60 * 1_000;
 const TOKEN_SKEW_MS = 60_000;
 let cachedAccessToken = '';
 let cachedAccessTokenExpiresAt = 0;
 
+const API_SECURITY_HEADERS = {
+  'Cache-Control': 'no-store',
+  'Content-Security-Policy': "default-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'",
+  'Cross-Origin-Resource-Policy': 'same-origin',
+  'Referrer-Policy': 'no-referrer',
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY'
+};
+
 const json = (data, status = 200, extraHeaders = {}) => new Response(JSON.stringify(data), {
   status,
   headers: {
+    ...API_SECURITY_HEADERS,
     'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': 'no-store',
     ...extraHeaders
   }
 });
 
-const clean = (value, max) => String(value ?? '').replace(/\u0000/g, '').trim().slice(0, max);
+const cleanText = (value, max) => String(value ?? '').replace(/\u0000/g, '').trim().slice(0, max);
+const cleanLine = (value, max) => cleanText(value, max).replace(/[\r\n\t]+/g, ' ').replace(/\s{2,}/g, ' ');
 const validEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(value);
 const validPhone = (value) => !value || /^[0-9+().\s-]{3,30}$/u.test(value);
 
 const sameOrigin = (request) => {
   const origin = request.headers.get('Origin');
   if (!origin) return false;
+
+  const fetchSite = request.headers.get('Sec-Fetch-Site');
+  if (fetchSite && fetchSite !== 'same-origin') return false;
+
   try { return new URL(origin).origin === new URL(request.url).origin; }
   catch { return false; }
+};
+
+const validFormTiming = (startedAt) => {
+  if (!Number.isFinite(startedAt) || startedAt <= 0) return false;
+  const age = Date.now() - startedAt;
+  return age >= MIN_FORM_AGE_MS && age <= MAX_FORM_AGE_MS;
 };
 
 const hashValue = async (value) => {
@@ -66,11 +88,11 @@ const markRate = async (key) => {
 };
 
 const graphConfig = (env) => {
-  const tenantId = clean(env.M365_TENANT_ID, 100);
-  const clientId = clean(env.M365_CLIENT_ID, 100);
-  const clientSecret = clean(env.M365_CLIENT_SECRET, 1200);
-  const mailbox = clean(env.CONTACT_MAILBOX, 160).toLowerCase();
-  const recipient = clean(env.CONTACT_TO || mailbox, 160).toLowerCase();
+  const tenantId = cleanLine(env.M365_TENANT_ID, 100);
+  const clientId = cleanLine(env.M365_CLIENT_ID, 100);
+  const clientSecret = cleanText(env.M365_CLIENT_SECRET, 1200);
+  const mailbox = cleanLine(env.CONTACT_MAILBOX, 160).toLowerCase();
+  const recipient = cleanLine(env.CONTACT_TO || mailbox, 160).toLowerCase();
   if (!tenantId || !clientId || !clientSecret || !validEmail(mailbox) || !validEmail(recipient)) return null;
   return { tenantId, clientId, clientSecret, mailbox, recipient };
 };
@@ -119,32 +141,34 @@ const sendMessage = async (config, token, message) => {
 export async function onRequestPost(context) {
   const { request, env } = context;
   if (!sameOrigin(request)) return json({ ok: false, code: 'origin' }, 403);
+
   const contentType = request.headers.get('Content-Type') || '';
   if (!contentType.toLowerCase().startsWith('application/json')) return json({ ok: false, code: 'content_type' }, 415);
 
   const contentLength = Number(request.headers.get('Content-Length') || 0);
-  if (contentLength > MAX_BODY_CHARS) return json({ ok: false, code: 'too_large' }, 413);
+  if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) return json({ ok: false, code: 'too_large' }, 413);
 
   const raw = await request.text().catch(() => '');
-  if (!raw || raw.length > MAX_BODY_CHARS) return json({ ok: false, code: 'invalid_body' }, 400);
+  if (!raw || raw.length > MAX_BODY_BYTES) return json({ ok: false, code: 'invalid_body' }, 400);
 
   let payload;
   try { payload = JSON.parse(raw); }
   catch { return json({ ok: false, code: 'invalid_json' }, 400); }
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return json({ ok: false, code: 'invalid_json' }, 400);
 
-  const navn = clean(payload.navn, 80);
-  const telefon = clean(payload.telefon, 30);
-  const email = clean(payload.email, 120).toLowerCase();
-  const ydelse = clean(payload.ydelse, 100);
-  const besked = clean(payload.besked, 2500);
-  const honeypot = clean(payload.website, 200);
-  const startedAt = Number(payload.startedAt || 0);
+  const navn = cleanLine(payload.navn, 80);
+  const telefon = cleanLine(payload.telefon, 30);
+  const email = cleanLine(payload.email, 120).toLowerCase();
+  const ydelse = cleanLine(payload.ydelse, 100);
+  const besked = cleanText(payload.besked, 2500);
+  const honeypot = cleanText(payload.website, 200);
+  const startedAt = Number(payload.startedAt);
   const samtykke = payload.samtykke === true;
 
   if (honeypot) return json({ ok: true });
   if (!navn || !email || !ydelse || !besked || !samtykke) return json({ ok: false, code: 'required' }, 400);
   if (!validEmail(email) || !validPhone(telefon) || !ALLOWED_SERVICES.has(ydelse)) return json({ ok: false, code: 'invalid' }, 400);
-  if (startedAt && Date.now() - startedAt < 700) return json({ ok: false, code: 'too_fast' }, 400);
+  if (!validFormTiming(startedAt)) return json({ ok: false, code: 'invalid_timing' }, 400);
 
   const rate = await getRateState(request);
   if (rate.limited) return json({ ok: false, code: 'rate_limited' }, 429, { 'Retry-After': String(RATE_LIMIT_SECONDS) });
@@ -154,6 +178,10 @@ export async function onRequestPost(context) {
 
   const token = await getAccessToken(config).catch(() => null);
   if (!token) return json({ ok: false, code: 'delivery_unavailable' }, 502);
+
+  // Reserve the short rate-limit window before the external send to reduce
+  // duplicate submissions and concurrent abuse. Cache failures stay non-fatal.
+  await markRate(rate.key);
 
   const text = [
     'Ny forespørgsel fra Esbjerg Shine', '',
@@ -173,7 +201,6 @@ export async function onRequestPost(context) {
   }).catch(() => false);
   if (!sent) return json({ ok: false, code: 'delivery_failed' }, 502);
 
-  context.waitUntil(markRate(rate.key));
   return json({ ok: true });
 }
 
@@ -182,5 +209,8 @@ export function onRequestGet() {
 }
 
 export function onRequestOptions() {
-  return new Response(null, { status: 204, headers: { Allow: 'POST' } });
+  return new Response(null, {
+    status: 204,
+    headers: { ...API_SECURITY_HEADERS, Allow: 'POST' }
+  });
 }

@@ -61,13 +61,13 @@ export const services: Service[] = [
   },
   {
     slug: 'polering',
-    title: 'Polering & lakforbedring',
+    title: 'Polering',
     eyebrow: 'Mere dybde. Mere glans.',
-    summary: 'Polering der kan forbedre glans, dybde og reducere synlige vaskespor og lette lakdefekter.',
-    intro: 'Polering bør tilpasses lakken frem for at følge en fast opskrift. Før arbejdet vurderes bilens overflade, så metode og ambitionsniveau passer til lakken og forventningen.',
-    bullets: ['Vurdering af lakkens stand', 'Forbedring af glans og dybde', 'Reduktion af lette vaskespor'],
+    summary: 'Professionel polering med fokus på glans, dybde og en flot, ensartet finish.',
+    intro: 'Polering tilpasses bilen og det resultat, du ønsker. Før arbejdet vurderer vi overfladen og aftaler niveauet, så behandlingen passer til bilens stand og dit behov.',
+    bullets: ['Vurdering af bilens overflade', 'Polering med fokus på glans og dybde', 'Afsluttende finish og kontrol'],
     seoTitle: 'Bilpolering i Esbjerg | Esbjerg Shine',
-    seoDescription: 'Professionel bilpolering i Esbjerg med fokus på glans, dybde og en flottere lak. Få et uforpligtende tilbud fra Esbjerg Shine.'
+    seoDescription: 'Professionel bilpolering i Esbjerg med fokus på glans, dybde og en ensartet finish. Få et uforpligtende tilbud fra Esbjerg Shine.'
   },
   {
     slug: 'motorvask',

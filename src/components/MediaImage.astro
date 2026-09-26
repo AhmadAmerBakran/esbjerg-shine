@@ -24,15 +24,22 @@ const {
 
 const publicFile = join(process.cwd(), 'public', src.replace(/^\//, ''));
 const exists = existsSync(publicFile);
+const isHeroBackground = className.split(/\s+/).includes('hero__background-media');
+const effectiveFetchPriority = isHeroBackground ? 'high' : (fetchPriority === 'auto' && loading === 'lazy' ? 'low' : fetchPriority);
+const responsiveSrcset = import.meta.env.PROD && isHeroBackground
+  ? '/media/home/hero-background-mobile.webp 1200w, /media/home/hero-background.webp 2400w'
+  : undefined;
 ---
 <div class:list={['media-slot', className]} data-media-slot>
   {exists && (
     <img
       src={src}
+      srcset={responsiveSrcset}
+      sizes={responsiveSrcset ? '100vw' : undefined}
       alt={alt}
       loading={loading}
       decoding="async"
-      fetchpriority={fetchPriority}
+      fetchpriority={effectiveFetchPriority}
       width={width}
       height={height}
       data-media-image
