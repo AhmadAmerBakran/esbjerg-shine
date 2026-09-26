@@ -7,9 +7,9 @@ const KB = 1024;
 
 const profiles = [
   { test: /\/social\//, maxWidth: 1200, maxHeight: 630, budget: 400 * KB },
-  { test: /\/home\/hero-background\./, maxWidth: 2400, maxHeight: 1600, budget: 450 * KB },
-  { test: /\/home\/hero-poster\./, maxWidth: 1600, maxHeight: 2000, budget: 500 * KB },
-  { test: /\/services\/[^/]+\/card\./, maxWidth: 1600, maxHeight: 1000, budget: 320 * KB },
+  { test: /\/home\/hero-background\./, maxWidth: 2400, maxHeight: 1600, budget: 320 * KB },
+  { test: /\/home\/hero-poster\./, maxWidth: 1600, maxHeight: 2000, budget: 400 * KB },
+  { test: /\/services\/[^/]+\/card\./, maxWidth: 1600, maxHeight: 1000, budget: 220 * KB },
   { test: /\/services\/[^/]+\/detail\./, maxWidth: 1920, maxHeight: 1080, budget: 420 * KB },
   { test: /\/before-after\//, maxWidth: 1800, maxHeight: 1800, budget: 450 * KB },
   { test: /\/about\//, maxWidth: 1600, maxHeight: 2000, budget: 400 * KB },
@@ -18,7 +18,7 @@ const profiles = [
 ];
 
 const fallbackProfile = { maxWidth: 2000, maxHeight: 2000, budget: 500 * KB };
-const qualities = [88, 84, 80, 76, 72];
+const qualities = [88, 84, 80, 76, 72, 68];
 
 const walk = async (directory) => {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -41,6 +41,33 @@ const encode = async (input, extension, quality) => {
     return input.clone().jpeg({ quality, mozjpeg: true, progressive: true }).toBuffer();
   }
   return input.clone().webp({ quality, effort: 6, smartSubsample: true }).toBuffer();
+};
+
+const createHeroMobileVariant = async () => {
+  const input = join(ROOT, 'home', 'hero-background.webp');
+  const output = join(ROOT, 'home', 'hero-background-mobile.webp');
+
+  try {
+    await stat(input);
+  } catch (error) {
+    if (error?.code === 'ENOENT') return;
+    throw error;
+  }
+
+  const pipeline = sharp(input, { failOn: 'error' })
+    .rotate()
+    .resize({ width: 1200, height: 800, fit: 'inside', withoutEnlargement: true });
+
+  let buffer;
+  for (const quality of [82, 78, 74, 70, 66]) {
+    buffer = await pipeline.clone().webp({ quality, effort: 6, smartSubsample: true }).toBuffer();
+    if (buffer.length <= 160 * KB) break;
+  }
+
+  if (buffer) {
+    await writeFile(output, buffer);
+    console.log(`${relative(process.cwd(), output)}: generated ${Math.round(buffer.length / KB)} KB responsive hero`);
+  }
 };
 
 const optimize = async (file) => {
@@ -79,6 +106,7 @@ const optimize = async (file) => {
 
 let files;
 try {
+  await createHeroMobileVariant();
   files = await walk(ROOT);
 } catch (error) {
   if (error?.code === 'ENOENT') {
