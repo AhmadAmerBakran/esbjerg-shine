@@ -56,9 +56,9 @@ npm run cf:dev
 
 ## Production deployment
 
-Production deployment is handled by `.github/workflows/deploy-cloudflare.yml` after changes reach `master`, or by its manual workflow trigger.
+Production deployment is handled by `.github/workflows/deploy-cloudflare.yml` only after the `Website quality gate` succeeds for `master`.
 
-The workflow validates dependencies, types, build output and Wrangler configuration before deployment.
+The deployment workflow rechecks dependency security, types, build output and Wrangler configuration before publishing the validated commit.
 
 ## Rollback
 
