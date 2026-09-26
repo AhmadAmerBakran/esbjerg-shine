@@ -129,6 +129,8 @@
 
   const status = form.querySelector('[data-form-status]');
   const submit = form.querySelector('button[type="submit"]');
+  const turnstileSiteKey = form.dataset.turnstileSitekey || '';
+  const turnstileWidget = form.querySelector('.cf-turnstile');
   const setStatus = (text, state = '') => {
     if (status) {
       status.textContent = text;
@@ -136,11 +138,28 @@
     }
   };
 
+  const resetTurnstile = () => {
+    const api = window.turnstile;
+    if (!api?.reset || !(turnstileWidget instanceof HTMLElement)) return;
+    try { api.reset(turnstileWidget); } catch { /* Widget may not have rendered yet. */ }
+  };
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!form.reportValidity()) return;
 
+    if (!turnstileSiteKey) {
+      setStatus('Sikkerhedstjekket er ikke konfigureret. Ring gerne på +45 91 81 89 90.', 'error');
+      return;
+    }
+
     const data = new FormData(form);
+    const turnstileToken = String(data.get('turnstileToken') || '');
+    if (!turnstileToken) {
+      setStatus('Sikkerhedstjekket er ikke klar endnu. Prøv igen om et øjeblik.', 'error');
+      return;
+    }
+
     const payload = {
       navn: String(data.get('navn') || ''),
       telefon: String(data.get('telefon') || ''),
@@ -148,6 +167,7 @@
       ydelse: String(data.get('ydelse') || ''),
       besked: String(data.get('besked') || ''),
       website: String(data.get('website') || ''),
+      turnstileToken,
       startedAt: Number(data.get('startedAt') || 0),
       samtykke: data.get('samtykke') === 'on'
     };
@@ -155,17 +175,23 @@
     if (submit instanceof HTMLButtonElement) submit.disabled = true;
     setStatus('Sender din forespørgsel…');
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12_000);
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: controller.signal
       });
       const result = await response.json().catch(() => ({}));
 
       if (!response.ok || !result.ok) {
-        if (result.code === 'not_configured') throw new Error('not_configured');
         if (result.code === 'rate_limited') throw new Error('rate_limited');
+        if (result.code === 'turnstile') throw new Error('turnstile');
+        if (result.code === 'security_unavailable') throw new Error('security_unavailable');
+        if (result.code === 'not_configured') throw new Error('not_configured');
         throw new Error('send_failed');
       }
 
@@ -173,11 +199,16 @@
       if (startedAt instanceof HTMLInputElement) startedAt.value = String(Date.now());
       setStatus('Tak. Din forespørgsel er sendt, og Esbjerg Shine vender tilbage hurtigst muligt.', 'success');
     } catch (error) {
-      const message = error instanceof Error && error.message === 'rate_limited'
-        ? 'Der er netop sendt en forespørgsel. Vent et øjeblik og prøv igen.'
-        : 'Formularen kan ikke sende lige nu. Ring gerne på +45 91 81 89 90.';
+      let message = 'Formularen kan ikke sende lige nu. Ring gerne på +45 91 81 89 90.';
+      if (error instanceof Error && error.message === 'rate_limited') {
+        message = 'Der er sendt flere forespørgsler på kort tid. Vent et øjeblik og prøv igen.';
+      } else if (error instanceof Error && error.message === 'turnstile') {
+        message = 'Sikkerhedstjekket udløb eller kunne ikke godkendes. Prøv igen.';
+      }
       setStatus(message, 'error');
     } finally {
+      clearTimeout(timeout);
+      resetTurnstile();
       if (submit instanceof HTMLButtonElement) submit.disabled = false;
     }
   });
