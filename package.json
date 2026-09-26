@@ -5,15 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/optimize-dist-media.mjs",
+    "check": "astro build",
     "preview": "astro preview",
-    "check": "astro build"
+    "audit": "npm audit --audit-level=moderate"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "5.3.0",
     "astro": "7.3.2"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12.0"
   }
 }
