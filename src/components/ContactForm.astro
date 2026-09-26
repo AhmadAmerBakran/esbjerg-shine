@@ -46,6 +46,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
 
   {turnstileSiteKey && (
     <div
+      id="contact-turnstile"
       class="cf-turnstile"
       data-sitekey={turnstileSiteKey}
       data-action="contact"
