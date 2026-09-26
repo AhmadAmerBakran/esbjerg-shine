@@ -25,11 +25,24 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '24.21.0'
           cache: npm
 
       - name: Install
-        run: npm ci --no-audit --no-fund
+        shell: bash
+        run: |
+          set -o pipefail
+          npm ci --no-audit --no-fund 2>&1 | tee /tmp/npm-ci.log
+          if grep -q 'npm warn deprecated' /tmp/npm-ci.log; then
+            echo 'Deprecated npm dependencies detected.'
+            exit 1
+          fi
+
+      - name: Dependency audit
+        run: npm audit --audit-level=low
+
+      - name: Astro type check
+        run: npm run check
 
       - name: JavaScript syntax
         run: |
