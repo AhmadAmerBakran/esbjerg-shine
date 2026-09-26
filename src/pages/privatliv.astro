@@ -4,8 +4,8 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { company } from '../data/company';
 
-const title = 'Privatliv | Esbjerg Shine';
-const description = 'Læs hvordan Esbjerg Shine behandler oplysninger, når du kontakter virksomheden via hjemmesiden.';
+const title = 'Privatlivspolitik | Esbjerg Shine';
+const description = 'Læs hvordan Esbjerg Shine behandler personoplysninger, når du bruger hjemmesiden eller sender en forespørgsel.';
 ---
 <BaseLayout title={title} description={description} canonicalPath="/privatliv/">
   <div id="top"></div>
@@ -13,19 +13,10 @@ const description = 'Læs hvordan Esbjerg Shine behandler oplysninger, når du k
   <main id="indhold" class="privacy-main">
     <article class="shell privacy">
       <p class="eyebrow">Privatliv</p>
-      <h1>En enkel hjemmeside.<br /><span>Så lidt data som muligt.</span></h1>
-      <p>Denne side beskriver den planlagte behandling af personoplysninger på esbjergshine.dk. Teksten skal gennemgås igen, når den endelige mailudbyder og hostingopsætning er valgt.</p>
+      <h1>Dine oplysninger.<br /><span>Kun når de er nødvendige.</span></h1>
+      <p>Esbjerg Shine behandler kun de personoplysninger, der er nødvendige for at drive hjemmesiden og besvare henvendelser. Der bruges ikke marketingpixels eller adfærdsbaseret annoncering på hjemmesiden.</p>
 
-      <h2>Kontaktformular</h2>
-      <p>Når du sender kontaktformularen, bruges de oplysninger, du selv indtaster, til at besvare din henvendelse. Oplysningerne er navn, e-mail, eventuelt telefonnummer, valgt ydelse og din besked.</p>
-
-      <h2>Kort fra Google Maps</h2>
-      <p>Google Maps indlæses ikke automatisk. Kortet hentes først fra Google, hvis du vælger “Vis kort”. Når kortet indlæses, kan Google modtage tekniske oplysninger som din IP-adresse og browseroplysninger. Du kan også åbne adressen direkte i Google Maps via linket på hjemmesiden.</p>
-
-      <h2>Ingen marketingtracking som standard</h2>
-      <p>Hjemmesiden er bygget uden marketingpixels eller sociale medie-embeds. Sociale medier vises kun som links. Hvis analyse eller yderligere tredjepartstjenester senere tilføjes, skal denne privatlivstekst og eventuelle samtykkekrav opdateres først.</p>
-
-      <h2>Virksomhedsoplysninger</h2>
+      <h2>Dataansvarlig</h2>
       <ul>
         <li>{company.name}, {company.entityType}</li>
         <li>CVR {company.cvr}</li>
@@ -33,8 +24,29 @@ const description = 'Læs hvordan Esbjerg Shine behandler oplysninger, når du k
         <li>Telefon {company.phoneDisplay}</li>
       </ul>
 
-      <h2>Kontakt</h2>
-      <p>Har du spørgsmål til oplysninger sendt via hjemmesiden, kan du kontakte Esbjerg Shine på <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>.</p>
+      <h2>Kontaktformular</h2>
+      <p>Når du sender en forespørgsel, behandler vi de oplysninger, du selv indtaster: navn, e-mail, eventuelt telefonnummer, valgt ydelse og din besked. Oplysningerne bruges til at besvare din henvendelse, afklare dit behov og eventuelt udarbejde et tilbud.</p>
+      <p>Behandlingen sker som udgangspunkt for at kunne træffe foranstaltninger på din anmodning før en eventuel aftale. Ved andre henvendelser kan behandlingen ske på baggrund af Esbjerg Shines legitime interesse i at kunne besvare relevante henvendelser.</p>
+
+      <h2>Hosting og e-mail</h2>
+      <p>Hjemmesiden hostes på Cloudflare. Når du besøger siden eller bruger kontaktformularen, kan Cloudflare behandle nødvendige tekniske oplysninger, blandt andet IP-adresse og oplysninger om din forbindelse, for at levere og beskytte tjenesten.</p>
+      <p>Forespørgsler fra kontaktformularen sendes til Esbjerg Shines Microsoft 365-mailkonto via Microsoft Graph. Microsoft kan derfor behandle de oplysninger, der indgår i henvendelsen, som leverandør af e-mailtjenesten.</p>
+
+      <h2>Opbevaring</h2>
+      <p>Oplysninger fra en henvendelse opbevares kun, så længe de er relevante for at behandle henvendelsen og et eventuelt efterfølgende kundeforhold. Oplysninger kan opbevares længere, hvis det er nødvendigt for at overholde lovkrav eller dokumentere et retskrav.</p>
+
+      <h2>Google Maps</h2>
+      <p>Google Maps indlæses ikke automatisk. Kortet hentes først fra Google, når du vælger “Vis kort”. Når kortet indlæses, kan Google modtage tekniske oplysninger som din IP-adresse og browseroplysninger. Du kan også åbne adressen direkte i Google Maps via linket på hjemmesiden.</p>
+
+      <h2>Cookies og tracking</h2>
+      <p>Esbjerg Shine bruger ikke analyseværktøjer, marketingcookies, sociale medie-embeds eller annonceringstracking på hjemmesiden. Hvis der senere tilføjes tjenester, som kræver samtykke, bliver privatlivspolitikken og samtykkeløsningen opdateret inden de tages i brug.</p>
+
+      <h2>Dine rettigheder</h2>
+      <p>Du kan efter databeskyttelsesreglerne blandt andet have ret til indsigt, rettelse, sletning, begrænsning og indsigelse mod behandling af dine personoplysninger. Rettighederne afhænger af den konkrete behandling og de lovkrav, virksomheden er underlagt.</p>
+      <p>Hvis du er utilfreds med behandlingen af dine personoplysninger, kan du klage til Datatilsynet.</p>
+
+      <h2>Kontakt om personoplysninger</h2>
+      <p>Har du spørgsmål til behandlingen af dine personoplysninger eller ønsker du at gøre brug af dine rettigheder, kan du kontakte Esbjerg Shine på <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>.</p>
     </article>
   </main>
   <Footer />
