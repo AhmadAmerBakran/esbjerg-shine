@@ -302,3 +302,4 @@ GitHub Actions builds the site and runs Lighthouse on mobile and desktop. The fl
 - SEO: 100
 
 After launch, monitor real-user LCP, INP and CLS and keep the 75th percentile in the good range.
+

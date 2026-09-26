@@ -1,0 +1,266 @@
+@layer utilities {
+  /*
+    Subpages have denser layouts than the homepage. Keep their content fluid and
+    explicitly remove intrinsic minimum widths so grids cannot force horizontal
+    scrolling on narrow screens.
+  */
+  @media (max-width: 980px) {
+    .subhero__grid {
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .subhero__grid > *,
+    .service-list,
+    .service-row,
+    .service-row a,
+    .service-row a > div,
+    .service-detail,
+    .service-detail__content,
+    .service-aside,
+    .privacy {
+      min-width: 0;
+    }
+
+    .subhero__grid > p {
+      max-width: 46rem;
+      justify-self: start;
+    }
+
+    .service-detail {
+      width: 100%;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2.25rem;
+    }
+
+    .service-detail__content,
+    .service-aside {
+      width: 100%;
+      max-width: none;
+    }
+
+    .service-aside {
+      position: static;
+      top: auto;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .service-detail__visual {
+      width: 100%;
+    }
+
+    .privacy {
+      width: var(--shell);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .subhero {
+      padding: 7.25rem 0 2.75rem;
+    }
+
+    .subhero h1,
+    .subhero--service h1 {
+      max-width: 100%;
+      font-size: clamp(2.55rem, 12vw, 3.6rem);
+      line-height: 1;
+      overflow-wrap: anywhere;
+    }
+
+    .subhero__grid {
+      gap: 1.25rem;
+    }
+
+    .subhero__grid > p {
+      width: 100%;
+      line-height: 1.7;
+    }
+
+    .breadcrumbs {
+      gap: .4rem .5rem;
+      margin-bottom: 1.35rem;
+      font-size: .7rem;
+      line-height: 1.5;
+    }
+
+    .breadcrumbs > * {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    /* Keep the service list visually identical, but give the text a real
+       flexible column and take the arrow out of the width calculation. */
+    main > .subhero + .section--tight .service-row a {
+      position: relative;
+      grid-template-columns: 5.25rem minmax(0, 1fr);
+      gap: .9rem;
+      align-items: start;
+      padding: 1.35rem 1.9rem 1.35rem 0;
+    }
+
+    .service-row__media {
+      width: 5.25rem;
+      margin-top: .12rem;
+    }
+
+    .service-row__arrow {
+      position: absolute;
+      right: .15rem;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .service-row h2 {
+      max-width: 100%;
+      margin-top: .3rem;
+      font-size: clamp(1.45rem, 7vw, 2rem);
+      line-height: 1.06;
+      overflow-wrap: anywhere;
+    }
+
+    .service-row p {
+      margin-top: .65rem;
+      font-size: .86rem;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .service-detail {
+      gap: 2rem;
+    }
+
+    .service-detail__visual {
+      min-height: 0;
+      aspect-ratio: 16 / 10;
+      margin-bottom: 2rem;
+    }
+
+    .service-detail__content h2 {
+      margin-top: 2.25rem;
+      font-size: clamp(1.8rem, 8vw, 2.5rem);
+      line-height: 1.06;
+      overflow-wrap: anywhere;
+    }
+
+    .service-detail__content p,
+    .detail-list li,
+    .aside-card p,
+    .aside-nav a {
+      overflow-wrap: anywhere;
+    }
+
+    .detail-list {
+      gap: .65rem;
+    }
+
+    .detail-list li {
+      padding: .8rem .85rem;
+    }
+
+    .service-aside {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .aside-card,
+    .aside-nav {
+      min-width: 0;
+      padding: 1rem;
+    }
+
+    .aside-card .button {
+      width: 100%;
+    }
+
+    .aside-nav a {
+      align-items: flex-start;
+    }
+
+    .aside-nav a span {
+      flex: 0 0 auto;
+    }
+
+    .cta-band {
+      padding: 2rem 0 4rem;
+    }
+
+    .cta-band__inner {
+      gap: 1.35rem;
+      padding: 1.25rem;
+    }
+
+    .cta-band h2 {
+      max-width: 100%;
+      font-size: clamp(1.8rem, 8.5vw, 2.5rem);
+      line-height: 1.06;
+      overflow-wrap: anywhere;
+    }
+
+    .privacy-main .privacy {
+      width: var(--shell);
+      padding: 7.5rem 0 4.5rem;
+    }
+
+    .privacy h1 {
+      max-width: 100%;
+      font-size: clamp(2.65rem, 12vw, 3.5rem);
+      line-height: 1.02;
+      overflow-wrap: anywhere;
+    }
+
+    .privacy h2 {
+      margin-top: 2.35rem;
+      font-size: clamp(1.65rem, 7vw, 2rem);
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+    }
+
+    .privacy p,
+    .privacy li,
+    .privacy a {
+      overflow-wrap: anywhere;
+    }
+
+    .privacy ul {
+      margin-left: 1rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .subhero {
+      padding-top: 6.8rem;
+    }
+
+    .subhero h1,
+    .subhero--service h1 {
+      font-size: clamp(2.3rem, 11.5vw, 3rem);
+    }
+
+    main > .subhero + .section--tight .service-row a {
+      grid-template-columns: 3.9rem minmax(0, 1fr);
+      gap: .7rem;
+      padding-right: 1.45rem;
+    }
+
+    .service-row__media {
+      width: 3.9rem;
+      border-radius: .6rem;
+    }
+
+    .service-row__arrow {
+      right: 0;
+      font-size: 1.1rem;
+    }
+
+    .service-row h2 {
+      font-size: clamp(1.35rem, 7vw, 1.75rem);
+    }
+
+    .service-row p {
+      font-size: .82rem;
+    }
+
+    .privacy h1 {
+      font-size: clamp(2.4rem, 11.5vw, 3rem);
+    }
+  }
+}

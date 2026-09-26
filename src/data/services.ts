@@ -5,6 +5,7 @@ export type Service = {
   summary: string;
   intro: string;
   bullets: string[];
+  notice?: string;
   seoTitle: string;
   seoDescription: string;
 };
@@ -14,21 +15,39 @@ export const services: Service[] = [
     slug: 'bilvask',
     title: 'Håndvask & udvendig bilpleje',
     eyebrow: 'Ren bil. Skarp finish.',
-    summary: 'Skånsom udvendig vask med fokus på detaljer, fælge, kanter og en ensartet finish.',
-    intro: 'En god bilvask handler om mere end at få snavset af. Vi arbejder metodisk omkring lak, fælge, dørfalser og detaljer, så bilen afleveres ren og velplejet uden unødigt hård behandling.',
-    bullets: ['Skånsom håndvask', 'Fælge og synlige detaljer', 'Aftørring med fokus på finish'],
+    summary: 'Grundig udvendig håndvask med fælgrens, forvask, shampoo, skånsom aftørring og dækshine.',
+    intro: 'Vi går bilen igennem trin for trin, så snavs løsnes inden selve håndvasken, og lakken behandles så skånsomt som muligt. Fælgene får deres egen rengøring, bilen håndvaskes med shampoo og afsluttes med omhyggelig aftørring og dækshine.',
+    bullets: [
+      'Fælgrens – fælgene rengøres grundigt for bremsestøv og snavs',
+      'Forvask – skidt og snavs opløses og fjernes, så den efterfølgende håndvask bliver mere skånsom',
+      'Håndvask med shampoo – bilen vaskes grundigt i hånden med kvalitetsshampoo',
+      'Skylning og aftørring – bilen skylles grundigt og tørres forsigtigt med rene mikrofiberklude',
+      'Dækshine – dækkene får som afslutning en ren, mørk og blank finish'
+    ],
     seoTitle: 'Bilvask i Esbjerg | Esbjerg Shine',
-    seoDescription: 'Skånsom håndvask og udvendig bilpleje i Esbjerg. Esbjerg Shine hjælper med en ren, velplejet bil og en skarp finish.'
+    seoDescription: 'Grundig håndvask og udvendig bilpleje i Esbjerg med fælgrens, forvask, shampoo, skånsom aftørring og dækshine hos Esbjerg Shine.'
   },
   {
     slug: 'indvendig-bilpleje',
     title: 'Indvendig bilpleje',
     eyebrow: 'Kabinen tilbage i form.',
-    summary: 'Grundig rengøring af kabine, overflader, måtter og svært tilgængelige områder.',
-    intro: 'Kabinen bliver brugt hver dag, og støv, sand, pletter og almindeligt slid sætter sig hurtigt. Vi arbejder systematisk gennem bilen og tilpasser behandlingen til materialerne.',
-    bullets: ['Støvsugning og rengøring', 'Måtter, paneler og detaljer', 'Pleje tilpasset materialerne'],
+    summary: 'En komplet rengøring af kabinen – fra sæder, måtter og bagagerum til luftdyser, knapper og sprækker.',
+    intro: 'Vi tager hele kabinen fra de store flader til de små detaljer. Behandlingen tilpasses materialerne, så tekstil, læder, plast og vinyl får den rigtige rengøring og pleje. Til sidst friskes kabinen op med vores egen bilduft.',
+    bullets: [
+      'Grundig støvsugning af hele kabinen – inkl. sæder, måtter og bagagerum',
+      'Dybdegående sæderens – tekstil eller læder behandles efter materialet',
+      'Rens af gulvtæpper og måtter',
+      'Aftørring og rengøring af instrumentbord, døre og midterkonsol',
+      'Detaljerens af luftdyser, knapper, samlinger og sprækker',
+      'Rens af loftbeklædning ved behov',
+      'Indvendig ruderens for en klar og stribefri finish',
+      'Rengøring af pedaler og fodområde',
+      'Lugtreduktion og opfriskning af kabinen',
+      'Pleje af plast, vinyl og læder for en pæn og ensartet finish',
+      'Afsluttes med vores egen bilduft, så kabinen føles frisk og ren'
+    ],
     seoTitle: 'Indvendig bilpleje i Esbjerg | Esbjerg Shine',
-    seoDescription: 'Indvendig rengøring og bilpleje i Esbjerg med fokus på kabine, måtter, paneler og detaljer. Kontakt Esbjerg Shine for et tilbud.'
+    seoDescription: 'Grundig indvendig bilpleje i Esbjerg med støvsugning, sæderens, måtter, detaljer, ruder og materialetilpasset pleje hos Esbjerg Shine.'
   },
   {
     slug: 'komplet-klargoering',
@@ -51,14 +70,20 @@ export const services: Service[] = [
     seoDescription: 'Professionel bilpolering i Esbjerg med fokus på glans, dybde og en flottere lak. Få et uforpligtende tilbud fra Esbjerg Shine.'
   },
   {
-    slug: 'lakbeskyttelse',
-    title: 'Lakbeskyttelse & coating',
-    eyebrow: 'Bevar resultatet længere.',
-    summary: 'Beskyttende behandlinger der vælges efter bil, lak og ønsket holdbarhed.',
-    intro: 'Efter vask eller polering kan en beskyttende behandling gøre den efterfølgende vedligeholdelse lettere og hjælpe med at bevare finishen. Valget af produkt og proces aftales ud fra bilen og ønsket holdbarhed.',
-    bullets: ['Lakforsegling', 'Coating efter behov', 'Råd om efterfølgende vedligeholdelse'],
-    seoTitle: 'Lakbeskyttelse og coating i Esbjerg | Esbjerg Shine',
-    seoDescription: 'Lakbeskyttelse og coating i Esbjerg. Esbjerg Shine tilpasser behandlingen til bilen, lakken og den ønskede holdbarhed.'
+    slug: 'motorvask',
+    title: 'Motorvask',
+    eyebrow: 'Rent motorrum. Med omtanke.',
+    summary: 'Skånsom rengøring af motorrummet med fokus på synligt snavs og tilgængelige flader. Udføres på eget ansvar.',
+    intro: 'Motorvask kan friske motorrummet op og fjerne ophobet støv, skidt og olieholdige belægninger fra tilgængelige overflader. Vi arbejder forsigtigt omkring elektriske og andre følsomme komponenter, og behandlingen udføres kun efter aftale.',
+    bullets: [
+      'Skånsom rengøring af tilgængelige overflader i motorrummet',
+      'Fokus på støv, snavs og olieholdige belægninger',
+      'Forsigtig behandling omkring elektriske og andre følsomme komponenter',
+      'Aftørring og opfriskning af relevante plast- og gummidele'
+    ],
+    notice: 'Motorvask udføres efter aftale og på kundens eget ansvar. Motorrummet indeholder elektriske og andre følsomme komponenter, og derfor kan der ikke gives garanti for, hvordan disse reagerer på rengøringen.',
+    seoTitle: 'Motorvask i Esbjerg | Esbjerg Shine',
+    seoDescription: 'Motorvask i Esbjerg med skånsom rengøring af motorrummets tilgængelige flader. Udføres efter aftale og på kundens eget ansvar hos Esbjerg Shine.'
   },
   {
     slug: 'saederens',
