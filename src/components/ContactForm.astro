@@ -1,8 +1,11 @@
 ---
 import { services } from '../data/services';
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
 ---
-<form class="contact-form" data-contact-form novalidate>
+<form class="contact-form" data-contact-form data-turnstile-sitekey={turnstileSiteKey} novalidate>
   <input type="hidden" name="startedAt" value="" data-started-at />
+  <input type="hidden" name="turnstileToken" value="" data-turnstile-token />
   <div class="honeypot" aria-hidden="true">
     <label>Hjemmeside <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
   </div>
@@ -41,6 +44,8 @@ import { services } from '../data/services';
     <input type="checkbox" name="samtykke" required />
     <span>Jeg accepterer, at Esbjerg Shine bruger oplysningerne til at besvare min henvendelse. <a href="/privatliv/">Læs om privatliv</a>.</span>
   </label>
+
+  <div data-turnstile-slot aria-live="polite"></div>
 
   <div class="form-actions">
     <button class="button button--primary" type="submit"><span>Send forespørgsel</span><i aria-hidden="true">↗</i></button>
