@@ -32,7 +32,7 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Dependency audit
-        run: npm audit --audit-level=moderate
+        run: npm audit --audit-level=low
 
       - name: JavaScript syntax
         run: |
@@ -41,6 +41,10 @@ jobs:
           node --check public/site-deferred.js
           node --check functions/api/contact.js
           node --check scripts/optimize-dist-media.mjs
+          node --check scripts/test-contact.mjs
+
+      - name: Contact endpoint regression tests
+        run: npm run test:contact
 
       - name: Build production site
         run: npm run build
@@ -72,9 +76,12 @@ jobs:
           test -f dist/sitemap.xml
           test -f dist/_headers
           test -f dist/_routes.json
+          test -f dist/media/home/hero-background-mobile.webp
           grep -q 'lang="da-DK"' dist/index.html
           grep -q 'Bilpleje i Esbjerg' dist/index.html
           grep -q 'AutomotiveBusiness' dist/index.html
+          grep -q 'hero-background-mobile.webp 1200w' dist/index.html
+          grep -q 'fetchpriority="high"' dist/index.html
           grep -q 'sitemap.xml' dist/robots.txt
           grep -q 'Disallow: /api/' dist/robots.txt
           grep -q 'https://esbjergshine.dk/ydelser/polering/' dist/sitemap.xml
