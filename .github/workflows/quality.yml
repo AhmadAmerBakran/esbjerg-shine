@@ -33,8 +33,8 @@ jobs:
         run: |
           set -o pipefail
           npm ci --no-audit --no-fund 2>&1 | tee /tmp/npm-ci.log
-          if grep -q 'npm warn deprecated' /tmp/npm-ci.log; then
-            echo 'Deprecated npm dependencies detected.'
+          if grep -Eq 'npm warn (deprecated|install-scripts)' /tmp/npm-ci.log; then
+            echo 'Deprecated dependency or unreviewed dependency install script detected.'
             exit 1
           fi
 
