@@ -28,19 +28,31 @@ const {
   height,
   loading = 'lazy',
   fetchPriority = 'auto',
-  sizes = '100vw'
+  sizes
 } = Astro.props;
 const hasImage = existsSync(join(process.cwd(), 'public', src.replace(/^\//, '')));
 const variant = (mediaVariants as Record<string, MediaVariantEntry>)[src];
 const avifSrcset = variant?.candidates.map(({ src: candidateSrc, width: candidateWidth }) => `${candidateSrc} ${candidateWidth}w`).join(', ');
 const intrinsicWidth = variant?.sourceWidth ?? width;
 const intrinsicHeight = variant?.sourceHeight ?? height;
+const automaticSizes = className?.includes('service-card__visual')
+  ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc((100vw - 48px) / 2), (max-width: 980px) 372px, 383px'
+  : className?.includes('service-row__media')
+    ? '(max-width: 420px) 62px, (max-width: 640px) 84px, 128px'
+    : className?.includes('service-detail__visual')
+      ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc(100vw - 32px), (max-width: 980px) 760px, 768px'
+      : className?.includes('about-panel')
+        ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc(100vw - 32px), (max-width: 980px) 760px, 420px'
+        : className?.includes('location-card__media')
+          ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc(100vw - 32px), (max-width: 980px) 760px, 315px'
+          : '100vw';
+const resolvedSizes = sizes ?? automaticSizes;
 ---
 
 <div class:list={['media-slot', className, { 'media-slot--missing': !hasImage }]} data-media-slot>
   {hasImage && avifSrcset ? (
     <picture class="media-picture">
-      <source type="image/avif" srcset={avifSrcset} sizes={sizes} />
+      <source type="image/avif" srcset={avifSrcset} sizes={resolvedSizes} />
       <img
         src={src}
         alt={alt}
