@@ -125,7 +125,38 @@
   if (!(form instanceof HTMLFormElement)) return;
 
   const startedAt = form.querySelector('[data-started-at]');
+  const submissionId = form.querySelector('[data-submission-id]');
+  const fallback = form.querySelector('[data-mail-fallback]');
+  const fallbackLink = form.querySelector('[data-mail-fallback-link]');
+  const contactEmail = form.dataset.contactEmail || 'info@esbjergshine.dk';
+  const createSubmissionId = () => typeof crypto.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(16).slice(2)}-${Math.random().toString(16).slice(2)}`;
+  const renewSubmissionId = () => {
+    if (submissionId instanceof HTMLInputElement) submissionId.value = createSubmissionId();
+  };
+  const hideFallback = () => {
+    if (fallback instanceof HTMLElement) fallback.hidden = true;
+  };
+  const showFallback = (payload) => {
+    if (!(fallback instanceof HTMLElement) || !(fallbackLink instanceof HTMLAnchorElement)) return;
+    const subject = `Forespørgsel – ${payload.ydelse || 'bilpleje'}`;
+    const body = [
+      'Hej Esbjerg Shine,', '',
+      'Jeg vil gerne sende følgende forespørgsel:', '',
+      `Navn: ${payload.navn}`,
+      `Telefon: ${payload.telefon || 'Ikke oplyst'}`,
+      `E-mail: ${payload.email}`,
+      `Ydelse: ${payload.ydelse}`, '',
+      'Besked:', payload.besked, '',
+      'Venlig hilsen', payload.navn
+    ].join('\n');
+    fallbackLink.href = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    fallback.hidden = false;
+  };
+
   if (startedAt instanceof HTMLInputElement) startedAt.value = String(Date.now());
+  renewSubmissionId();
 
   const serviceFromUrl = new URL(location.href).searchParams.get('service');
   if (serviceFromUrl) {
@@ -158,16 +189,37 @@
     };
     control.addEventListener('input', clearInvalid);
     control.addEventListener('change', clearInvalid);
+
+    if (!(control instanceof HTMLInputElement) || control.type !== 'hidden') {
+      const markChanged = () => {
+        hideFallback();
+        renewSubmissionId();
+      };
+      control.addEventListener('input', markChanged);
+      control.addEventListener('change', markChanged);
+    }
   });
 
   const resetTurnstile = () => {
+    const widget = form.querySelector('.cf-turnstile');
     const api = window.turnstile;
-    if (!api?.reset || !(form.querySelector('.cf-turnstile') instanceof HTMLElement)) return;
-    try { api.reset(form.querySelector('.cf-turnstile')); } catch { /* Widget may not have rendered yet. */ }
+    if (!api?.reset || !(widget instanceof HTMLElement)) return;
+    try { api.reset(widget); } catch { /* Widget may not have rendered yet. */ }
   };
+
+  const systemFailureCodes = new Set([
+    'security_unavailable',
+    'not_configured',
+    'delivery_unavailable',
+    'delivery_failed',
+    'send_failed',
+    'network_error'
+  ]);
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    hideFallback();
+
     if (!form.checkValidity()) {
       setStatus('Tjek de markerede felter, og udfyld de oplysninger der mangler.', 'error');
       form.reportValidity();
@@ -175,7 +227,15 @@
     }
 
     if (!turnstileSiteKey) {
-      setStatus('Sikkerhedstjekket er ikke konfigureret. Ring gerne på +45 91 81 89 90.', 'error', true);
+      setStatus(`Sikkerhedstjekket er ikke konfigureret. Skriv til ${contactEmail} eller ring på +45 91 81 89 90.`, 'error', true);
+      const data = new FormData(form);
+      showFallback({
+        navn: String(data.get('navn') || ''),
+        telefon: String(data.get('telefon') || ''),
+        email: String(data.get('email') || ''),
+        ydelse: String(data.get('ydelse') || ''),
+        besked: String(data.get('besked') || '')
+      });
       return;
     }
 
@@ -194,6 +254,7 @@
       besked: String(data.get('besked') || ''),
       website: String(data.get('website') || ''),
       turnstileToken,
+      submissionId: String(data.get('submissionId') || ''),
       startedAt: Number(data.get('startedAt') || 0),
       samtykke: data.get('samtykke') === 'on'
     };
@@ -201,6 +262,7 @@
     if (submit instanceof HTMLButtonElement) {
       submit.disabled = true;
       submit.setAttribute('aria-disabled', 'true');
+      submit.setAttribute('aria-busy', 'true');
     }
     setStatus('Sender din forespørgsel…');
 
@@ -216,24 +278,31 @@
       });
       const result = await response.json().catch(() => ({}));
 
-      if (!response.ok || !result.ok) {
-        if (result.code === 'rate_limited') throw new Error('rate_limited');
-        if (result.code === 'turnstile') throw new Error('turnstile');
-        if (result.code === 'security_unavailable') throw new Error('security_unavailable');
-        if (result.code === 'not_configured') throw new Error('not_configured');
-        throw new Error('send_failed');
-      }
+      if (!response.ok || !result.ok) throw new Error(String(result.code || 'send_failed'));
 
       form.reset();
       controls.forEach((control) => control.removeAttribute('aria-invalid'));
       if (startedAt instanceof HTMLInputElement) startedAt.value = String(Date.now());
-      setStatus('Tak. Din forespørgsel er sendt, og Esbjerg Shine vender tilbage hurtigst muligt.', 'success', true);
+      renewSubmissionId();
+      hideFallback();
+      setStatus(result.duplicate
+        ? 'Forespørgslen var allerede modtaget. Du behøver ikke sende den igen.'
+        : 'Tak. Din forespørgsel er sendt, og Esbjerg Shine vender tilbage hurtigst muligt.', 'success', true);
     } catch (error) {
-      let message = 'Formularen kan ikke sende lige nu. Ring gerne på +45 91 81 89 90.';
-      if (error instanceof Error && error.message === 'rate_limited') {
+      const code = error instanceof Error
+        ? (error.name === 'AbortError' ? 'network_error' : error.message)
+        : 'network_error';
+      let message = `Formularen kan ikke sende lige nu. Du kan skrive til ${contactEmail} eller ringe på +45 91 81 89 90.`;
+
+      if (code === 'rate_limited') {
         message = 'Der er sendt flere forespørgsler på kort tid. Vent et øjeblik og prøv igen.';
-      } else if (error instanceof Error && error.message === 'turnstile') {
+      } else if (code === 'turnstile') {
         message = 'Sikkerhedstjekket udløb eller kunne ikke godkendes. Prøv igen.';
+      }
+
+      if (systemFailureCodes.has(code)) {
+        showFallback(payload);
+        renewSubmissionId();
       }
       setStatus(message, 'error', true);
     } finally {
@@ -242,6 +311,7 @@
       if (submit instanceof HTMLButtonElement) {
         submit.disabled = false;
         submit.removeAttribute('aria-disabled');
+        submit.removeAttribute('aria-busy');
       }
     }
   });
