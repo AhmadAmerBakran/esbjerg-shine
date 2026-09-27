@@ -35,7 +35,11 @@
   doc.querySelectorAll('[data-comparison]').forEach((comparison) => {
     const range = comparison.querySelector('[data-comparison-range]');
     if (!(range instanceof HTMLInputElement)) return;
-    const update = () => comparison.style.setProperty('--position', `${range.value}%`);
+    const update = () => {
+      const before = Number(range.value);
+      comparison.style.setProperty('--position', `${before}%`);
+      range.setAttribute('aria-valuetext', `${before} procent før og ${100 - before} procent efter`);
+    };
     range.addEventListener('input', update, { passive: true });
     update();
   });
@@ -45,6 +49,7 @@
     const range = gallery.querySelector('[data-comparison-range]');
     const beforeImage = gallery.querySelector('[data-comparison-before-image]');
     const afterImage = gallery.querySelector('[data-comparison-after-image]');
+    const status = gallery.querySelector('[data-comparison-status]');
     const buttons = [...gallery.querySelectorAll('[data-comparison-set]')];
     const prev = gallery.querySelector('[data-comparison-prev]');
     const next = gallery.querySelector('[data-comparison-next]');
@@ -66,7 +71,7 @@
     const parsedInitial = Number.parseInt(gallery.dataset.initialSet || '0', 10);
     let active = Number.isFinite(parsedInitial) ? Math.min(Math.max(parsedInitial, 0), buttons.length - 1) : 0;
 
-    const show = (index) => {
+    const show = (index, announce = true) => {
       active = (index + buttons.length) % buttons.length;
       comparison.dataset.activeSet = String(active);
       buttons.forEach((button, buttonIndex) => {
@@ -79,18 +84,20 @@
       if (activeButton instanceof HTMLElement) {
         setComparisonImage(beforeImage, activeButton.dataset.before || '');
         setComparisonImage(afterImage, activeButton.dataset.after || '');
+        if (status && announce) status.textContent = `Viser ${activeButton.dataset.label || 'valgt behandling'}.`;
       }
 
       if (range instanceof HTMLInputElement) {
         range.value = '52';
         comparison.style.setProperty('--position', '52%');
+        range.setAttribute('aria-valuetext', '52 procent før og 48 procent efter');
       }
     };
 
     buttons.forEach((button, index) => button.addEventListener('click', () => show(index)));
     prev?.addEventListener('click', () => show(active - 1));
     next?.addEventListener('click', () => show(active + 1));
-    show(active);
+    show(active, false);
   });
 
   doc.querySelectorAll('[data-map-load]').forEach((button) => {
@@ -106,7 +113,9 @@
       iframe.loading = 'lazy';
       iframe.referrerPolicy = 'no-referrer-when-downgrade';
       iframe.allowFullscreen = true;
+      iframe.tabIndex = 0;
       frame.replaceChildren(iframe);
+      requestAnimationFrame(() => iframe.focus());
     }, { once: true });
   });
 
@@ -130,33 +139,50 @@
   const status = form.querySelector('[data-form-status]');
   const submit = form.querySelector('button[type="submit"]');
   const turnstileSiteKey = form.dataset.turnstileSitekey || '';
-  const turnstileWidget = form.querySelector('.cf-turnstile');
-  const setStatus = (text, state = '') => {
-    if (status) {
-      status.textContent = text;
-      status.setAttribute('data-state', state);
-    }
+  const setStatus = (text, state = '', focus = false) => {
+    if (!(status instanceof HTMLElement)) return;
+    status.textContent = text;
+    status.setAttribute('data-state', state);
+    const isError = state === 'error';
+    status.setAttribute('role', isError ? 'alert' : 'status');
+    status.setAttribute('aria-live', isError ? 'assertive' : 'polite');
+    if (focus && text) requestAnimationFrame(() => status.focus());
   };
+
+  const controls = [...form.querySelectorAll('input, select, textarea')];
+  controls.forEach((control) => {
+    if (!(control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement)) return;
+    control.addEventListener('invalid', () => control.setAttribute('aria-invalid', 'true'));
+    const clearInvalid = () => {
+      if (control.checkValidity()) control.removeAttribute('aria-invalid');
+    };
+    control.addEventListener('input', clearInvalid);
+    control.addEventListener('change', clearInvalid);
+  });
 
   const resetTurnstile = () => {
     const api = window.turnstile;
-    if (!api?.reset || !(turnstileWidget instanceof HTMLElement)) return;
-    try { api.reset(turnstileWidget); } catch { /* Widget may not have rendered yet. */ }
+    if (!api?.reset || !(form.querySelector('.cf-turnstile') instanceof HTMLElement)) return;
+    try { api.reset(form.querySelector('.cf-turnstile')); } catch { /* Widget may not have rendered yet. */ }
   };
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    if (!form.reportValidity()) return;
+    if (!form.checkValidity()) {
+      setStatus('Tjek de markerede felter, og udfyld de oplysninger der mangler.', 'error');
+      form.reportValidity();
+      return;
+    }
 
     if (!turnstileSiteKey) {
-      setStatus('Sikkerhedstjekket er ikke konfigureret. Ring gerne på +45 91 81 89 90.', 'error');
+      setStatus('Sikkerhedstjekket er ikke konfigureret. Ring gerne på +45 91 81 89 90.', 'error', true);
       return;
     }
 
     const data = new FormData(form);
     const turnstileToken = String(data.get('turnstileToken') || '');
     if (!turnstileToken) {
-      setStatus('Sikkerhedstjekket er ikke klar endnu. Prøv igen om et øjeblik.', 'error');
+      setStatus('Sikkerhedstjekket er ikke klar endnu. Prøv igen om et øjeblik.', 'error', true);
       return;
     }
 
@@ -172,7 +198,10 @@
       samtykke: data.get('samtykke') === 'on'
     };
 
-    if (submit instanceof HTMLButtonElement) submit.disabled = true;
+    if (submit instanceof HTMLButtonElement) {
+      submit.disabled = true;
+      submit.setAttribute('aria-disabled', 'true');
+    }
     setStatus('Sender din forespørgsel…');
 
     const controller = new AbortController();
@@ -196,8 +225,9 @@
       }
 
       form.reset();
+      controls.forEach((control) => control.removeAttribute('aria-invalid'));
       if (startedAt instanceof HTMLInputElement) startedAt.value = String(Date.now());
-      setStatus('Tak. Din forespørgsel er sendt, og Esbjerg Shine vender tilbage hurtigst muligt.', 'success');
+      setStatus('Tak. Din forespørgsel er sendt, og Esbjerg Shine vender tilbage hurtigst muligt.', 'success', true);
     } catch (error) {
       let message = 'Formularen kan ikke sende lige nu. Ring gerne på +45 91 81 89 90.';
       if (error instanceof Error && error.message === 'rate_limited') {
@@ -205,11 +235,14 @@
       } else if (error instanceof Error && error.message === 'turnstile') {
         message = 'Sikkerhedstjekket udløb eller kunne ikke godkendes. Prøv igen.';
       }
-      setStatus(message, 'error');
+      setStatus(message, 'error', true);
     } finally {
       clearTimeout(timeout);
       resetTurnstile();
-      if (submit instanceof HTMLButtonElement) submit.disabled = false;
+      if (submit instanceof HTMLButtonElement) {
+        submit.disabled = false;
+        submit.removeAttribute('aria-disabled');
+      }
     }
   });
 })();
