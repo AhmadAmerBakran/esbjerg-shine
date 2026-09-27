@@ -55,7 +55,14 @@ const fileToRoute = (file) => {
 };
 
 test('all expected static site outputs exist', () => {
-  for (const required of ['index.html', '404.html', 'robots.txt', 'sitemap.xml', 'privatliv/index.html', 'ydelser/index.html']) {
+  for (const required of [
+    'index.html',
+    '404.html',
+    'robots.txt',
+    'sitemap.xml',
+    'privatliv/index.html',
+    'ydelser/index.html'
+  ]) {
     assert.ok(fs.existsSync(path.join(dist, required)), `Missing ${required}`);
   }
 });

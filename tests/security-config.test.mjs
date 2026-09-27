@@ -32,7 +32,10 @@ test('third-party CSP access is limited to services actually used', () => {
   const csp = headers.match(/Content-Security-Policy:\s*([^\n]+)/i)?.[1] ?? '';
   assert.match(csp, /script-src 'self' https:\/\/challenges\.cloudflare\.com/);
   assert.match(csp, /connect-src 'self' https:\/\/challenges\.cloudflare\.com/);
-  assert.match(csp, /frame-src https:\/\/www\.google\.com https:\/\/maps\.google\.com https:\/\/challenges\.cloudflare\.com/);
+  assert.match(
+    csp,
+    /frame-src https:\/\/www\.google\.com https:\/\/maps\.google\.com https:\/\/challenges\.cloudflare\.com/
+  );
   for (const unexpected of ['googletagmanager.com', 'google-analytics.com', 'facebook.net', 'doubleclick.net']) {
     assert.ok(!csp.includes(unexpected), `Unexpected tracking domain in CSP: ${unexpected}`);
   }
