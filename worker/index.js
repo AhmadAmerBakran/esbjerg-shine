@@ -33,7 +33,7 @@ const apiJson = (data, status, extraHeaders = {}) => withApiHeaders(new Response
 
 const apiNotFound = () => apiJson({ ok: false, code: 'not_found' }, 404);
 const methodNotAllowed = () => apiJson({ ok: false, code: 'method_not_allowed' }, 405, { Allow: 'POST, OPTIONS' });
-const internalError = () => apiJson({ ok: false, code: 'internal_error' }, 500);
+const internalError = (requestId) => apiJson({ ok: false, code: 'internal_error' }, 500, { 'X-Request-ID': requestId });
 
 export default {
   async fetch(request, env, ctx) {
@@ -55,7 +55,9 @@ export default {
 
         return withApiHeaders(response);
       } catch {
-        return internalError();
+        const requestId = crypto.randomUUID();
+        console.error(`[contact] ${JSON.stringify({ event: 'worker_unhandled_error', requestId })}`);
+        return internalError(requestId);
       }
     }
 
