@@ -1,0 +1,380 @@
+{
+  "/media/about/esbjerg-shine-work.webp": {
+    "sourceWidth": 1120,
+    "sourceHeight": 1400,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/about/esbjerg-shine-work-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/about/esbjerg-shine-work-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/about/esbjerg-shine-work-1024w.avif"
+      },
+      {
+        "width": 1120,
+        "src": "/media/about/esbjerg-shine-work-1120w.avif"
+      }
+    ]
+  },
+  "/media/home/hero-background.webp": {
+    "sourceWidth": 960,
+    "sourceHeight": 540,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/home/hero-background-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/home/hero-background-768w.avif"
+      },
+      {
+        "width": 960,
+        "src": "/media/home/hero-background-960w.avif"
+      }
+    ]
+  },
+  "/media/location/esbjerg-shine-location.webp": {
+    "sourceWidth": 1536,
+    "sourceHeight": 1024,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/location/esbjerg-shine-location-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/location/esbjerg-shine-location-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/location/esbjerg-shine-location-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/location/esbjerg-shine-location-1440w.avif"
+      },
+      {
+        "width": 1536,
+        "src": "/media/location/esbjerg-shine-location-1536w.avif"
+      }
+    ]
+  },
+  "/media/services/bilvask/card.webp": {
+    "sourceWidth": 1586,
+    "sourceHeight": 992,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/bilvask/card-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/bilvask/card-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/bilvask/card-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/bilvask/card-1440w.avif"
+      },
+      {
+        "width": 1586,
+        "src": "/media/services/bilvask/card-1586w.avif"
+      }
+    ]
+  },
+  "/media/services/bilvask/detail.webp": {
+    "sourceWidth": 1672,
+    "sourceHeight": 941,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/bilvask/detail-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/bilvask/detail-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/bilvask/detail-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/bilvask/detail-1440w.avif"
+      },
+      {
+        "width": 1672,
+        "src": "/media/services/bilvask/detail-1672w.avif"
+      }
+    ]
+  },
+  "/media/services/indvendig-bilpleje/card.webp": {
+    "sourceWidth": 1672,
+    "sourceHeight": 941,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/indvendig-bilpleje/card-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/indvendig-bilpleje/card-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/indvendig-bilpleje/card-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/indvendig-bilpleje/card-1440w.avif"
+      },
+      {
+        "width": 1672,
+        "src": "/media/services/indvendig-bilpleje/card-1672w.avif"
+      }
+    ]
+  },
+  "/media/services/indvendig-bilpleje/detail.webp": {
+    "sourceWidth": 1672,
+    "sourceHeight": 941,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/indvendig-bilpleje/detail-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/indvendig-bilpleje/detail-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/indvendig-bilpleje/detail-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/indvendig-bilpleje/detail-1440w.avif"
+      },
+      {
+        "width": 1672,
+        "src": "/media/services/indvendig-bilpleje/detail-1672w.avif"
+      }
+    ]
+  },
+  "/media/services/komplet-klargoering/card.webp": {
+    "sourceWidth": 1586,
+    "sourceHeight": 992,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/komplet-klargoering/card-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/komplet-klargoering/card-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/komplet-klargoering/card-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/komplet-klargoering/card-1440w.avif"
+      },
+      {
+        "width": 1586,
+        "src": "/media/services/komplet-klargoering/card-1586w.avif"
+      }
+    ]
+  },
+  "/media/services/komplet-klargoering/detail.webp": {
+    "sourceWidth": 1672,
+    "sourceHeight": 941,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/komplet-klargoering/detail-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/komplet-klargoering/detail-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/komplet-klargoering/detail-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/komplet-klargoering/detail-1440w.avif"
+      },
+      {
+        "width": 1672,
+        "src": "/media/services/komplet-klargoering/detail-1672w.avif"
+      }
+    ]
+  },
+  "/media/services/motorvask/card.webp": {
+    "sourceWidth": 1672,
+    "sourceHeight": 941,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/motorvask/card-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/motorvask/card-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/motorvask/card-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/motorvask/card-1440w.avif"
+      },
+      {
+        "width": 1672,
+        "src": "/media/services/motorvask/card-1672w.avif"
+      }
+    ]
+  },
+  "/media/services/motorvask/detail.webp": {
+    "sourceWidth": 1586,
+    "sourceHeight": 992,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/motorvask/detail-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/motorvask/detail-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/motorvask/detail-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/motorvask/detail-1440w.avif"
+      },
+      {
+        "width": 1586,
+        "src": "/media/services/motorvask/detail-1586w.avif"
+      }
+    ]
+  },
+  "/media/services/polering/card.webp": {
+    "sourceWidth": 1586,
+    "sourceHeight": 992,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/polering/card-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/polering/card-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/polering/card-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/polering/card-1440w.avif"
+      },
+      {
+        "width": 1586,
+        "src": "/media/services/polering/card-1586w.avif"
+      }
+    ]
+  },
+  "/media/services/polering/detail.webp": {
+    "sourceWidth": 1672,
+    "sourceHeight": 941,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/polering/detail-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/polering/detail-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/polering/detail-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/polering/detail-1440w.avif"
+      },
+      {
+        "width": 1672,
+        "src": "/media/services/polering/detail-1672w.avif"
+      }
+    ]
+  },
+  "/media/services/saederens/card.webp": {
+    "sourceWidth": 1584,
+    "sourceHeight": 990,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/saederens/card-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/saederens/card-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/saederens/card-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/saederens/card-1440w.avif"
+      },
+      {
+        "width": 1584,
+        "src": "/media/services/saederens/card-1584w.avif"
+      }
+    ]
+  },
+  "/media/services/saederens/detail.webp": {
+    "sourceWidth": 1664,
+    "sourceHeight": 936,
+    "candidates": [
+      {
+        "width": 480,
+        "src": "/media/services/saederens/detail-480w.avif"
+      },
+      {
+        "width": 768,
+        "src": "/media/services/saederens/detail-768w.avif"
+      },
+      {
+        "width": 1024,
+        "src": "/media/services/saederens/detail-1024w.avif"
+      },
+      {
+        "width": 1440,
+        "src": "/media/services/saederens/detail-1440w.avif"
+      },
+      {
+        "width": 1664,
+        "src": "/media/services/saederens/detail-1664w.avif"
+      }
+    ]
+  }
+}
