@@ -1,42 +1,68 @@
 ---
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import mediaVariants from '../data/media-variants.json';
+
+interface MediaVariantEntry {
+  sourceWidth: number;
+  sourceHeight: number;
+  candidates: Array<{ width: number; src: string }>;
+}
 
 interface Props {
   src: string;
   alt: string;
   class?: string;
-  loading?: 'eager' | 'lazy';
+  width: number;
+  height: number;
+  loading?: 'lazy' | 'eager';
   fetchPriority?: 'high' | 'low' | 'auto';
-  width?: number;
-  height?: number;
+  sizes?: string;
 }
 
 const {
   src,
   alt,
-  class: className = '',
+  class: className,
+  width,
+  height,
   loading = 'lazy',
   fetchPriority = 'auto',
-  width,
-  height
+  sizes = '100vw'
 } = Astro.props;
-
-const publicFile = join(process.cwd(), 'public', src.replace(/^\//, ''));
-const exists = existsSync(publicFile);
+const hasImage = existsSync(join(process.cwd(), 'public', src.replace(/^\//, '')));
+const variant = (mediaVariants as Record<string, MediaVariantEntry>)[src];
+const avifSrcset = variant?.candidates.map(({ src: candidateSrc, width: candidateWidth }) => `${candidateSrc} ${candidateWidth}w`).join(', ');
+const intrinsicWidth = variant?.sourceWidth ?? width;
+const intrinsicHeight = variant?.sourceHeight ?? height;
 ---
-<div class:list={['media-slot', className]} data-media-slot>
-  {exists && (
+
+<div class:list={['media-slot', className, { 'media-slot--missing': !hasImage }]} data-media-slot>
+  {hasImage && avifSrcset ? (
+    <picture class="media-picture">
+      <source type="image/avif" srcset={avifSrcset} sizes={sizes} />
+      <img
+        src={src}
+        alt={alt}
+        width={intrinsicWidth}
+        height={intrinsicHeight}
+        loading={loading}
+        decoding="async"
+        fetchpriority={fetchPriority}
+        data-media-image
+      />
+    </picture>
+  ) : hasImage ? (
     <img
       src={src}
       alt={alt}
+      width={intrinsicWidth}
+      height={intrinsicHeight}
       loading={loading}
       decoding="async"
       fetchpriority={fetchPriority}
-      width={width}
-      height={height}
       data-media-image
     />
-  )}
+  ) : null}
   <span class="media-slot__fallback" aria-hidden="true"></span>
 </div>
