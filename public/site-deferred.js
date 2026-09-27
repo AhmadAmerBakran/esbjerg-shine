@@ -129,9 +129,14 @@
   const fallback = form.querySelector('[data-mail-fallback]');
   const fallbackLink = form.querySelector('[data-mail-fallback-link]');
   const contactEmail = form.dataset.contactEmail || 'info@esbjergshine.dk';
-  const createSubmissionId = () => typeof crypto.randomUUID === 'function'
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(16).slice(2)}-${Math.random().toString(16).slice(2)}`;
+  const createSubmissionId = () => {
+    if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    const hex = [...bytes].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+  };
   const renewSubmissionId = () => {
     if (submissionId instanceof HTMLInputElement) submissionId.value = createSubmissionId();
   };
@@ -215,6 +220,19 @@
     'send_failed',
     'network_error'
   ]);
+  const handledFailureCodes = new Set([
+    ...systemFailureCodes,
+    'rate_limited',
+    'turnstile',
+    'required',
+    'invalid',
+    'too_fast',
+    'origin',
+    'content_type',
+    'invalid_body',
+    'invalid_json',
+    'too_large'
+  ]);
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -289,15 +307,18 @@
         ? 'Forespørgslen var allerede modtaget. Du behøver ikke sende den igen.'
         : 'Tak. Din forespørgsel er sendt, og Esbjerg Shine vender tilbage hurtigst muligt.', 'success', true);
     } catch (error) {
-      const code = error instanceof Error
+      const rawCode = error instanceof Error
         ? (error.name === 'AbortError' ? 'network_error' : error.message)
         : 'network_error';
+      const code = handledFailureCodes.has(rawCode) ? rawCode : 'network_error';
       let message = `Formularen kan ikke sende lige nu. Du kan skrive til ${contactEmail} eller ringe på +45 91 81 89 90.`;
 
       if (code === 'rate_limited') {
         message = 'Der er sendt flere forespørgsler på kort tid. Vent et øjeblik og prøv igen.';
       } else if (code === 'turnstile') {
         message = 'Sikkerhedstjekket udløb eller kunne ikke godkendes. Prøv igen.';
+      } else if (!systemFailureCodes.has(code)) {
+        message = 'Forespørgslen kunne ikke sendes. Kontrollér oplysningerne og prøv igen.';
       }
 
       if (systemFailureCodes.has(code)) {
