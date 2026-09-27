@@ -42,7 +42,6 @@ jobs:
                   raise SystemExit(f'Expected text not found in {path}: {old[:100]!r}')
               p.write_text(text.replace(old, new))
 
-          # One source of truth for public company details.
           replace(
               'src/data/company.ts',
               "  mapUrl: 'https://www.google.com/maps/search/?api=1&query=Randersvej%2026%2C%206700%20Esbjerg%2C%20Danmark'\n",
@@ -63,18 +62,9 @@ jobs:
               "  const contactEmail = form.dataset.contactEmail || 'info@esbjergshine.dk';\n",
               "  const contactEmail = form.dataset.contactEmail || '';\n  const contactPhone = form.dataset.contactPhone || '';\n"
           )
-          replace(
-              'public/site-deferred.js',
-              'Skriv til ${contactEmail} eller ring på +45 91 81 89 90.',
-              'Skriv til ${contactEmail} eller ring på ${contactPhone}.'
-          )
-          replace(
-              'public/site-deferred.js',
-              'Du kan skrive til ${contactEmail} eller ringe på +45 91 81 89 90.',
-              'Du kan skrive til ${contactEmail} eller ringe på ${contactPhone}.'
-          )
+          replace('public/site-deferred.js', 'Skriv til ${contactEmail} eller ring på +45 91 81 89 90.', 'Skriv til ${contactEmail} eller ring på ${contactPhone}.')
+          replace('public/site-deferred.js', 'Du kan skrive til ${contactEmail} eller ringe på +45 91 81 89 90.', 'Du kan skrive til ${contactEmail} eller ringe på ${contactPhone}.')
 
-          # Contact API derives service names and mailbox from the same data used by the site.
           p = Path('functions/api/contact.js')
           text = p.read_text()
           old = """const ALLOWED_SERVICES = new Set([\n  'Håndvask og udvendig bilpleje',\n  'Indvendig bilpleje',\n  'Komplet klargøring',\n  'Polering',\n  'Motorvask',\n  'Sæde- og tekstilrens',\n  'Andet'\n]);\n"""
@@ -88,38 +78,21 @@ jobs:
               raise SystemExit('Expected contact mailbox config not found')
           p.write_text(text.replace(old, new))
 
-          # Runtime configuration now contains only values that really belong at runtime.
-          replace(
-              'wrangler.jsonc',
-              ',\n    "CONTACT_MAILBOX": "info@esbjergshine.dk",\n    "CONTACT_TO": "info@esbjergshine.dk"',
-              ''
-          )
-          replace(
-              '.dev.vars.example',
-              'CONTACT_MAILBOX=info@esbjergshine.dk\nCONTACT_TO=info@esbjergshine.dk\n',
-              ''
-          )
+          replace('wrangler.jsonc', ',\n    "CONTACT_MAILBOX": "info@esbjergshine.dk",\n    "CONTACT_TO": "info@esbjergshine.dk"', '')
+          replace('.dev.vars.example', 'CONTACT_MAILBOX=info@esbjergshine.dk\nCONTACT_TO=info@esbjergshine.dk\n', '')
 
-          # Deployment guide: public mailbox is source-controlled, credentials remain secret.
           replace(
               'docs/cloudflare-deployment.md',
-              'npx wrangler secret put M365_CLIENT_SECRET\nnpx wrangler secret put CONTACT_MAILBOX\nnpx wrangler secret put CONTACT_TO\n',
-              'npx wrangler secret put M365_CLIENT_SECRET\n'
-          )
-          replace(
-              'docs/cloudflare-deployment.md',
-              'The public mailbox address is `info@esbjergshine.dk`. The Microsoft tenant/client credentials and Turnstile secret remain runtime secrets; the mailbox/recipient address is normal Worker configuration because it is public contact information.\n',
+              'The public mailbox configuration is deliberately committed in `wrangler.jsonc` so production cannot accidentally send enquiries to the wrong address:\n\n- `CONTACT_MAILBOX=info@esbjergshine.dk`\n- `CONTACT_TO=info@esbjergshine.dk`\n',
               'The public mailbox address comes from `src/data/company.ts` and is currently `info@esbjergshine.dk`. The Microsoft tenant/client credentials and Turnstile secret remain runtime secrets.\n'
           )
 
-          # Keep the permanent quality gate responsible for code style too.
           replace(
               '.github/workflows/quality.yml',
               '      - name: Astro type check\n        run: npm run check\n\n      - name: JavaScript syntax\n',
               '      - name: Astro type check\n        run: npm run check\n\n      - name: Lint\n        run: npm run lint\n\n      - name: Format check\n        run: npm run format:check\n\n      - name: JavaScript syntax\n'
           )
 
-          # README is intentionally concise and reflects the current architecture.
           Path('README.md').write_text('''# Esbjerg Shine\n\nProduction website for **Esbjerg Shine** (CVR 46241479), a bilplejevirksomhed in Esbjerg. The public site is Danish and built for performance, accessibility, local SEO and a small attack surface.\n\n## Stack\n\n- Astro 7 with fully static output\n- Plain CSS and small vanilla JavaScript enhancements\n- Cloudflare Workers + Static Assets\n- Worker-backed contact endpoint at `/api/contact`\n- Cloudflare Turnstile and Worker rate limiting\n- Microsoft Graph / Exchange Online mail delivery\n- GitHub Actions quality gate with Lighthouse checks\n\n## Source of truth\n\nKeep business and service information centralized:\n\n- `src/data/company.ts` — company name, CVR, phone, `info@esbjergshine.dk`, address, maps and social links\n- `src/data/services.ts` — public services and their Danish content/SEO metadata\n- `src/data/media.ts` — media paths used by the site\n\nThe contact backend imports the company email and service titles from those same sources. Do not duplicate them in Worker configuration.\n\n## Local development\n\nUse the pinned Node/npm versions from `.node-version` / `packageManager`.\n\n```bash\nnpm ci\nnpm run dev\n```\n\nUseful checks:\n\n```bash\nnpm run check\nnpm run lint\nnpm run format:check\nnpm audit --audit-level=low\nnpm run build\nnpm run cf:dry-run\n```\n\nTo format supported source/config files:\n\n```bash\nnpm run format\n```\n\n## Contact form\n\nThe production form is handled by `/api/contact` and uses Turnstile, application-level rate limiting, duplicate-submission receipts, request timeouts and Microsoft Graph. If mail infrastructure is unavailable, the page offers a user-initiated pre-filled email fallback to `info@esbjergshine.dk`.\n\nSecrets are never committed. Production setup is documented in `docs/cloudflare-deployment.md`.\n\n## Media\n\nMedia lives in `public/media/`. Service media follows:\n\n```text\npublic/media/services/<service-slug>/card.webp\npublic/media/services/<service-slug>/detail.webp\n```\n\nBefore/after, hero, location, brand, social and video files have their own folders under `public/media/`. Media paths are centralized in `src/data/media.ts`.\n\nCI asset budgets:\n\n- non-video public assets: maximum 1.2 MB each\n- video files under `public/media/video/`: maximum 4 MB each\n\n## Quality gate\n\nThe permanent GitHub Actions gate runs dependency audit, Astro checks, ESLint, Prettier verification, build/Cloudflare validation and Lighthouse. Current Lighthouse floors are:\n\n- Performance: 95+\n- Accessibility: 100\n- Best Practices: 95+\n- SEO: 100\n\nAfter launch, real-user LCP, INP and CLS should also be monitored.\n''')
           PY
 
