@@ -7,6 +7,11 @@
   "background_color": "#0a0b0d",
   "theme_color": "#0a0b0d",
   "icons": [
-    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+    {
+      "src": "/media/brand/esbjerg-shine-logo.webp",
+      "sizes": "560x277",
+      "type": "image/webp",
+      "purpose": "any"
+    }
   ]
 }
