@@ -92,7 +92,7 @@
     { passive: true }
   );
 
-  const heroBackground = doc.querySelector('.hero__background-media > img');
+  const heroBackground = doc.querySelector('.hero__background-media img');
   if (heroBackground instanceof HTMLImageElement) {
     const syncBackground = () =>
       heroBackground.classList.toggle('is-loaded', heroBackground.complete && heroBackground.naturalWidth > 0);
