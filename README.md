@@ -39,10 +39,22 @@ npm run lint
 npm run format:check
 npm audit --audit-level=low
 npm run build
+npm run test:predeploy
 npm run cf:dry-run
 ```
 
-`astro check` validates Astro/TypeScript. ESLint covers runtime JavaScript and Prettier keeps JavaScript/TypeScript/config files consistent.
+`astro check` validates Astro/TypeScript. ESLint covers runtime JavaScript and the permanent test suite. Prettier keeps supported JavaScript/TypeScript/config/test files consistent.
+
+## Pre-deployment tests
+
+After `npm run build`, `npm run test:predeploy` checks the parts that can be verified without a live domain or production credentials:
+
+- contact API validation, Turnstile handling, rate limiting, Graph success/failure mapping and duplicate-submit protection
+- security headers, CSP and Cloudflare production configuration
+- generated pages, canonical URLs, sitemap, robots.txt, internal links, fragments, IDs and image alt attributes
+- the custom 404 page and `/api/*` routing through a real local Wrangler runtime
+
+Real DNS/TLS, the production Turnstile keys, Cloudflare account rules and actual delivery through `info@esbjergshine.dk` are verified only after deployment.
 
 ## Contact form
 
@@ -63,4 +75,4 @@ Media paths are centralized in `src/data/media.ts`. CI limits non-video public a
 
 ## Quality gate
 
-The permanent quality gate runs dependency audit, Astro checks, JavaScript linting, formatting checks, build/Cloudflare validation and Lighthouse. Current Lighthouse floors are Performance 95+, Accessibility 100, Best Practices 95+ and SEO 100.
+The permanent quality gate runs dependency audit, Astro checks, JavaScript linting, formatting checks, the pre-deployment regression suite, build/Cloudflare validation and Lighthouse. Current homepage Lighthouse floors are Performance 95+ using the median of three mobile runs, Accessibility 100, Best Practices 95+ and SEO 100.
