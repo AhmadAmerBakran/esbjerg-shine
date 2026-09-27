@@ -30,6 +30,13 @@ const routeToFile = (pathname) => {
 
 const attrs = (html, name) => [...html.matchAll(new RegExp(`\\b${name}=["']([^"']+)["']`, 'gi'))].map((m) => m[1]);
 const ids = (html) => attrs(html, 'id');
+const srcsetUrls = (html) =>
+  [...attrs(html, 'srcset'), ...attrs(html, 'data-srcset')].flatMap((value) =>
+    value
+      .split(',')
+      .map((candidate) => candidate.trim().split(/\s+/)[0])
+      .filter(Boolean)
+  );
 
 const resolveLocal = (value, currentFile) => {
   if (!value || value.startsWith('mailto:') || value.startsWith('tel:') || value.startsWith('data:')) return null;
@@ -91,10 +98,16 @@ test('404 stays non-indexable and free of canonical/schema', () => {
   assert.match(html, /Siden findes/i);
 });
 
-test('all local href/src/poster references resolve to built files and fragments', () => {
+test('all local links and responsive media references resolve to built files and fragments', () => {
   for (const file of htmlFiles()) {
     const html = fs.readFileSync(file, 'utf8');
-    const values = [...attrs(html, 'href'), ...attrs(html, 'src'), ...attrs(html, 'poster')];
+    const values = [
+      ...attrs(html, 'href'),
+      ...attrs(html, 'src'),
+      ...attrs(html, 'data-src'),
+      ...attrs(html, 'poster'),
+      ...srcsetUrls(html)
+    ];
     for (const value of values) {
       const url = resolveLocal(value, file);
       if (!url) continue;
@@ -118,6 +131,15 @@ test('HTML ids are unique per page and images always declare alt text', () => {
       assert.match(img, /\balt(?:=["'][^"']*["'])?(?=\s|>)/i, `Image without alt in ${file}: ${img}`);
     }
   }
+});
+
+test('responsive media is emitted without replacing original fallbacks', () => {
+  const home = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
+  assert.match(home, /type="image\/avif"/i);
+  assert.match(home, /hero-background-768w\.avif/i);
+  assert.match(home, /data-lazy-media/i);
+  assert.match(home, /data-srcset="[^"]*services\/bilvask\/card-/i);
+  assert.match(home, /data-src="\/media\/services\/bilvask\/card\.webp"/i);
 });
 
 test('sitemap contains only real canonical pages and excludes 404', () => {
