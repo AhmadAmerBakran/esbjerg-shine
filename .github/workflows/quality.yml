@@ -114,6 +114,17 @@ jobs:
           ! grep -q 'rel="canonical"' dist/404.html
           ! grep -q 'application/ld+json' dist/404.html
 
+      - name: Verify accessibility outputs
+        run: |
+          grep -q 'class="skip-link"' dist/index.html
+          grep -q 'aria-controls="hovednavigation"' dist/index.html
+          grep -q 'aria-describedby="contact-form-help contact-form-status"' dist/index.html
+          grep -q 'aria-valuetext="52 procent før og 48 procent efter"' dist/index.html
+          grep -q 'aria-live="polite"' dist/index.html
+          grep -Rqs 'prefers-reduced-motion:reduce' dist/_astro
+          grep -q 'Siden findes' dist/404.html
+          grep -q '"not_found_handling": "404-page"' wrangler.jsonc
+
       - name: Start local server
         run: |
           python3 -m http.server 4173 --directory dist >/tmp/esbjerg-shine-http.log 2>&1 &
@@ -142,7 +153,7 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
 
-          const thresholds = { performance: .95, accessibility: .98, 'best-practices': .95, seo: 1 };
+          const thresholds = { performance: .95, accessibility: 1, 'best-practices': .95, seo: 1 };
           const diagnostics = [
             'first-contentful-paint',
             'largest-contentful-paint',
