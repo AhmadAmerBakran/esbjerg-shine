@@ -22,13 +22,16 @@
   if (reducedMotion || !('IntersectionObserver' in window)) {
     revealItems.forEach((item) => item.classList.add('is-visible'));
   } else {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
-      });
-    }, { rootMargin: '80px 0px -4% 0px', threshold: 0.08 });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: '80px 0px -4% 0px', threshold: 0.08 }
+    );
     revealItems.forEach((item) => observer.observe(item));
   }
 
@@ -106,20 +109,26 @@
     const src = button.dataset.mapSrc;
     if (!(frame instanceof HTMLElement) || !src) return;
 
-    button.addEventListener('click', () => {
-      const iframe = doc.createElement('iframe');
-      iframe.title = 'Kort til Esbjerg Shine på Randersvej 26 i Esbjerg';
-      iframe.src = src;
-      iframe.loading = 'lazy';
-      iframe.referrerPolicy = 'no-referrer-when-downgrade';
-      iframe.allowFullscreen = true;
-      iframe.tabIndex = 0;
-      frame.replaceChildren(iframe);
-      requestAnimationFrame(() => iframe.focus());
-    }, { once: true });
+    button.addEventListener(
+      'click',
+      () => {
+        const iframe = doc.createElement('iframe');
+        iframe.title = 'Kort til Esbjerg Shine på Randersvej 26 i Esbjerg';
+        iframe.src = src;
+        iframe.loading = 'lazy';
+        iframe.referrerPolicy = 'no-referrer-when-downgrade';
+        iframe.allowFullscreen = true;
+        iframe.tabIndex = 0;
+        frame.replaceChildren(iframe);
+        requestAnimationFrame(() => iframe.focus());
+      },
+      { once: true }
+    );
   });
 
-  doc.querySelectorAll('[data-year]').forEach((node) => { node.textContent = String(new Date().getFullYear()); });
+  doc.querySelectorAll('[data-year]').forEach((node) => {
+    node.textContent = String(new Date().getFullYear());
+  });
 
   const form = doc.querySelector('[data-contact-form]');
   if (!(form instanceof HTMLFormElement)) return;
@@ -128,7 +137,8 @@
   const submissionId = form.querySelector('[data-submission-id]');
   const fallback = form.querySelector('[data-mail-fallback]');
   const fallbackLink = form.querySelector('[data-mail-fallback-link]');
-  const contactEmail = form.dataset.contactEmail || 'info@esbjergshine.dk';
+  const contactEmail = form.dataset.contactEmail || '';
+  const contactPhone = form.dataset.contactPhone || '';
   const createSubmissionId = () => {
     if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
     const bytes = crypto.getRandomValues(new Uint8Array(16));
@@ -147,14 +157,20 @@
     if (!(fallback instanceof HTMLElement) || !(fallbackLink instanceof HTMLAnchorElement)) return;
     const subject = `Forespørgsel – ${payload.ydelse || 'bilpleje'}`;
     const body = [
-      'Hej Esbjerg Shine,', '',
-      'Jeg vil gerne sende følgende forespørgsel:', '',
+      'Hej Esbjerg Shine,',
+      '',
+      'Jeg vil gerne sende følgende forespørgsel:',
+      '',
       `Navn: ${payload.navn}`,
       `Telefon: ${payload.telefon || 'Ikke oplyst'}`,
       `E-mail: ${payload.email}`,
-      `Ydelse: ${payload.ydelse}`, '',
-      'Besked:', payload.besked, '',
-      'Venlig hilsen', payload.navn
+      `Ydelse: ${payload.ydelse}`,
+      '',
+      'Besked:',
+      payload.besked,
+      '',
+      'Venlig hilsen',
+      payload.navn
     ].join('\n');
     fallbackLink.href = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     fallback.hidden = false;
@@ -167,7 +183,9 @@
   if (serviceFromUrl) {
     const select = form.elements.namedItem('ydelse');
     if (select instanceof HTMLSelectElement) {
-      const matchingOption = [...select.options].find((option) => option.value.toLocaleLowerCase('da-DK') === serviceFromUrl.toLocaleLowerCase('da-DK'));
+      const matchingOption = [...select.options].find(
+        (option) => option.value.toLocaleLowerCase('da-DK') === serviceFromUrl.toLocaleLowerCase('da-DK')
+      );
       if (matchingOption) select.value = matchingOption.value;
     }
   }
@@ -187,7 +205,12 @@
 
   const controls = [...form.querySelectorAll('input, select, textarea')];
   controls.forEach((control) => {
-    if (!(control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement)) return;
+    if (!(
+      control instanceof HTMLInputElement ||
+      control instanceof HTMLSelectElement ||
+      control instanceof HTMLTextAreaElement
+    ))
+      return;
     control.addEventListener('invalid', () => control.setAttribute('aria-invalid', 'true'));
     const clearInvalid = () => {
       if (control.checkValidity()) control.removeAttribute('aria-invalid');
@@ -209,7 +232,11 @@
     const widget = form.querySelector('.cf-turnstile');
     const api = window.turnstile;
     if (!api?.reset || !(widget instanceof HTMLElement)) return;
-    try { api.reset(widget); } catch { /* Widget may not have rendered yet. */ }
+    try {
+      api.reset(widget);
+    } catch {
+      /* Widget may not have rendered yet. */
+    }
   };
 
   const systemFailureCodes = new Set([
@@ -245,7 +272,11 @@
     }
 
     if (!turnstileSiteKey) {
-      setStatus(`Sikkerhedstjekket er ikke konfigureret. Skriv til ${contactEmail} eller ring på +45 91 81 89 90.`, 'error', true);
+      setStatus(
+        `Sikkerhedstjekket er ikke konfigureret. Skriv til ${contactEmail} eller ring på ${contactPhone}.`,
+        'error',
+        true
+      );
       const data = new FormData(form);
       showFallback({
         navn: String(data.get('navn') || ''),
@@ -303,15 +334,18 @@
       if (startedAt instanceof HTMLInputElement) startedAt.value = String(Date.now());
       renewSubmissionId();
       hideFallback();
-      setStatus(result.duplicate
-        ? 'Forespørgslen var allerede modtaget. Du behøver ikke sende den igen.'
-        : 'Tak. Din forespørgsel er sendt, og Esbjerg Shine vender tilbage hurtigst muligt.', 'success', true);
+      setStatus(
+        result.duplicate
+          ? 'Forespørgslen var allerede modtaget. Du behøver ikke sende den igen.'
+          : 'Tak. Din forespørgsel er sendt, og Esbjerg Shine vender tilbage hurtigst muligt.',
+        'success',
+        true
+      );
     } catch (error) {
-      const rawCode = error instanceof Error
-        ? (error.name === 'AbortError' ? 'network_error' : error.message)
-        : 'network_error';
+      const rawCode =
+        error instanceof Error ? (error.name === 'AbortError' ? 'network_error' : error.message) : 'network_error';
       const code = handledFailureCodes.has(rawCode) ? rawCode : 'network_error';
-      let message = `Formularen kan ikke sende lige nu. Du kan skrive til ${contactEmail} eller ringe på +45 91 81 89 90.`;
+      let message = `Formularen kan ikke sende lige nu. Du kan skrive til ${contactEmail} eller ringe på ${contactPhone}.`;
 
       if (code === 'rate_limited') {
         message = 'Der er sendt flere forespørgsler på kort tid. Vent et øjeblik og prøv igen.';

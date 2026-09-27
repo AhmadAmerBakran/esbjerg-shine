@@ -1,6 +1,6 @@
 # Esbjerg Shine
 
-Performance-first website for **Esbjerg Shine** (CVR 46241479), a Danish bilplejevirksomhed in Esbjerg.
+Production website for **Esbjerg Shine** (CVR 46241479), a bilplejevirksomhed in Esbjerg. The public site is Danish and built for performance, accessibility, local SEO and a small attack surface.
 
 ## Stack
 
@@ -8,125 +8,59 @@ Performance-first website for **Esbjerg Shine** (CVR 46241479), a Danish bilplej
 - Plain CSS and small vanilla JavaScript enhancements
 - Cloudflare Workers + Static Assets
 - Worker-backed contact endpoint at `/api/contact`
-- Danish metadata, canonical URLs, sitemap, robots.txt and structured data
+- Cloudflare Turnstile and Worker rate limiting
+- Microsoft Graph / Exchange Online mail delivery
 - GitHub Actions quality gate with Lighthouse checks
+
+## Source of truth
+
+Keep business and service information centralized:
+
+- `src/data/company.ts` — company name, CVR, phone, `info@esbjergshine.dk`, address, maps and social links
+- `src/data/services.ts` — public services and their Danish content/SEO metadata
+- `src/data/media.ts` — media paths used by the site
+
+The contact backend imports the company email and service titles from those same sources. Do not duplicate them in Worker configuration.
 
 ## Local development
 
+Use the pinned Node/npm versions from `.node-version` / `packageManager`.
+
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-Production build:
+Useful checks:
 
 ```bash
-SITE_URL=https://esbjergshine.dk npm run build
-```
-
-Cloudflare validation:
-
-```bash
+npm run check
+npm run lint
+npm run format:check
+npm audit --audit-level=low
+npm run build
 npm run cf:dry-run
 ```
 
-## Services
-
-The public service list is defined in `src/data/services.ts` and currently contains:
-
-- Håndvask og udvendig bilpleje
-- Indvendig bilpleje
-- Komplet klargøring
-- Polering
-- Motorvask
-- Sæde- og tekstilrens
-
-Service pages are generated from the same data source, so titles, descriptions and navigation remain consistent.
-
-## Media structure
-
-Website media lives in `public/media/`.
-
-```text
-public/media/
-├── brand/
-│   └── esbjerg-shine-logo.webp
-├── home/
-│   ├── hero-background.webp
-│   └── hero-poster.webp
-├── video/
-│   ├── hero-detailing.webm
-│   └── hero-detailing.mp4
-├── services/
-│   ├── bilvask/
-│   │   ├── card.webp
-│   │   └── detail.webp
-│   ├── indvendig-bilpleje/
-│   │   ├── card.webp
-│   │   └── detail.webp
-│   ├── komplet-klargoering/
-│   │   ├── card.webp
-│   │   └── detail.webp
-│   ├── polering/
-│   │   ├── card.webp
-│   │   └── detail.webp
-│   ├── motorvask/
-│   │   ├── card.webp
-│   │   └── detail.webp
-│   └── saederens/
-│       ├── card.webp
-│       └── detail.webp
-├── before-after/
-│   ├── 01-polering-before.webp
-│   ├── 01-polering-after.webp
-│   ├── 02-indvendig-before.webp
-│   ├── 02-indvendig-after.webp
-│   ├── 03-saederens-before.webp
-│   ├── 03-saederens-after.webp
-│   ├── 04-bilvask-before.webp
-│   ├── 04-bilvask-after.webp
-│   ├── 05-klargoering-before.webp
-│   ├── 05-klargoering-after.webp
-│   ├── 06-motorvask-before.webp
-│   └── 06-motorvask-after.webp
-├── about/
-│   └── esbjerg-shine-work.webp
-├── location/
-│   └── esbjerg-shine-location.webp
-└── social/
-    └── esbjerg-shine-og.jpg
-```
-
-## Asset budgets
-
-The CI quality gate rejects oversized public assets:
-
-- Non-video files: maximum 1.2 MB each
-- Video files under `public/media/video/`: maximum 4 MB each
+`astro check` validates Astro/TypeScript. ESLint covers runtime JavaScript and Prettier keeps JavaScript/TypeScript/config files consistent.
 
 ## Contact form
 
-The production Worker uses Cloudflare Turnstile, a rate-limit binding and Microsoft Graph. Runtime secrets are configured outside Git and documented in `docs/cloudflare-deployment.md`.
+The production form is handled by `/api/contact` and uses Turnstile, application-level rate limiting, duplicate-submission receipts, request timeouts and Microsoft Graph. If mail infrastructure is unavailable, the page offers a user-initiated pre-filled email fallback to `info@esbjergshine.dk`.
 
-## SEO and local business data
+Secrets are never committed. Production setup is documented in `docs/cloudflare-deployment.md`.
 
-The site uses the verified business details from `src/data/company.ts`, including:
+## Media
 
-- Esbjerg Shine
-- CVR 46241479
-- +45 91 81 89 90
-- Randersvej 26, 6700 Esbjerg
-- Åbningstider efter aftale
+Media lives in `public/media/`. Service media follows:
 
-The site intentionally avoids thin location pages. Service pages use individual Danish titles, descriptions and structured data.
+```text
+public/media/services/<service-slug>/card.webp
+public/media/services/<service-slug>/detail.webp
+```
 
-## Quality targets
+Media paths are centralized in `src/data/media.ts`. CI limits non-video public assets to 1.2 MB each and video files under `public/media/video/` to 4 MB each.
 
-GitHub Actions builds the site and runs Lighthouse on mobile and desktop. Current floors are:
+## Quality gate
 
-- Performance: 95+
-- Accessibility: 98+
-- Best Practices: 95+
-- SEO: 100
-
-After launch, monitor real-user LCP, INP and CLS in addition to synthetic Lighthouse checks.
+The permanent quality gate runs dependency audit, Astro checks, JavaScript linting, formatting checks, build/Cloudflare validation and Lighthouse. Current Lighthouse floors are Performance 95+, Accessibility 100, Best Practices 95+ and SEO 100.

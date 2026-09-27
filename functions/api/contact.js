@@ -1,12 +1,7 @@
-const ALLOWED_SERVICES = new Set([
-  'Håndvask og udvendig bilpleje',
-  'Indvendig bilpleje',
-  'Komplet klargøring',
-  'Polering',
-  'Motorvask',
-  'Sæde- og tekstilrens',
-  'Andet'
-]);
+import { company } from '../../src/data/company.ts';
+import { services } from '../../src/data/services.ts';
+
+const ALLOWED_SERVICES = new Set([...services.map(({ title }) => title), 'Andet']);
 
 const MAX_BODY_BYTES = 12_000;
 const TURNSTILE_MAX_CHARS = 2_048;
@@ -18,16 +13,21 @@ const TOKEN_SKEW_MS = 60_000;
 let cachedAccessToken = '';
 let cachedAccessTokenExpiresAt = 0;
 
-const json = (data, status = 200, extraHeaders = {}) => new Response(JSON.stringify(data), {
-  status,
-  headers: {
-    'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': 'no-store',
-    ...extraHeaders
-  }
-});
+const json = (data, status = 200, extraHeaders = {}) =>
+  new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+      ...extraHeaders
+    }
+  });
 
-const clean = (value, max) => String(value ?? '').replace(/\u0000/g, '').trim().slice(0, max);
+const clean = (value, max) =>
+  String(value ?? '')
+    .replace(/\u0000/g, '')
+    .trim()
+    .slice(0, max);
 const validEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/u.test(value);
 const validPhone = (value) => !value || /^[0-9+().\s-]{3,30}$/u.test(value);
 const validSubmissionId = (value) => /^[A-Za-z0-9-]{20,80}$/u.test(value);
@@ -58,7 +58,8 @@ const sameOrigin = (request, env) => {
     if (originUrl.origin !== requestUrl.origin) return false;
 
     const expectedHostname = clean(env.APP_HOSTNAME, 253).toLowerCase();
-    if (env.APP_ENV === 'production' && expectedHostname && requestUrl.hostname.toLowerCase() !== expectedHostname) return false;
+    if (env.APP_ENV === 'production' && expectedHostname && requestUrl.hostname.toLowerCase() !== expectedHostname)
+      return false;
 
     const fetchSite = request.headers.get('Sec-Fetch-Site');
     return !fetchSite || fetchSite === 'same-origin';
@@ -109,10 +110,13 @@ const getReceipt = async (request, submissionId) => {
 const markReceipt = async (request, submissionId, fingerprint) => {
   if (!globalThis.caches?.default) return;
   try {
-    await caches.default.put(receiptKey(request, submissionId), new Response(fingerprint, {
-      status: 200,
-      headers: { 'Cache-Control': `public, max-age=${RECEIPT_TTL_SECONDS}` }
-    }));
+    await caches.default.put(
+      receiptKey(request, submissionId),
+      new Response(fingerprint, {
+        status: 200,
+        headers: { 'Cache-Control': `public, max-age=${RECEIPT_TTL_SECONDS}` }
+      })
+    );
   } catch {
     // Delivery is already complete. Receipt caching is best-effort duplicate protection only.
   }
@@ -151,8 +155,8 @@ const graphConfig = (env) => {
   const tenantId = clean(env.M365_TENANT_ID, 100);
   const clientId = clean(env.M365_CLIENT_ID, 100);
   const clientSecret = clean(env.M365_CLIENT_SECRET, 1200);
-  const mailbox = clean(env.CONTACT_MAILBOX, 160).toLowerCase();
-  const recipient = clean(env.CONTACT_TO || mailbox, 160).toLowerCase();
+  const mailbox = company.email.toLowerCase();
+  const recipient = company.email.toLowerCase();
   if (!tenantId || !clientId || !clientSecret || !validEmail(mailbox) || !validEmail(recipient)) return null;
   return { tenantId, clientId, clientSecret, mailbox, recipient };
 };
@@ -167,11 +171,14 @@ const getAccessToken = async (config) => {
     grant_type: 'client_credentials'
   });
 
-  const response = await fetchWithTimeout(`https://login.microsoftonline.com/${encodeURIComponent(config.tenantId)}/oauth2/v2.0/token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
-    body
-  });
+  const response = await fetchWithTimeout(
+    `https://login.microsoftonline.com/${encodeURIComponent(config.tenantId)}/oauth2/v2.0/token`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
+      body
+    }
+  );
   const result = await response.json().catch(() => null);
   if (!response.ok || !result?.access_token) return null;
 
@@ -182,34 +189,38 @@ const getAccessToken = async (config) => {
 };
 
 const sendMessage = async (config, token, message) => {
-  const response = await fetchWithTimeout(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(config.mailbox)}/sendMail`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'client-request-id': message.requestId
-    },
-    body: JSON.stringify({
-      message: {
-        subject: message.subject,
-        body: { contentType: 'Text', content: message.text },
-        toRecipients: [{ emailAddress: { address: config.recipient } }],
-        replyTo: [{ emailAddress: { name: message.customerName, address: message.customerEmail } }]
+  const response = await fetchWithTimeout(
+    `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(config.mailbox)}/sendMail`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'client-request-id': message.requestId
       },
-      saveToSentItems: true
-    })
-  });
+      body: JSON.stringify({
+        message: {
+          subject: message.subject,
+          body: { contentType: 'Text', content: message.text },
+          toRecipients: [{ emailAddress: { address: config.recipient } }],
+          replyTo: [{ emailAddress: { name: message.customerName, address: message.customerEmail } }]
+        },
+        saveToSentItems: true
+      })
+    }
+  );
   return { ok: response.ok, status: response.status };
 };
 
 export async function onRequestPost(context) {
   const { request, env } = context;
   const requestId = crypto.randomUUID();
-  const reply = (data, status = 200, extraHeaders = {}) => json(data, status, {
-    'X-Request-ID': requestId,
-    ...extraHeaders
-  });
+  const reply = (data, status = 200, extraHeaders = {}) =>
+    json(data, status, {
+      'X-Request-ID': requestId,
+      ...extraHeaders
+    });
 
   if (!sameOrigin(request, env)) return reply({ ok: false, code: 'origin' }, 403);
 
@@ -217,14 +228,19 @@ export async function onRequestPost(context) {
   if (!contentType.toLowerCase().startsWith('application/json')) return reply({ ok: false, code: 'content_type' }, 415);
 
   const contentLength = Number(request.headers.get('Content-Length') || 0);
-  if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) return reply({ ok: false, code: 'too_large' }, 413);
+  if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES)
+    return reply({ ok: false, code: 'too_large' }, 413);
 
   const raw = await request.text().catch(() => '');
-  if (!raw || new TextEncoder().encode(raw).byteLength > MAX_BODY_BYTES) return reply({ ok: false, code: 'invalid_body' }, 400);
+  if (!raw || new TextEncoder().encode(raw).byteLength > MAX_BODY_BYTES)
+    return reply({ ok: false, code: 'invalid_body' }, 400);
 
   let payload;
-  try { payload = JSON.parse(raw); }
-  catch { return reply({ ok: false, code: 'invalid_json' }, 400); }
+  try {
+    payload = JSON.parse(raw);
+  } catch {
+    return reply({ ok: false, code: 'invalid_json' }, 400);
+  }
 
   const navn = clean(payload.navn, 80);
   const telefon = clean(payload.telefon, 30);
@@ -256,7 +272,8 @@ export async function onRequestPost(context) {
     logContact('warn', 'rate_limiter_unavailable', requestId);
     return reply({ ok: false, code: 'security_unavailable' }, 503);
   }
-  if (rate.limited) return reply({ ok: false, code: 'rate_limited' }, 429, { 'Retry-After': String(RATE_LIMIT_SECONDS) });
+  if (rate.limited)
+    return reply({ ok: false, code: 'rate_limited' }, 429, { 'Retry-After': String(RATE_LIMIT_SECONDS) });
 
   const turnstileValid = await verifyTurnstile(request, env, turnstileToken).catch(() => false);
   if (!turnstileValid) return reply({ ok: false, code: 'turnstile' }, 403);
@@ -274,12 +291,16 @@ export async function onRequestPost(context) {
   }
 
   const text = [
-    'Ny forespørgsel fra Esbjerg Shine', '',
+    'Ny forespørgsel fra Esbjerg Shine',
+    '',
     `Navn: ${navn}`,
     `Telefon: ${telefon || 'Ikke oplyst'}`,
     `E-mail: ${email}`,
-    `Ydelse: ${ydelse}`, '',
-    'Besked:', besked, '',
+    `Ydelse: ${ydelse}`,
+    '',
+    'Besked:',
+    besked,
+    '',
     `Modtaget: ${new Date().toISOString()}`,
     `Reference: ${requestId}`
   ].join('\n');

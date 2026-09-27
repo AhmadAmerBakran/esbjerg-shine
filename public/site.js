@@ -66,8 +66,9 @@
     }
 
     if (event.key !== 'Tab' || !(header instanceof HTMLElement)) return;
-    const focusable = [...header.querySelectorAll('a[href], button:not([disabled])')]
-      .filter((item) => item instanceof HTMLElement && !item.hasAttribute('inert'));
+    const focusable = [...header.querySelectorAll('a[href], button:not([disabled])')].filter(
+      (item) => item instanceof HTMLElement && !item.hasAttribute('inert')
+    );
     if (focusable.length === 0) return;
 
     const first = focusable[0];
@@ -83,13 +84,18 @@
     }
   });
 
-  addEventListener('resize', () => {
-    if (innerWidth > 980) closeMenu(false);
-  }, { passive: true });
+  addEventListener(
+    'resize',
+    () => {
+      if (innerWidth > 980) closeMenu(false);
+    },
+    { passive: true }
+  );
 
   const heroBackground = doc.querySelector('.hero__background-media > img');
   if (heroBackground instanceof HTMLImageElement) {
-    const syncBackground = () => heroBackground.classList.toggle('is-loaded', heroBackground.complete && heroBackground.naturalWidth > 0);
+    const syncBackground = () =>
+      heroBackground.classList.toggle('is-loaded', heroBackground.complete && heroBackground.naturalWidth > 0);
     heroBackground.addEventListener('load', syncBackground, { once: true });
     syncBackground();
   }

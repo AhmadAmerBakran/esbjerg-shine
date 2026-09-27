@@ -5,7 +5,8 @@ const API_HEADERS = {
   'Content-Security-Policy': "default-src 'none'; base-uri 'none'; frame-ancestors 'none'",
   'Cross-Origin-Opener-Policy': 'same-origin',
   'Cross-Origin-Resource-Policy': 'same-origin',
-  'Permissions-Policy': 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), browsing-topics=()',
+  'Permissions-Policy':
+    'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), browsing-topics=()',
   'Referrer-Policy': 'no-referrer',
   'Strict-Transport-Security': 'max-age=31536000',
   'X-Content-Type-Options': 'nosniff',
@@ -23,13 +24,16 @@ const withApiHeaders = (response) => {
   });
 };
 
-const apiJson = (data, status, extraHeaders = {}) => withApiHeaders(new Response(JSON.stringify(data), {
-  status,
-  headers: {
-    'Content-Type': 'application/json; charset=utf-8',
-    ...extraHeaders
-  }
-}));
+const apiJson = (data, status, extraHeaders = {}) =>
+  withApiHeaders(
+    new Response(JSON.stringify(data), {
+      status,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        ...extraHeaders
+      }
+    })
+  );
 
 const apiNotFound = () => apiJson({ ok: false, code: 'not_found' }, 404);
 const methodNotAllowed = () => apiJson({ ok: false, code: 'method_not_allowed' }, 405, { Allow: 'POST, OPTIONS' });

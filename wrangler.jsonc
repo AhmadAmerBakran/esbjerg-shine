@@ -30,8 +30,6 @@
   ],
   "vars": {
     "APP_ENV": "production",
-    "APP_HOSTNAME": "esbjergshine.dk",
-    "CONTACT_MAILBOX": "info@esbjergshine.dk",
-    "CONTACT_TO": "info@esbjergshine.dk"
+    "APP_HOSTNAME": "esbjergshine.dk"
   }
 }

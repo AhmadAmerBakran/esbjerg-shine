@@ -71,11 +71,14 @@
   };
 
   if ('IntersectionObserver' in window) {
-    const mediaObserver = new IntersectionObserver((entries) => {
-      if (!entries.some((entry) => entry.isIntersecting)) return;
-      markNear();
-      mediaObserver.disconnect();
-    }, { rootMargin: '160px 0px', threshold: 0.01 });
+    const mediaObserver = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        markNear();
+        mediaObserver.disconnect();
+      },
+      { rootMargin: '160px 0px', threshold: 0.01 }
+    );
     mediaObserver.observe(hero);
   } else {
     markNear();

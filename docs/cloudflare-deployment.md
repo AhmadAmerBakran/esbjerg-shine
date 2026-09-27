@@ -20,10 +20,7 @@ npx wrangler secret put M365_CLIENT_ID
 npx wrangler secret put M365_CLIENT_SECRET
 ```
 
-The public mailbox configuration is deliberately committed in `wrangler.jsonc` so production cannot accidentally send enquiries to the wrong address:
-
-- `CONTACT_MAILBOX=info@esbjergshine.dk`
-- `CONTACT_TO=info@esbjergshine.dk`
+The public mailbox address comes from `src/data/company.ts` and is currently `info@esbjergshine.dk`. The Microsoft tenant/client credentials and Turnstile secret remain runtime secrets.
 
 For local development, copy `.dev.vars.example` to `.dev.vars` and `.env.example` to `.env`. Cloudflare's official Turnstile test sitekey/secret may be used locally; never use test credentials in production.
 

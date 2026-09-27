@@ -16,5 +16,6 @@ export const company = {
   openingText: 'Åbningstider efter aftale',
   facebook: 'https://www.facebook.com/p/Esbjerg-Shine-61578978760165/',
   instagram: 'https://www.instagram.com/esbjerg_shine_/',
-  mapUrl: 'https://www.google.com/maps/search/?api=1&query=Randersvej%2026%2C%206700%20Esbjerg%2C%20Danmark'
+  mapUrl: 'https://www.google.com/maps/search/?api=1&query=Randersvej%2026%2C%206700%20Esbjerg%2C%20Danmark',
+  mapEmbedUrl: 'https://www.google.com/maps?q=Randersvej%2026%2C%206700%20Esbjerg%2C%20Danmark&output=embed'
 } as const;
