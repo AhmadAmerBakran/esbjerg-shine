@@ -88,12 +88,37 @@ jobs:
       - name: Verify SEO outputs
         run: |
           test -f dist/index.html
+          test -f dist/404.html
           test -f dist/robots.txt
           test -f dist/sitemap.xml
+          test ! -e public/media/services/lakbeskyttelse
+
+          if grep -RniE 'lakbeskyttelse|lakforbedring|lak beskyttelse|lak forbedring' src README.md; then
+            echo 'Obsolete service wording must not return.'
+            exit 1
+          fi
+
           grep -q 'lang="da-DK"' dist/index.html
           grep -q 'Bilpleje i Esbjerg' dist/index.html
           grep -q 'AutomotiveBusiness\|AutoWash\|LocalBusiness' dist/index.html
+          grep -q 'rel="canonical" href="https://esbjergshine.dk/"' dist/index.html
+          grep -q 'og:image:type' dist/index.html
+          grep -q 'twitter:title' dist/index.html
+          ! grep -q 'hreflang=' dist/index.html
+
+          grep -q 'rel="canonical" href="https://esbjergshine.dk/ydelser/polering/"' dist/ydelser/polering/index.html
+          grep -q '"@type":"Service"' dist/ydelser/polering/index.html
+          grep -q '"@type":"BreadcrumbList"' dist/ydelser/polering/index.html
+          grep -q '"@type":"BreadcrumbList"' dist/ydelser/index.html
+          grep -q '"@type":"ItemList"' dist/ydelser/index.html
+
+          grep -q '<lastmod>2026-09-27</lastmod>' dist/sitemap.xml
+          ! grep -q '/404/' dist/sitemap.xml
           grep -q 'sitemap.xml' dist/robots.txt
+
+          grep -q 'noindex,nofollow' dist/404.html
+          ! grep -q 'rel="canonical"' dist/404.html
+          ! grep -q 'application/ld+json' dist/404.html
 
       - name: Start local server
         run: |
