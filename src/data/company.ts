@@ -5,6 +5,8 @@ export const company = {
   cvr: '46241479',
   phoneDisplay: '+45 91 81 89 90',
   phoneHref: '+4591818990',
+  email: 'info@esbjergshine.dk',
+  emailHref: 'mailto:info@esbjergshine.dk',
   address: {
     street: 'Randersvej 26',
     postalCode: '6700',
