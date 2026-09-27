@@ -14,10 +14,14 @@
     script.async = true;
     script.defer = true;
     script.dataset.turnstileLoader = 'true';
-    script.addEventListener('error', () => {
-      requested = false;
-      script.remove();
-    }, { once: true });
+    script.addEventListener(
+      'error',
+      () => {
+        requested = false;
+        script.remove();
+      },
+      { once: true }
+    );
     document.head.append(script);
   };
 
