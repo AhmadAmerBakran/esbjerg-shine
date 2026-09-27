@@ -44,6 +44,12 @@ jobs:
       - name: Astro type check
         run: npm run check
 
+      - name: Lint JavaScript
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
       - name: JavaScript syntax
         run: |
           node --check public/site.js
