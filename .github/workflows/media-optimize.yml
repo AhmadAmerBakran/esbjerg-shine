@@ -1,0 +1,147 @@
+name: Media responsive variants
+
+on:
+  push:
+    branches: [production-hardening]
+
+permissions:
+  contents: write
+
+jobs:
+  optimize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: production-hardening
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.node-version'
+          cache: npm
+      - name: Install image encoder
+        run: npm install --no-save --package-lock=false sharp@0.34.4
+      - name: Generate AVIF responsive variants
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import sharp from 'sharp';
+
+          const roots = [
+            'public/media/home/hero-background.webp',
+            'public/media/about',
+            'public/media/location',
+            'public/media/services'
+          ];
+          const standardWidths = [480, 768, 1024, 1440, 1920, 2560, 3200, 3840];
+          const maxVariantWidth = 3840;
+          const minPsnr = 35;
+
+          const walk = (entry) => {
+            if (!fs.existsSync(entry)) return [];
+            const stat = fs.statSync(entry);
+            if (stat.isFile()) return [entry];
+            return fs.readdirSync(entry, { withFileTypes: true }).flatMap((item) =>
+              walk(path.join(entry, item.name))
+            );
+          };
+
+          const files = roots
+            .flatMap(walk)
+            .filter((file) => /\.(?:webp|jpe?g|png)$/i.test(file))
+            .filter((file) => !/-\d+w\.(?:webp|avif)$/i.test(file))
+            .sort();
+
+          const manifest = {};
+          let sourceBytes = 0;
+          let variantBytes = 0;
+          let variantCount = 0;
+
+          for (const file of files) {
+            const metadata = await sharp(file).metadata();
+            const sourceWidth = metadata.width ?? 0;
+            const sourceHeight = metadata.height ?? 0;
+            if (!sourceWidth || !sourceHeight || sourceWidth < 480) continue;
+
+            const cappedWidth = Math.min(sourceWidth, maxVariantWidth);
+            const widths = standardWidths.filter((width) => width < cappedWidth);
+            if (!widths.includes(cappedWidth)) widths.push(cappedWidth);
+
+            const relative = `/${path.relative('public', file).split(path.sep).join('/')}`;
+            const parsed = path.parse(file);
+            const candidates = [];
+            sourceBytes += fs.statSync(file).size;
+
+            for (const width of widths) {
+              const out = path.join(parsed.dir, `${parsed.name}-${width}w.avif`);
+              const reference = await sharp(file)
+                .rotate()
+                .resize({ width, withoutEnlargement: true })
+                .toColourspace('srgb')
+                .removeAlpha()
+                .raw()
+                .toBuffer({ resolveWithObject: true });
+
+              await sharp(file)
+                .rotate()
+                .resize({ width, withoutEnlargement: true })
+                .toColourspace('srgb')
+                .avif({ quality: 72, effort: 5, chromaSubsampling: '4:4:4' })
+                .toFile(out);
+
+              const decoded = await sharp(out)
+                .toColourspace('srgb')
+                .removeAlpha()
+                .raw()
+                .toBuffer({ resolveWithObject: true });
+
+              if (reference.info.width !== decoded.info.width || reference.info.height !== decoded.info.height) {
+                throw new Error(`Dimension mismatch for ${out}`);
+              }
+
+              let squaredError = 0;
+              const samples = Math.min(reference.data.length, decoded.data.length);
+              for (let i = 0; i < samples; i += 1) {
+                const delta = reference.data[i] - decoded.data[i];
+                squaredError += delta * delta;
+              }
+              const mse = squaredError / Math.max(samples, 1);
+              const psnr = mse === 0 ? 99 : 10 * Math.log10((255 * 255) / mse);
+              if (psnr < minPsnr) {
+                throw new Error(`${out} PSNR ${psnr.toFixed(2)} dB is below ${minPsnr} dB`);
+              }
+
+              const bytes = fs.statSync(out).size;
+              variantBytes += bytes;
+              variantCount += 1;
+              candidates.push({ width, src: `/${path.relative('public', out).split(path.sep).join('/')}` });
+              console.log(`${relative} -> ${width}px AVIF ${(bytes / 1024).toFixed(1)} KiB, PSNR ${psnr.toFixed(1)} dB`);
+            }
+
+            manifest[relative] = {
+              sourceWidth,
+              sourceHeight,
+              candidates
+            };
+          }
+
+          fs.writeFileSync('src/data/media-variants.json', `${JSON.stringify(manifest, null, 2)}\n`);
+          console.log(`Generated ${variantCount} AVIF variants from ${files.length} source images.`);
+          console.log(`Source set: ${(sourceBytes / 1024 / 1024).toFixed(2)} MiB; generated variants: ${(variantBytes / 1024 / 1024).toFixed(2)} MiB.`);
+          NODE
+      - name: Commit generated media
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/media src/data/media-variants.json
+          if git diff --cached --quiet; then
+            echo 'No media changes to commit.'
+            exit 0
+          fi
+          git commit -m 'perf: add high-quality responsive AVIF media'
+          git push origin HEAD:production-hardening
