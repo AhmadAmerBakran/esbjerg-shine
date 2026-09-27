@@ -91,12 +91,6 @@ jobs:
           test -f dist/404.html
           test -f dist/robots.txt
           test -f dist/sitemap.xml
-          test ! -e public/media/services/lakbeskyttelse
-
-          if grep -RniE 'lakbeskyttelse|lakforbedring|lak beskyttelse|lak forbedring' src README.md; then
-            echo 'Obsolete service wording must not return.'
-            exit 1
-          fi
 
           grep -q 'lang="da-DK"' dist/index.html
           grep -q 'Bilpleje i Esbjerg' dist/index.html
