@@ -121,7 +121,7 @@ export const services: Service[] = [
       'Aftørring og opfriskning af relevante plast- og gummidele'
     ],
     notice:
-      'Motorvask udføres efter aftale og på kundens eget ansvar. Motorrummet indeholder elektriske og andre følsomme komponenter, og derfor kan der ikke gives garanti for, hvordan disse reagerer på rengøringen.',
+      'Motorvask udføres kun efter en konkret vurdering af motorrummets stand. Fugt kan indebære en særlig risiko ved blandt andet ældre, beskadigede eller eftermonterede elektriske komponenter, stik og tætninger. Oplys derfor om kendte fejl, utætheder eller ændringer inden behandlingen. Esbjerg Shine er ikke ansvarlig for allerede eksisterende fejl eller forhold, som ikke med rimelighed kunne opdages før arbejdet. Dette begrænser ikke kundens ufravigelige rettigheder efter dansk ret.',
     seoTitle: 'Motorvask i Esbjerg | Esbjerg Shine',
     seoDescription:
       'Motorvask i Esbjerg med forsigtig rengøring af motorrummets tilgængelige flader og omtanke omkring elektriske og følsomme komponenter.'
