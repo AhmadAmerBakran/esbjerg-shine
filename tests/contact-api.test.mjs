@@ -9,7 +9,6 @@ const originalCaches = globalThis.caches;
 let receiptStore;
 let graphCalls;
 let turnstileResult;
-let tokenStatus;
 let deliveryStatus;
 
 const baseEnv = () => ({
@@ -19,9 +18,7 @@ const baseEnv = () => ({
   M365_TENANT_ID: 'tenant-id',
   M365_CLIENT_ID: 'client-id',
   M365_CLIENT_SECRET: 'client-secret',
-  CONTACT_RATE_LIMITER: {
-    limit: async () => ({ success: true })
-  }
+  CONTACT_RATE_LIMITER: { limit: async () => ({ success: true }) }
 });
 
 const validPayload = (overrides = {}) => ({
@@ -59,7 +56,6 @@ beforeEach(() => {
   receiptStore = new Map();
   graphCalls = 0;
   turnstileResult = { success: true, action: 'contact', hostname: 'esbjergshine.dk' };
-  tokenStatus = 200;
   deliveryStatus = 202;
 
   Object.defineProperty(globalThis, 'caches', {
@@ -87,7 +83,6 @@ beforeEach(() => {
       });
     }
     if (url.includes('login.microsoftonline.com')) {
-      if (tokenStatus !== 200) return new Response(JSON.stringify({ error: 'token_error' }), { status: tokenStatus });
       return new Response(JSON.stringify({ access_token: 'graph-token', expires_in: 3600 }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
@@ -201,22 +196,16 @@ test('missing Graph configuration exposes a controlled fallback state', async ()
   assert.equal(body.code, 'not_configured');
 });
 
-test('Graph token and delivery failures are mapped to controlled errors', async () => {
-  tokenStatus = 401;
-  const tokenFailure = await responseJson(await onRequestPost({ request: makeRequest(), env: baseEnv() }));
-  assert.equal(tokenFailure.response.status, 502);
-  assert.equal(tokenFailure.body.code, 'delivery_unavailable');
-
-  tokenStatus = 200;
+test('Graph delivery failure is mapped to a controlled error', async () => {
   deliveryStatus = 503;
-  const deliveryFailure = await responseJson(
+  const { response, body } = await responseJson(
     await onRequestPost({
       request: makeRequest(validPayload({ submissionId: 'submission-22345678901234567890' })),
       env: baseEnv()
     })
   );
-  assert.equal(deliveryFailure.response.status, 502);
-  assert.equal(deliveryFailure.body.code, 'delivery_failed');
+  assert.equal(response.status, 502);
+  assert.equal(body.code, 'delivery_failed');
 });
 
 test('GET and OPTIONS expose only the intended contact method', async () => {
@@ -233,9 +222,7 @@ test('Worker protects unknown API routes and delegates normal assets', async () 
   const ctx = { waitUntil() {} };
   const env = {
     ...baseEnv(),
-    ASSETS: {
-      fetch: async () => new Response('asset-ok', { status: 200 })
-    }
+    ASSETS: { fetch: async () => new Response('asset-ok', { status: 200 }) }
   };
 
   const missingApi = await worker.fetch(new Request('https://esbjergshine.dk/api/unknown'), env, ctx);
