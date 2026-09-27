@@ -11,19 +11,23 @@ import { services } from '../data/services';
 import { getServiceMedia, siteMedia } from '../data/media';
 
 const title = 'Bilpleje i Esbjerg | Esbjerg Shine';
-const description = 'Esbjerg Shine tilbyder bilpleje, klargøring, polering, håndvask og motorvask i Esbjerg. Kontakt os og få et tilbud tilpasset din bil.';
+const description = 'Bilpleje i Esbjerg med håndvask, indvendig bilpleje, klargøring, polering, motorvask og sæderens. Kontakt Esbjerg Shine for et tilbud.';
+const site = Astro.site ?? new URL('https://esbjergshine.dk');
+const home = site.toString().replace(/\/$/, '');
 
 const serviceSchema = {
   '@type': 'ItemList',
+  '@id': `${home}/#ydelser`,
   name: 'Bilpleje hos Esbjerg Shine',
   itemListElement: services.map((service, index) => ({
     '@type': 'ListItem',
     position: index + 1,
     item: {
       '@type': 'Service',
+      '@id': `${home}/ydelser/${service.slug}/#service`,
       name: service.title,
-      url: new URL(`/ydelser/${service.slug}/`, Astro.site ?? 'https://esbjergshine.dk').toString(),
-      provider: { '@id': `${(Astro.site ?? new URL('https://esbjergshine.dk')).toString().replace(/\/$/, '')}/#virksomhed` }
+      url: `${home}/ydelser/${service.slug}/`,
+      provider: { '@id': `${home}/#virksomhed` }
     }
   }))
 };
@@ -37,14 +41,14 @@ const serviceSchema = {
       <div class="shell hero__grid">
         <div class="hero__copy reveal">
           <p class="eyebrow">Bilpleje · Esbjerg</p>
-          <h1 id="hero-title">Din bil.<br /><span>Skærpet til detaljen.</span></h1>
-          <p class="hero__lead">Fra grundig håndvask og indvendig bilpleje til polering og motorvask. Esbjerg Shine arbejder med detaljen, finishen og det resultat, du faktisk kan se.</p>
+          <h1 id="hero-title">Din bil.<br /><span>Plejet ned til mindste detalje.</span></h1>
+          <p class="hero__lead">Fra grundig håndvask og indvendig bilpleje til polering og motorvask. Vi tilpasser arbejdet til bilen og lægger vægt på de detaljer, der gør forskellen i det færdige resultat.</p>
           <div class="hero__actions">
             <a class="button button--primary" href="#kontakt"><span>Få et uforpligtende tilbud</span><i aria-hidden="true">↗</i></a>
             <a class="button button--ghost" href={`tel:${company.phoneHref}`}><span>{company.phoneDisplay}</span><i aria-hidden="true">☎</i></a>
           </div>
           <div class="hero__trust" aria-label="Det kan du forvente">
-            <span>Efter aftale</span><span>Lokalt i Esbjerg</span><span>Detaljefokus</span>
+            <span>Efter aftale</span><span>Lokalt i Esbjerg</span><span>Fokus på detaljerne</span>
           </div>
         </div>
 
@@ -57,7 +61,7 @@ const serviceSchema = {
       <div class="shell">
         <header class="section-heading reveal">
           <div><p class="eyebrow">Ydelser</p><h2 id="services-title">Bilpleje, der <span>kan ses.</span></h2></div>
-          <p>Vi starter med bilen og dit ønskede resultat. Vælg den behandling, der passer bedst, eller kontakt os hvis du er i tvivl.</p>
+          <p>Vi tager udgangspunkt i bilens stand og det resultat, du ønsker. Vælg en ydelse, eller kontakt os, hvis du er i tvivl om, hvad der passer bedst til bilen.</p>
         </header>
         <div class="service-grid">
           {services.map((service) => {
@@ -81,7 +85,7 @@ const serviceSchema = {
         <div class="comparison-copy reveal">
           <p class="eyebrow">Før / efter</p>
           <h2 id="comparison-title">Forskellen skal ikke forklares.<br /><span>Den skal kunne ses.</span></h2>
-          <p>God bilpleje handler om helheden: rene flader, en mere ensartet finish og detaljer, der igen står skarpt.</p>
+          <p>God bilpleje handler om helheden: rene flader, en mere ensartet finish og detaljer, der står tydeligere frem.</p>
           <ul class="check-list"><li>Renere flader og skarpere linjer</li><li>Mere ensartet finish</li><li>Detaljer, der står tydeligere frem</li></ul>
         </div>
         <div class="reveal"><BeforeAfter /></div>
@@ -93,9 +97,9 @@ const serviceSchema = {
         <MediaImage class="about-panel reveal" src={siteMedia.about} alt="Bilpleje udført hos Esbjerg Shine i Esbjerg" width={1600} height={2000} />
         <div class="about-copy reveal">
           <p class="eyebrow">Esbjerg Shine</p>
-          <h2 id="about-title">Rolig proces.<br /><span>Skarpt resultat.</span></h2>
-          <p>Esbjerg Shine er en lokal bilplejevirksomhed i Esbjerg. Målet er enkelt: bilen skal afleveres med en finish, hvor arbejdet i detaljerne kan ses.</p>
-          <p>Behandlingen aftales efter bilens stand og dit behov. Derfor arbejder vi efter aftale frem for faste åbningstider.</p>
+          <h2 id="about-title">Grundigt arbejde.<br /><span>Et resultat, der kan ses.</span></h2>
+          <p>Esbjerg Shine er en lokal bilplejevirksomhed i Esbjerg. Målet er enkelt: bilen skal afleveres med en finish, hvor arbejdet med detaljerne kan ses.</p>
+          <p>Behandlingen aftales ud fra bilens stand og dit behov. Derfor arbejder vi efter aftale frem for med faste åbningstider.</p>
           <div class="facts"><div><small>Adresse</small><a href={company.mapUrl} target="_blank" rel="noopener noreferrer">{company.address.street}<br />{company.address.postalCode} {company.address.city} ↗</a></div><div><small>Åbning</small><span>{company.openingText}</span></div><div><small>CVR</small><span>{company.cvr}</span></div></div>
         </div>
       </div>
@@ -105,7 +109,7 @@ const serviceSchema = {
       <div class="shell">
         <header class="section-heading reveal">
           <div><p class="eyebrow">Find os</p><h2 id="location-title">Lokalt i <span>Esbjerg.</span></h2></div>
-          <p>Esbjerg Shine ligger på Randersvej. Kom efter aftale, så der er sat tid af til bilen og den behandling, vi har aftalt.</p>
+          <p>Esbjerg Shine ligger på Randersvej. Kom efter aftale, så vi har sat tid af til bilen og den behandling, vi har aftalt.</p>
         </header>
         <div class="location-card reveal">
           <div class="location-card__info">
