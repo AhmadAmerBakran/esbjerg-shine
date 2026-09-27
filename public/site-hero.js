@@ -9,11 +9,15 @@
   const video = hero.querySelector('[data-hero-video]');
   const compactHero = matchMedia('(max-width: 980px)').matches;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const saveData = navigator.connection?.saveData === true;
+  const connection = navigator.connection;
+  const saveData = connection?.saveData === true;
+  const effectiveType = connection?.effectiveType || '';
+  const slowConnection = /(?:^|-)2g$|3g/.test(effectiveType);
+  const videoAllowed = !compactHero && !reducedMotion && !saveData && !slowConnection;
 
   let mediaNear = false;
   let videoRequested = false;
-  let videoWanted = compactHero;
+  let videoWanted = false;
 
   const loadPoster = () => {
     if (!(poster instanceof HTMLImageElement)) return;
@@ -25,7 +29,7 @@
   };
 
   const activateVideo = async () => {
-    if (!(video instanceof HTMLVideoElement) || reducedMotion || saveData) {
+    if (!(video instanceof HTMLVideoElement) || !videoAllowed) {
       video?.pause();
       hero.classList.remove('has-video');
       return;
@@ -39,7 +43,7 @@
   };
 
   const loadVideo = () => {
-    if (!(video instanceof HTMLVideoElement) || videoRequested || reducedMotion || saveData || !mediaNear || doc.hidden) return;
+    if (!(video instanceof HTMLVideoElement) || videoRequested || !videoAllowed || !mediaNear || doc.hidden) return;
     const sources = [...video.querySelectorAll('source[data-src]')];
     if (sources.length === 0) return;
 
@@ -54,6 +58,7 @@
   };
 
   const requestVideo = () => {
+    if (!videoAllowed) return;
     videoWanted = true;
     if (mediaNear) loadPoster();
     loadVideo();
@@ -66,11 +71,14 @@
   };
 
   if ('IntersectionObserver' in window) {
-    const mediaObserver = new IntersectionObserver((entries) => {
-      if (!entries.some((entry) => entry.isIntersecting)) return;
-      markNear();
-      mediaObserver.disconnect();
-    }, { rootMargin: '160px 0px', threshold: 0.01 });
+    const mediaObserver = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        markNear();
+        mediaObserver.disconnect();
+      },
+      { rootMargin: '160px 0px', threshold: 0.01 }
+    );
     mediaObserver.observe(hero);
   } else {
     markNear();
@@ -81,9 +89,7 @@
   if (video instanceof HTMLVideoElement) {
     video.addEventListener('error', () => hero.classList.remove('has-video'));
 
-    if (compactHero) {
-      requestVideo();
-    } else {
+    if (videoAllowed) {
       addEventListener('pointerdown', requestVideo, { once: true, passive: true });
       addEventListener('touchstart', requestVideo, { once: true, passive: true });
       addEventListener('keydown', requestVideo, { once: true });

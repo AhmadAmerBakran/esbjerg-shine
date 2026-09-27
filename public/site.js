@@ -13,28 +13,89 @@
 
   const menuButton = doc.querySelector('[data-menu-button]');
   const nav = doc.querySelector('[data-nav]');
-  const closeMenu = () => {
+  const backgroundContent = [...doc.querySelectorAll('main, footer, .skip-link')];
+  const menuIsOpen = () => nav?.classList.contains('is-open') === true;
+  const setBackgroundInert = (inert) => {
+    backgroundContent.forEach((element) => {
+      if (!(element instanceof HTMLElement)) return;
+      element.inert = inert;
+      if (inert) element.setAttribute('aria-hidden', 'true');
+      else element.removeAttribute('aria-hidden');
+    });
+  };
+
+  const closeMenu = (restoreFocus = false) => {
+    if (!menuIsOpen()) return;
     nav?.classList.remove('is-open');
     body.classList.remove('menu-open');
+    setBackgroundInert(false);
     menuButton?.setAttribute('aria-expanded', 'false');
     menuButton?.setAttribute('aria-label', 'Åbn menu');
+    if (restoreFocus && menuButton instanceof HTMLButtonElement) menuButton.focus();
+  };
+
+  const openMenu = () => {
+    if (!(nav instanceof HTMLElement) || !(menuButton instanceof HTMLButtonElement)) return;
+    nav.classList.add('is-open');
+    body.classList.add('menu-open');
+    setBackgroundInert(true);
+    menuButton.setAttribute('aria-expanded', 'true');
+    menuButton.setAttribute('aria-label', 'Luk menu');
+    requestAnimationFrame(() => {
+      const firstLink = nav.querySelector('a[href]');
+      if (firstLink instanceof HTMLElement) firstLink.focus();
+    });
   };
 
   menuButton?.addEventListener('click', () => {
-    const open = !nav?.classList.contains('is-open');
-    nav?.classList.toggle('is-open', open);
-    body.classList.toggle('menu-open', open);
-    menuButton.setAttribute('aria-expanded', String(open));
-    menuButton.setAttribute('aria-label', open ? 'Luk menu' : 'Åbn menu');
+    if (menuIsOpen()) closeMenu(false);
+    else openMenu();
   });
+
   nav?.addEventListener('click', (event) => {
-    if (event.target instanceof Element && event.target.closest('a')) closeMenu();
+    if (event.target instanceof Element && event.target.closest('a')) closeMenu(true);
   });
-  addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu(); });
+
+  addEventListener('keydown', (event) => {
+    if (!menuIsOpen()) return;
+
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeMenu(true);
+      return;
+    }
+
+    if (event.key !== 'Tab' || !(header instanceof HTMLElement)) return;
+    const focusable = [...header.querySelectorAll('a[href], button:not([disabled])')].filter(
+      (item) => item instanceof HTMLElement && !item.hasAttribute('inert')
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (!(first instanceof HTMLElement) || !(last instanceof HTMLElement)) return;
+
+    if (event.shiftKey && doc.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && doc.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
+  addEventListener(
+    'resize',
+    () => {
+      if (innerWidth > 980) closeMenu(false);
+    },
+    { passive: true }
+  );
 
   const heroBackground = doc.querySelector('.hero__background-media > img');
   if (heroBackground instanceof HTMLImageElement) {
-    const syncBackground = () => heroBackground.classList.toggle('is-loaded', heroBackground.complete && heroBackground.naturalWidth > 0);
+    const syncBackground = () =>
+      heroBackground.classList.toggle('is-loaded', heroBackground.complete && heroBackground.naturalWidth > 0);
     heroBackground.addEventListener('load', syncBackground, { once: true });
     syncBackground();
   }
@@ -63,8 +124,6 @@
     if (compactHero) loadHeroMedia();
   };
 
-  // Desktop keeps the existing poster/video experience. Compact layouts keep
-  // the media card off the critical path until the visitor actually interacts.
   if (!compactHero) loadHeroMedia();
 
   addEventListener('pointerdown', loadInteractive, { once: true, passive: true });

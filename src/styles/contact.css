@@ -1,0 +1,28 @@
+@layer components {
+  .form-fallback {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: rgba(255,255,255,.025);
+  }
+
+  .form-fallback[hidden] {
+    display: none;
+  }
+
+  .form-fallback p {
+    color: var(--muted);
+    font-size: .82rem;
+  }
+
+  .form-fallback .button {
+    margin-top: .8rem;
+  }
+
+  @media (max-width: 640px) {
+    .form-fallback .button {
+      width: 100%;
+    }
+  }
+}

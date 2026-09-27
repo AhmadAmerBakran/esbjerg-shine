@@ -7,9 +7,38 @@ import { services } from '../../data/services';
 import { getServiceMedia } from '../../data/media';
 
 const title = 'Bilpleje og klargøring i Esbjerg | Esbjerg Shine';
-const description = 'Se ydelser inden for bilvask, indvendig bilpleje, klargøring, polering, lakbeskyttelse og sæderens hos Esbjerg Shine i Esbjerg.';
+const description = 'Se bilvask, indvendig bilpleje, komplet klargøring, polering, motorvask samt sæde- og tekstilrens hos Esbjerg Shine i Esbjerg.';
+const site = Astro.site ?? new URL('https://esbjergshine.dk');
+const home = site.toString().replace(/\/$/, '');
+const pageUrl = `${home}/ydelser/`;
+const schema = [
+  {
+    '@type': 'BreadcrumbList',
+    '@id': `${pageUrl}#breadcrumbs`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Forside', item: `${home}/` },
+      { '@type': 'ListItem', position: 2, name: 'Ydelser' }
+    ]
+  },
+  {
+    '@type': 'ItemList',
+    '@id': `${pageUrl}#ydelser`,
+    name: 'Bilpleje hos Esbjerg Shine',
+    itemListElement: services.map((service, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Service',
+        '@id': `${home}/ydelser/${service.slug}/#service`,
+        name: service.title,
+        url: `${home}/ydelser/${service.slug}/`,
+        provider: { '@id': `${home}/#virksomhed` }
+      }
+    }))
+  }
+];
 ---
-<BaseLayout title={title} description={description} canonicalPath="/ydelser/">
+<BaseLayout title={title} description={description} canonicalPath="/ydelser/" schema={schema}>
   <div id="top"></div>
   <Header />
   <main id="indhold">

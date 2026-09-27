@@ -1,12 +1,14 @@
 ---
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import '@fontsource-variable/manrope';
 import '../styles/global.css';
 import '../styles/brand.css';
 import '../styles/logo.css';
 import '../styles/media.css';
 import '../styles/surfaces.css';
+import '../styles/responsive.css';
+import '../styles/accessibility.css';
+import '../styles/contact.css';
 import { company } from '../data/company';
 import { siteMedia } from '../data/media';
 
@@ -27,8 +29,8 @@ const {
 } = Astro.props;
 
 const site = Astro.site ?? new URL('https://esbjergshine.dk');
-const canonical = new URL(canonicalPath, site).toString();
 const home = site.toString().replace(/\/$/, '');
+const canonical = noindex ? null : new URL(canonicalPath, site).toString();
 const hasPublicFile = (src: string) => existsSync(join(process.cwd(), 'public', src.replace(/^\//, '')));
 const shareMedia = hasPublicFile(siteMedia.social)
   ? { src: siteMedia.social, width: 1200, height: 630 }
@@ -37,7 +39,14 @@ const shareMedia = hasPublicFile(siteMedia.social)
     : { src: siteMedia.logo, width: 560, height: 277 };
 const socialImage = new URL(shareMedia.src, site).toString();
 const logoImage = new URL(siteMedia.logo, site).toString();
-const socialAlt = 'Esbjerg Shine – professionel bilpleje i Esbjerg';
+const socialAlt = 'Esbjerg Shine – bilpleje i Esbjerg';
+const socialImageType = shareMedia.src.endsWith('.jpg') || shareMedia.src.endsWith('.jpeg')
+  ? 'image/jpeg'
+  : shareMedia.src.endsWith('.webp')
+    ? 'image/webp'
+    : shareMedia.src.endsWith('.png')
+      ? 'image/png'
+      : undefined;
 
 const localBusinessSchema = {
   '@type': 'AutomotiveBusiness',
@@ -46,6 +55,7 @@ const localBusinessSchema = {
   legalName: company.legalName,
   url: `${home}/`,
   telephone: company.phoneHref,
+  email: company.email,
   taxID: company.cvr,
   hasMap: company.mapUrl,
   logo: logoImage,
@@ -65,7 +75,7 @@ const localBusinessSchema = {
 };
 
 const graph = Array.isArray(schema) ? schema : schema ? [schema] : [];
-const structuredData = {
+const structuredData = !noindex && canonical ? {
   '@context': 'https://schema.org',
   '@graph': [
     localBusinessSchema,
@@ -77,9 +87,18 @@ const structuredData = {
       inLanguage: 'da-DK',
       publisher: { '@id': `${home}/#virksomhed` }
     },
+    {
+      '@type': 'WebPage',
+      '@id': `${canonical}#webpage`,
+      url: canonical,
+      name: title,
+      description,
+      inLanguage: 'da-DK',
+      isPartOf: { '@id': `${home}/#website` }
+    },
     ...graph
   ]
-};
+} : null;
 ---
 <!doctype html>
 <html lang="da-DK">
@@ -91,9 +110,7 @@ const structuredData = {
     <meta name="description" content={description} />
     <meta name="robots" content={noindex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'} />
     <meta name="author" content={company.name} />
-    <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="da-DK" href={canonical} />
-    <link rel="alternate" hreflang="x-default" href={canonical} />
+    {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="/site.webmanifest" />
 
@@ -102,17 +119,21 @@ const structuredData = {
     <meta property="og:site_name" content={company.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={socialImage} />
+    <meta property="og:image:secure_url" content={socialImage} />
+    {socialImageType && <meta property="og:image:type" content={socialImageType} />}
     <meta property="og:image:width" content={String(shareMedia.width)} />
     <meta property="og:image:height" content={String(shareMedia.height)} />
     <meta property="og:image:alt" content={socialAlt} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content={socialAlt} />
 
     <title>{title}</title>
-    <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
+    {structuredData && <script type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>}
     <script src="/site.js" defer></script>
   </head>
   <body>

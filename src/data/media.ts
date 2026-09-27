@@ -43,8 +43,8 @@ export const beforeAfterSets = [
     after: '/media/before-after/05-klargoering-after.webp'
   },
   {
-    label: 'Lakbeskyttelse',
-    before: '/media/before-after/06-lakbeskyttelse-before.webp',
-    after: '/media/before-after/06-lakbeskyttelse-after.webp'
+    label: 'Motorvask',
+    before: '/media/before-after/06-motorvask-before.webp',
+    after: '/media/before-after/06-motorvask-after.webp'
   }
 ] as const;

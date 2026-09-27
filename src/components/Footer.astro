@@ -13,6 +13,7 @@ import { company } from '../data/company';
     <div>
       <p class="footer-label">Kontakt</p>
       <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>
+      <a href={company.emailHref}>{company.email}</a>
       <a href={company.mapUrl} target="_blank" rel="noopener noreferrer">{company.address.street}, {company.address.postalCode} {company.address.city}</a>
       <span>{company.openingText}</span>
     </div>

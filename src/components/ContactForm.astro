@@ -1,8 +1,21 @@
 ---
 import { services } from '../data/services';
+import { company } from '../data/company';
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
 ---
-<form class="contact-form" data-contact-form novalidate>
+<form
+  class="contact-form"
+  data-contact-form
+  data-turnstile-sitekey={turnstileSiteKey}
+  data-contact-email={company.email}
+  data-contact-phone={company.phoneDisplay}
+  aria-describedby="contact-form-help contact-form-status"
+  novalidate
+>
+  <p class="form-help" id="contact-form-help">Felter markeret med <span aria-hidden="true">*</span><span class="sr-only">stjerne</span> skal udfyldes.</p>
   <input type="hidden" name="startedAt" value="" data-started-at />
+  <input type="hidden" name="submissionId" value="" data-submission-id />
   <div class="honeypot" aria-hidden="true">
     <label>Hjemmeside <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
   </div>
@@ -39,11 +52,33 @@ import { services } from '../data/services';
 
   <label class="consent">
     <input type="checkbox" name="samtykke" required />
-    <span>Jeg accepterer, at Esbjerg Shine bruger oplysningerne til at besvare min henvendelse. <a href="/privatliv/">Læs om privatliv</a>.</span>
+    <span>Jeg har læst, hvordan Esbjerg Shine behandler oplysningerne i min henvendelse. <a href="/privatliv/">Læs om privatliv</a>.</span>
   </label>
+
+  {turnstileSiteKey && (
+    <div
+      id="contact-turnstile"
+      class="cf-turnstile"
+      data-sitekey={turnstileSiteKey}
+      data-action="contact"
+      data-appearance="interaction-only"
+      data-theme="auto"
+      data-response-field-name="turnstileToken"
+    ></div>
+  )}
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <div class="form-actions">
     <button class="button button--primary" type="submit"><span>Send forespørgsel</span><i aria-hidden="true">↗</i></button>
-    <p class="form-status" role="status" aria-live="polite" data-form-status></p>
+    <p class="form-status" id="contact-form-status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1" data-form-status></p>
   </div>
+
+  <div class="form-fallback" data-mail-fallback hidden>
+    <p>Du kan i stedet sende den samme forespørgsel fra din egen e-mailapp.</p>
+    <a class="button button--ghost" href={company.emailHref} data-mail-fallback-link><span>Åbn forespørgslen i din e-mailapp</span><i aria-hidden="true">↗</i></a>
+  </div>
+
+  <noscript>
+    <p class="form-help">Formularen kræver JavaScript. Du kan i stedet skrive direkte til <a href={company.emailHref}>{company.email}</a>.</p>
+  </noscript>
 </form>
