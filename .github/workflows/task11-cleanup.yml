@@ -1,0 +1,219 @@
+name: Task 11 cleanup
+
+on:
+  push:
+    branches: [production-hardening]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: production-hardening
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.node-version'
+          cache: npm
+
+      - name: Install current dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Consolidate project sources
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          def replace(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              if old not in text:
+                  raise SystemExit(f'Expected text not found in {path}: {old[:100]!r}')
+              p.write_text(text.replace(old, new))
+
+          # One source of truth for public company details.
+          replace(
+              'src/data/company.ts',
+              "  mapUrl: 'https://www.google.com/maps/search/?api=1&query=Randersvej%2026%2C%206700%20Esbjerg%2C%20Danmark'\n",
+              "  mapUrl: 'https://www.google.com/maps/search/?api=1&query=Randersvej%2026%2C%206700%20Esbjerg%2C%20Danmark',\n  mapEmbedUrl: 'https://www.google.com/maps?q=Randersvej%2026%2C%206700%20Esbjerg%2C%20Danmark&output=embed'\n"
+          )
+          replace(
+              'src/pages/index.astro',
+              '              data-map-src="https://www.google.com/maps?q=Randersvej%2026%2C%206700%20Esbjerg%2C%20Danmark&output=embed"',
+              '              data-map-src={company.mapEmbedUrl}'
+          )
+          replace(
+              'src/components/ContactForm.astro',
+              '  data-contact-email={company.email}\n',
+              '  data-contact-email={company.email}\n  data-contact-phone={company.phoneDisplay}\n'
+          )
+          replace(
+              'public/site-deferred.js',
+              "  const contactEmail = form.dataset.contactEmail || 'info@esbjergshine.dk';\n",
+              "  const contactEmail = form.dataset.contactEmail || '';\n  const contactPhone = form.dataset.contactPhone || '';\n"
+          )
+          replace(
+              'public/site-deferred.js',
+              'Skriv til ${contactEmail} eller ring på +45 91 81 89 90.',
+              'Skriv til ${contactEmail} eller ring på ${contactPhone}.'
+          )
+          replace(
+              'public/site-deferred.js',
+              'Du kan skrive til ${contactEmail} eller ringe på +45 91 81 89 90.',
+              'Du kan skrive til ${contactEmail} eller ringe på ${contactPhone}.'
+          )
+
+          # Contact API derives service names and mailbox from the same data used by the site.
+          p = Path('functions/api/contact.js')
+          text = p.read_text()
+          old = """const ALLOWED_SERVICES = new Set([\n  'Håndvask og udvendig bilpleje',\n  'Indvendig bilpleje',\n  'Komplet klargøring',\n  'Polering',\n  'Motorvask',\n  'Sæde- og tekstilrens',\n  'Andet'\n]);\n"""
+          new = """import { company } from '../../src/data/company.ts';\nimport { services } from '../../src/data/services.ts';\n\nconst ALLOWED_SERVICES = new Set([...services.map(({ title }) => title), 'Andet']);\n"""
+          if old not in text:
+              raise SystemExit('Expected duplicated service list not found')
+          text = text.replace(old, new)
+          old = """  const mailbox = clean(env.CONTACT_MAILBOX, 160).toLowerCase();\n  const recipient = clean(env.CONTACT_TO || mailbox, 160).toLowerCase();\n"""
+          new = """  const mailbox = company.email.toLowerCase();\n  const recipient = company.email.toLowerCase();\n"""
+          if old not in text:
+              raise SystemExit('Expected contact mailbox config not found')
+          p.write_text(text.replace(old, new))
+
+          # Runtime configuration now contains only values that really belong at runtime.
+          replace(
+              'wrangler.jsonc',
+              ',\n    "CONTACT_MAILBOX": "info@esbjergshine.dk",\n    "CONTACT_TO": "info@esbjergshine.dk"',
+              ''
+          )
+          replace(
+              '.dev.vars.example',
+              'CONTACT_MAILBOX=info@esbjergshine.dk\nCONTACT_TO=info@esbjergshine.dk\n',
+              ''
+          )
+
+          # Deployment guide: public mailbox is source-controlled, credentials remain secret.
+          replace(
+              'docs/cloudflare-deployment.md',
+              'npx wrangler secret put M365_CLIENT_SECRET\nnpx wrangler secret put CONTACT_MAILBOX\nnpx wrangler secret put CONTACT_TO\n',
+              'npx wrangler secret put M365_CLIENT_SECRET\n'
+          )
+          replace(
+              'docs/cloudflare-deployment.md',
+              'The public mailbox address is `info@esbjergshine.dk`. The Microsoft tenant/client credentials and Turnstile secret remain runtime secrets; the mailbox/recipient address is normal Worker configuration because it is public contact information.\n',
+              'The public mailbox address comes from `src/data/company.ts` and is currently `info@esbjergshine.dk`. The Microsoft tenant/client credentials and Turnstile secret remain runtime secrets.\n'
+          )
+
+          # Keep the permanent quality gate responsible for code style too.
+          replace(
+              '.github/workflows/quality.yml',
+              '      - name: Astro type check\n        run: npm run check\n\n      - name: JavaScript syntax\n',
+              '      - name: Astro type check\n        run: npm run check\n\n      - name: Lint\n        run: npm run lint\n\n      - name: Format check\n        run: npm run format:check\n\n      - name: JavaScript syntax\n'
+          )
+
+          # README is intentionally concise and reflects the current architecture.
+          Path('README.md').write_text('''# Esbjerg Shine\n\nProduction website for **Esbjerg Shine** (CVR 46241479), a bilplejevirksomhed in Esbjerg. The public site is Danish and built for performance, accessibility, local SEO and a small attack surface.\n\n## Stack\n\n- Astro 7 with fully static output\n- Plain CSS and small vanilla JavaScript enhancements\n- Cloudflare Workers + Static Assets\n- Worker-backed contact endpoint at `/api/contact`\n- Cloudflare Turnstile and Worker rate limiting\n- Microsoft Graph / Exchange Online mail delivery\n- GitHub Actions quality gate with Lighthouse checks\n\n## Source of truth\n\nKeep business and service information centralized:\n\n- `src/data/company.ts` — company name, CVR, phone, `info@esbjergshine.dk`, address, maps and social links\n- `src/data/services.ts` — public services and their Danish content/SEO metadata\n- `src/data/media.ts` — media paths used by the site\n\nThe contact backend imports the company email and service titles from those same sources. Do not duplicate them in Worker configuration.\n\n## Local development\n\nUse the pinned Node/npm versions from `.node-version` / `packageManager`.\n\n```bash\nnpm ci\nnpm run dev\n```\n\nUseful checks:\n\n```bash\nnpm run check\nnpm run lint\nnpm run format:check\nnpm audit --audit-level=low\nnpm run build\nnpm run cf:dry-run\n```\n\nTo format supported source/config files:\n\n```bash\nnpm run format\n```\n\n## Contact form\n\nThe production form is handled by `/api/contact` and uses Turnstile, application-level rate limiting, duplicate-submission receipts, request timeouts and Microsoft Graph. If mail infrastructure is unavailable, the page offers a user-initiated pre-filled email fallback to `info@esbjergshine.dk`.\n\nSecrets are never committed. Production setup is documented in `docs/cloudflare-deployment.md`.\n\n## Media\n\nMedia lives in `public/media/`. Service media follows:\n\n```text\npublic/media/services/<service-slug>/card.webp\npublic/media/services/<service-slug>/detail.webp\n```\n\nBefore/after, hero, location, brand, social and video files have their own folders under `public/media/`. Media paths are centralized in `src/data/media.ts`.\n\nCI asset budgets:\n\n- non-video public assets: maximum 1.2 MB each\n- video files under `public/media/video/`: maximum 4 MB each\n\n## Quality gate\n\nThe permanent GitHub Actions gate runs dependency audit, Astro checks, ESLint, Prettier verification, build/Cloudflare validation and Lighthouse. Current Lighthouse floors are:\n\n- Performance: 95+\n- Accessibility: 100\n- Best Practices: 95+\n- SEO: 100\n\nAfter launch, real-user LCP, INP and CLS should also be monitored.\n''')
+          PY
+
+          rm -f public/media/social/.gitkeep
+
+      - name: Refresh dependencies and tooling
+        run: |
+          npm uninstall @fontsource-variable/manrope
+          npm install --save-dev --save-exact eslint@9 @eslint/js@9 eslint-plugin-astro@1 globals@16 prettier@3 prettier-plugin-astro@0.14
+          npm pkg set 'scripts.lint=eslint "public/*.js" "functions/**/*.js" "worker/**/*.js" "src/**/*.astro" "astro.config.mjs" "eslint.config.js"'
+          npm pkg set 'scripts.format=prettier --write "src/**/*.{astro,ts}" "public/*.js" "functions/**/*.js" "worker/**/*.js" "astro.config.mjs" "wrangler.jsonc" "eslint.config.js" ".prettierrc.json"'
+          npm pkg set 'scripts.format:check=prettier --check "src/**/*.{astro,ts}" "public/*.js" "functions/**/*.js" "worker/**/*.js" "astro.config.mjs" "wrangler.jsonc" "eslint.config.js" ".prettierrc.json"'
+          npm pkg set 'scripts.quality=npm run check && npm run lint && npm run format:check && npm audit --audit-level=low && npm run build && npm run cf:dry-run'
+
+      - name: Add lint and format configuration
+        run: |
+          cat > eslint.config.js <<'EOF'
+          import js from '@eslint/js';
+          import astro from 'eslint-plugin-astro';
+          import globals from 'globals';
+
+          export default [
+            {
+              ignores: ['dist/**', '.wrangler/**', 'node_modules/**', 'public/media/**', 'package-lock.json']
+            },
+            {
+              ...js.configs.recommended,
+              files: ['public/*.js', 'functions/**/*.js', 'worker/**/*.js', 'astro.config.mjs', 'eslint.config.js'],
+              languageOptions: {
+                globals: {
+                  ...globals.browser,
+                  ...globals.node,
+                  ...globals.worker
+                }
+              }
+            },
+            ...astro.configs['flat/recommended']
+          ];
+          EOF
+
+          cat > .prettierrc.json <<'EOF'
+          {
+            "plugins": ["prettier-plugin-astro"],
+            "singleQuote": true,
+            "semi": true,
+            "printWidth": 120,
+            "trailingComma": "none",
+            "overrides": [
+              {
+                "files": "*.astro",
+                "options": { "parser": "astro" }
+              }
+            ]
+          }
+          EOF
+
+          cat > .prettierignore <<'EOF'
+          dist/
+          node_modules/
+          .wrangler/
+          public/media/
+          package-lock.json
+          EOF
+
+      - name: Format supported sources
+        run: npm run format
+
+      - name: Validate cleanup
+        env:
+          SITE_URL: https://esbjergshine.dk
+          PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+        run: |
+          npm audit --audit-level=low
+          npm run check
+          npm run lint
+          npm run format:check
+          node --check public/site.js
+          node --check public/site-hero.js
+          node --check public/site-deferred.js
+          node --check functions/api/contact.js
+          node --check worker/index.js
+          npm run build
+          npm run cf:dry-run
+          ! grep -Rqs '@fontsource-variable/manrope' package.json package-lock.json src public functions worker
+          ! grep -Rqs 'CONTACT_MAILBOX\|CONTACT_TO' wrangler.jsonc .dev.vars.example
+          test ! -e public/media/social/.gitkeep
+          grep -q 'info@esbjergshine.dk' dist/index.html
+          grep -q 'data-contact-phone' dist/index.html
+
+      - name: Commit cleanup
+        run: |
+          rm .github/workflows/task11-cleanup.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'chore: clean and centralize project'
+          git push origin HEAD:production-hardening
