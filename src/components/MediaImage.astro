@@ -36,9 +36,11 @@ const avifSrcset = variant?.candidates.map(({ src: candidateSrc, width: candidat
 const intrinsicWidth = variant?.sourceWidth ?? width;
 const intrinsicHeight = variant?.sourceHeight ?? height;
 const isServiceDetail = className?.includes('service-detail__visual') === true;
+const isServiceCard = className?.includes('service-card__visual') === true;
+const deferServiceCard = isServiceCard && loading === 'lazy';
 const resolvedLoading = isServiceDetail && loading === 'lazy' ? 'eager' : loading;
 const resolvedFetchPriority = isServiceDetail && fetchPriority === 'auto' ? 'high' : fetchPriority;
-const automaticSizes = className?.includes('service-card__visual')
+const automaticSizes = isServiceCard
   ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc((100vw - 48px) / 2), (max-width: 980px) 372px, 383px'
   : className?.includes('service-row__media')
     ? '(max-width: 420px) 62px, (max-width: 640px) 84px, 128px'
@@ -54,10 +56,16 @@ const resolvedSizes = sizes ?? automaticSizes;
 
 <div class:list={['media-slot', className, { 'media-slot--missing': !hasImage }]} data-media-slot>
   {hasImage && avifSrcset ? (
-    <picture class="media-picture">
-      <source type="image/avif" srcset={avifSrcset} sizes={resolvedSizes} />
+    <picture class="media-picture" data-lazy-media={deferServiceCard ? '' : undefined}>
+      <source
+        type="image/avif"
+        srcset={deferServiceCard ? undefined : avifSrcset}
+        data-srcset={deferServiceCard ? avifSrcset : undefined}
+        sizes={resolvedSizes}
+      />
       <img
-        src={src}
+        src={deferServiceCard ? undefined : src}
+        data-src={deferServiceCard ? src : undefined}
         alt={alt}
         width={intrinsicWidth}
         height={intrinsicHeight}
