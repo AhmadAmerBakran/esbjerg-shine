@@ -234,7 +234,7 @@ jobs:
       - name: Upload Lighthouse reports
         if: always() && github.event_name == 'workflow_dispatch'
         continue-on-error: true
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: lighthouse-reports
           path: lighthouse-*.json
