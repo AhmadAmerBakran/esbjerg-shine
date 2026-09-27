@@ -15,6 +15,9 @@ const initialIndex = firstCompleteIndex >= 0 ? firstCompleteIndex : 0;
 const initial = sets[initialIndex];
 ---
 <div class="comparison-gallery" data-comparison-gallery data-initial-set={String(initialIndex)}>
+  <p class="sr-only" id="comparison-help">Brug skyderen eller piletasterne til at sammenligne før og efter. Knapperne nedenunder skifter mellem behandlingerne.</p>
+  <p class="sr-only" id="comparison-status" role="status" aria-live="polite" aria-atomic="true" data-comparison-status>Viser {initial.label}.</p>
+
   <div class="comparison" data-comparison data-active-set={String(initialIndex)} style="--position: 52%;">
     <div class="comparison__scene comparison__scene--after" aria-hidden="true">
       <img
@@ -41,14 +44,24 @@ const initial = sets[initialIndex];
       <span class="photo-placeholder photo-placeholder--before"><b>FØR</b></span>
     </div>
     <div class="comparison__divider" aria-hidden="true"><span>↔</span></div>
-    <input class="comparison__range" type="range" min="0" max="100" value="52" aria-label="Sammenlign før- og efterbillede" data-comparison-range />
+    <input
+      class="comparison__range"
+      type="range"
+      min="0"
+      max="100"
+      value="52"
+      aria-label="Sammenlign før- og efterbillede"
+      aria-describedby="comparison-help comparison-status"
+      aria-valuetext="52 procent før og 48 procent efter"
+      data-comparison-range
+    />
   </div>
 
   <div class="comparison-gallery__controls">
     <button class="comparison-gallery__arrow" type="button" aria-label="Forrige sammenligning" data-comparison-prev>
       <span aria-hidden="true">←</span>
     </button>
-    <div class="comparison-gallery__dots" role="group" aria-label="Vælg før og efter sammenligning">
+    <div class="comparison-gallery__dots" role="group" aria-label="Vælg før- og efter-sammenligning">
       {sets.map((set, index) => (
         <button
           class:list={{ 'is-active': index === initialIndex }}
@@ -56,6 +69,7 @@ const initial = sets[initialIndex];
           aria-label={`Vis ${set.label.toLocaleLowerCase('da-DK')}`}
           aria-pressed={index === initialIndex ? 'true' : 'false'}
           data-comparison-set={String(index)}
+          data-label={set.label}
           data-before={set.beforeReady ? set.before : ''}
           data-after={set.afterReady ? set.after : ''}
         ><span></span></button>
