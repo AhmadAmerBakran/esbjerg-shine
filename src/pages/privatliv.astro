@@ -31,10 +31,11 @@ const description = 'Læs hvordan Esbjerg Shine behandler oplysninger, når du k
         <li>CVR {company.cvr}</li>
         <li>{company.address.street}, {company.address.postalCode} {company.address.city}</li>
         <li>Telefon {company.phoneDisplay}</li>
+        <li>E-mail <a href={company.emailHref}>{company.email}</a></li>
       </ul>
 
       <h2>Kontakt</h2>
-      <p>Har du spørgsmål til oplysninger sendt via hjemmesiden, kan du kontakte Esbjerg Shine på <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>.</p>
+      <p>Har du spørgsmål til oplysninger sendt via hjemmesiden, kan du kontakte Esbjerg Shine på <a href={company.emailHref}>{company.email}</a> eller <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>.</p>
     </article>
   </main>
   <Footer />
