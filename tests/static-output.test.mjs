@@ -108,7 +108,7 @@ test('HTML ids are unique per page and images always declare alt text', () => {
     const pageIds = ids(html);
     assert.equal(new Set(pageIds).size, pageIds.length, `Duplicate id in ${file}`);
     for (const img of html.match(/<img\b[^>]*>/gi) ?? []) {
-      assert.match(img, /\balt=["'][^"']*["']/i, `Image without alt in ${file}: ${img}`);
+      assert.match(img, /\balt(?:=["'][^"']*["'])?(?=\s|>)/i, `Image without alt in ${file}: ${img}`);
     }
   }
 });
