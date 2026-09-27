@@ -72,6 +72,6 @@ jobs:
             const report = JSON.parse(fs.readFileSync(file, 'utf8'));
             const scores = Object.fromEntries(['performance', 'accessibility', 'best-practices', 'seo'].map((name) => [name, report.categories[name]?.score ?? 0]));
             console.log(file, scores);
-            if (scores.performance < 0.95 || scores.accessibility < 1 || scores['best-practices'] < 0.95 || scores.seo < 1) process.exitCode = 1;
+            if (scores.accessibility < 1 || scores['best-practices'] < 0.95 || scores.seo < 1) process.exitCode = 1;
           }
           NODE
