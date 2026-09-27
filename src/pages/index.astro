@@ -151,6 +151,7 @@ const serviceSchema = {
           <h2 id="contact-title">Fortæl os om <span>din bil.</span></h2>
           <p>Send en kort beskrivelse af bilen og den behandling, du overvejer. Vi vender tilbage med næste skridt og et tilbud.</p>
           <a class="contact-phone" href={`tel:${company.phoneHref}`}><small>Vil du hellere ringe?</small><strong>{company.phoneDisplay}</strong></a>
+          <a class="contact-phone" href={company.emailHref}><small>Vil du hellere skrive?</small><strong>{company.email}</strong></a>
           <div class="social-links" aria-label="Esbjerg Shine på sociale medier">
             <a class="social-icon" href={company.facebook} target="_blank" rel="noopener noreferrer" aria-label="Esbjerg Shine på Facebook" title="Facebook">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4.5c-.5-.1-1.8-.2-3.4-.2-3.3 0-5.6 2-5.6 5.8V13H4v4h4v7h5v-7h3.5l.6-4H13v-2.5C13 9.3 13.4 8 14 8Z"/></svg>
