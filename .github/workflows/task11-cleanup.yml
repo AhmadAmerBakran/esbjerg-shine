@@ -90,10 +90,10 @@ jobs:
           replace(
               '.github/workflows/quality.yml',
               '      - name: Astro type check\n        run: npm run check\n\n      - name: JavaScript syntax\n',
-              '      - name: Astro type check\n        run: npm run check\n\n      - name: Lint\n        run: npm run lint\n\n      - name: Format check\n        run: npm run format:check\n\n      - name: JavaScript syntax\n'
+              '      - name: Astro type check\n        run: npm run check\n\n      - name: Lint JavaScript\n        run: npm run lint\n\n      - name: Format check\n        run: npm run format:check\n\n      - name: JavaScript syntax\n'
           )
 
-          Path('README.md').write_text('''# Esbjerg Shine\n\nProduction website for **Esbjerg Shine** (CVR 46241479), a bilplejevirksomhed in Esbjerg. The public site is Danish and built for performance, accessibility, local SEO and a small attack surface.\n\n## Stack\n\n- Astro 7 with fully static output\n- Plain CSS and small vanilla JavaScript enhancements\n- Cloudflare Workers + Static Assets\n- Worker-backed contact endpoint at `/api/contact`\n- Cloudflare Turnstile and Worker rate limiting\n- Microsoft Graph / Exchange Online mail delivery\n- GitHub Actions quality gate with Lighthouse checks\n\n## Source of truth\n\nKeep business and service information centralized:\n\n- `src/data/company.ts` — company name, CVR, phone, `info@esbjergshine.dk`, address, maps and social links\n- `src/data/services.ts` — public services and their Danish content/SEO metadata\n- `src/data/media.ts` — media paths used by the site\n\nThe contact backend imports the company email and service titles from those same sources. Do not duplicate them in Worker configuration.\n\n## Local development\n\nUse the pinned Node/npm versions from `.node-version` / `packageManager`.\n\n```bash\nnpm ci\nnpm run dev\n```\n\nUseful checks:\n\n```bash\nnpm run check\nnpm run lint\nnpm run format:check\nnpm audit --audit-level=low\nnpm run build\nnpm run cf:dry-run\n```\n\nTo format supported source/config files:\n\n```bash\nnpm run format\n```\n\n## Contact form\n\nThe production form is handled by `/api/contact` and uses Turnstile, application-level rate limiting, duplicate-submission receipts, request timeouts and Microsoft Graph. If mail infrastructure is unavailable, the page offers a user-initiated pre-filled email fallback to `info@esbjergshine.dk`.\n\nSecrets are never committed. Production setup is documented in `docs/cloudflare-deployment.md`.\n\n## Media\n\nMedia lives in `public/media/`. Service media follows:\n\n```text\npublic/media/services/<service-slug>/card.webp\npublic/media/services/<service-slug>/detail.webp\n```\n\nBefore/after, hero, location, brand, social and video files have their own folders under `public/media/`. Media paths are centralized in `src/data/media.ts`.\n\nCI asset budgets:\n\n- non-video public assets: maximum 1.2 MB each\n- video files under `public/media/video/`: maximum 4 MB each\n\n## Quality gate\n\nThe permanent GitHub Actions gate runs dependency audit, Astro checks, ESLint, Prettier verification, build/Cloudflare validation and Lighthouse. Current Lighthouse floors are:\n\n- Performance: 95+\n- Accessibility: 100\n- Best Practices: 95+\n- SEO: 100\n\nAfter launch, real-user LCP, INP and CLS should also be monitored.\n''')
+          Path('README.md').write_text('''# Esbjerg Shine\n\nProduction website for **Esbjerg Shine** (CVR 46241479), a bilplejevirksomhed in Esbjerg. The public site is Danish and built for performance, accessibility, local SEO and a small attack surface.\n\n## Stack\n\n- Astro 7 with fully static output\n- Plain CSS and small vanilla JavaScript enhancements\n- Cloudflare Workers + Static Assets\n- Worker-backed contact endpoint at `/api/contact`\n- Cloudflare Turnstile and Worker rate limiting\n- Microsoft Graph / Exchange Online mail delivery\n- GitHub Actions quality gate with Lighthouse checks\n\n## Source of truth\n\nKeep business and service information centralized:\n\n- `src/data/company.ts` — company name, CVR, phone, `info@esbjergshine.dk`, address, maps and social links\n- `src/data/services.ts` — public services and their Danish content/SEO metadata\n- `src/data/media.ts` — media paths used by the site\n\nThe contact backend imports the company email and service titles from those same sources. Do not duplicate them in Worker configuration.\n\n## Local development\n\nUse the pinned Node/npm versions from `.node-version` / `packageManager`.\n\n```bash\nnpm ci\nnpm run dev\n```\n\nUseful checks:\n\n```bash\nnpm run check\nnpm run lint\nnpm run format:check\nnpm audit --audit-level=low\nnpm run build\nnpm run cf:dry-run\n```\n\n`astro check` validates Astro/TypeScript. ESLint covers runtime JavaScript and Prettier covers Astro, TypeScript and JavaScript formatting.\n\nTo format supported source/config files:\n\n```bash\nnpm run format\n```\n\n## Contact form\n\nThe production form is handled by `/api/contact` and uses Turnstile, application-level rate limiting, duplicate-submission receipts, request timeouts and Microsoft Graph. If mail infrastructure is unavailable, the page offers a user-initiated pre-filled email fallback to `info@esbjergshine.dk`.\n\nSecrets are never committed. Production setup is documented in `docs/cloudflare-deployment.md`.\n\n## Media\n\nMedia lives in `public/media/`. Service media follows:\n\n```text\npublic/media/services/<service-slug>/card.webp\npublic/media/services/<service-slug>/detail.webp\n```\n\nBefore/after, hero, location, brand, social and video files have their own folders under `public/media/`. Media paths are centralized in `src/data/media.ts`.\n\nCI asset budgets:\n\n- non-video public assets: maximum 1.2 MB each\n- video files under `public/media/video/`: maximum 4 MB each\n\n## Quality gate\n\nThe permanent GitHub Actions gate runs dependency audit, Astro checks, ESLint, Prettier verification, build/Cloudflare validation and Lighthouse. Current Lighthouse floors are:\n\n- Performance: 95+\n- Accessibility: 100\n- Best Practices: 95+\n- SEO: 100\n\nAfter launch, real-user LCP, INP and CLS should also be monitored.\n''')
           PY
 
           rm -f public/media/social/.gitkeep
@@ -101,8 +101,8 @@ jobs:
       - name: Refresh dependencies and tooling
         run: |
           npm uninstall @fontsource-variable/manrope
-          npm install --save-dev --save-exact eslint@9 @eslint/js@9 eslint-plugin-astro@1 globals@16 prettier@3 prettier-plugin-astro@0.14
-          npm pkg set 'scripts.lint=eslint "public/*.js" "functions/**/*.js" "worker/**/*.js" "src/**/*.astro" "astro.config.mjs" "eslint.config.js"'
+          npm install --save-dev --save-exact eslint @eslint/js globals prettier prettier-plugin-astro
+          npm pkg set 'scripts.lint=eslint "public/*.js" "functions/**/*.js" "worker/**/*.js" "astro.config.mjs" "eslint.config.js"'
           npm pkg set 'scripts.format=prettier --write "src/**/*.{astro,ts}" "public/*.js" "functions/**/*.js" "worker/**/*.js" "astro.config.mjs" "wrangler.jsonc" "eslint.config.js" ".prettierrc.json"'
           npm pkg set 'scripts.format:check=prettier --check "src/**/*.{astro,ts}" "public/*.js" "functions/**/*.js" "worker/**/*.js" "astro.config.mjs" "wrangler.jsonc" "eslint.config.js" ".prettierrc.json"'
           npm pkg set 'scripts.quality=npm run check && npm run lint && npm run format:check && npm audit --audit-level=low && npm run build && npm run cf:dry-run'
@@ -111,7 +111,6 @@ jobs:
         run: |
           cat > eslint.config.js <<'EOF'
           import js from '@eslint/js';
-          import astro from 'eslint-plugin-astro';
           import globals from 'globals';
 
           export default [
@@ -124,12 +123,13 @@ jobs:
               languageOptions: {
                 globals: {
                   ...globals.browser,
-                  ...globals.node,
-                  ...globals.worker
+                  ...globals.node
                 }
+              },
+              rules: {
+                'no-control-regex': 'off'
               }
-            },
-            ...astro.configs['flat/recommended']
+            }
           ];
           EOF
 
@@ -159,6 +159,17 @@ jobs:
 
       - name: Format supported sources
         run: npm run format
+
+      - name: Verify final install is warning-free
+        shell: bash
+        run: |
+          rm -rf node_modules
+          set -o pipefail
+          npm ci --no-audit --no-fund 2>&1 | tee /tmp/npm-ci-final.log
+          if grep -Eq 'npm warn (deprecated|install-scripts)' /tmp/npm-ci-final.log; then
+            echo 'Deprecated dependency or unreviewed dependency install script detected.'
+            exit 1
+          fi
 
       - name: Validate cleanup
         env:
