@@ -1,0 +1,111 @@
+@layer utilities {
+  .sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  html {
+    scroll-padding-top: 7rem;
+  }
+
+  :where(main, footer) :is(a, button, input, select, textarea, [tabindex]):focus-visible,
+  :target {
+    scroll-margin-block: 7rem 1rem;
+  }
+
+  .form-help {
+    margin-bottom: 1rem;
+    color: var(--muted);
+    font-size: .82rem;
+    line-height: 1.55;
+  }
+
+  .field input,
+  .field select,
+  .button,
+  .menu-button,
+  .comparison-gallery__arrow,
+  .social-icon,
+  .map-frame__load {
+    min-height: 44px;
+  }
+
+  .comparison-gallery__arrow,
+  .social-icon {
+    min-width: 44px;
+  }
+
+  .comparison-gallery__dots button {
+    min-width: 28px;
+    min-height: 28px;
+  }
+
+  .consent input {
+    flex: 0 0 24px;
+    width: 24px;
+    min-width: 24px;
+    height: 24px;
+    min-height: 24px;
+  }
+
+  [aria-invalid="true"] {
+    outline: 2px solid var(--danger);
+    outline-offset: 2px;
+  }
+
+  .form-status:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 980px) {
+    .nav a {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+      transition-delay: 0ms !important;
+    }
+
+    .ticker__track {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+
+  @media (forced-colors: active) {
+    :focus-visible {
+      outline: 2px solid CanvasText;
+    }
+
+    .button,
+    .menu-button,
+    .comparison-gallery__arrow,
+    .comparison-gallery__dots button,
+    .social-icon {
+      border: 1px solid ButtonText;
+    }
+  }
+}
