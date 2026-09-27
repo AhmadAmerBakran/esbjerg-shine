@@ -53,7 +53,7 @@
   });
 
   nav?.addEventListener('click', (event) => {
-    if (event.target instanceof Element && event.target.closest('a')) closeMenu(false);
+    if (event.target instanceof Element && event.target.closest('a')) closeMenu(true);
   });
 
   addEventListener('keydown', (event) => {
