@@ -138,7 +138,7 @@
             activateLazyMedia(entry.target);
           });
         },
-        { rootMargin: '300px 0px', threshold: 0.01 }
+        { rootMargin: '160px 0px', threshold: 0.01 }
       );
       lazyMedia.forEach((picture) => lazyMediaObserver.observe(picture));
     } else {
