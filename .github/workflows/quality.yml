@@ -70,6 +70,9 @@ jobs:
           SITE_URL: https://esbjergshine.dk
           PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
 
+      - name: Pre-deployment regression tests
+        run: npm run test:predeploy
+
       - name: Validate Cloudflare bundle
         run: npm run cf:dry-run
 
