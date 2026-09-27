@@ -1,42 +1,91 @@
 ---
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import mediaVariants from '../data/media-variants.json';
+
+interface MediaVariantEntry {
+  sourceWidth: number;
+  sourceHeight: number;
+  candidates: Array<{ width: number; src: string }>;
+}
 
 interface Props {
   src: string;
   alt: string;
   class?: string;
-  loading?: 'eager' | 'lazy';
+  width: number;
+  height: number;
+  loading?: 'lazy' | 'eager';
   fetchPriority?: 'high' | 'low' | 'auto';
-  width?: number;
-  height?: number;
+  sizes?: string;
 }
 
 const {
   src,
   alt,
-  class: className = '',
+  class: className,
+  width,
+  height,
   loading = 'lazy',
   fetchPriority = 'auto',
-  width,
-  height
+  sizes
 } = Astro.props;
-
-const publicFile = join(process.cwd(), 'public', src.replace(/^\//, ''));
-const exists = existsSync(publicFile);
+const hasImage = existsSync(join(process.cwd(), 'public', src.replace(/^\//, '')));
+const variant = (mediaVariants as Record<string, MediaVariantEntry>)[src];
+const avifSrcset = variant?.candidates.map(({ src: candidateSrc, width: candidateWidth }) => `${candidateSrc} ${candidateWidth}w`).join(', ');
+const intrinsicWidth = variant?.sourceWidth ?? width;
+const intrinsicHeight = variant?.sourceHeight ?? height;
+const isServiceDetail = className?.includes('service-detail__visual') === true;
+const isServiceCard = className?.includes('service-card__visual') === true;
+const deferServiceCard = isServiceCard && loading === 'lazy';
+const resolvedLoading = isServiceDetail && loading === 'lazy' ? 'eager' : loading;
+const resolvedFetchPriority = isServiceDetail && fetchPriority === 'auto' ? 'high' : fetchPriority;
+const automaticSizes = isServiceCard
+  ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc((100vw - 48px) / 2), (max-width: 980px) 372px, 383px'
+  : className?.includes('service-row__media')
+    ? '(max-width: 420px) 62px, (max-width: 640px) 84px, 128px'
+    : isServiceDetail
+      ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc(100vw - 32px), (max-width: 980px) 760px, 768px'
+      : className?.includes('about-panel')
+        ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc(100vw - 32px), (max-width: 980px) 760px, 420px'
+        : className?.includes('location-card__media')
+          ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc(100vw - 32px), (max-width: 980px) 760px, 315px'
+          : '100vw';
+const resolvedSizes = sizes ?? automaticSizes;
 ---
-<div class:list={['media-slot', className]} data-media-slot>
-  {exists && (
+
+<div class:list={['media-slot', className, { 'media-slot--missing': !hasImage }]} data-media-slot>
+  {hasImage && avifSrcset ? (
+    <picture class="media-picture" data-lazy-media={deferServiceCard ? '' : undefined}>
+      <source
+        type="image/avif"
+        srcset={deferServiceCard ? undefined : avifSrcset}
+        data-srcset={deferServiceCard ? avifSrcset : undefined}
+        sizes={resolvedSizes}
+      />
+      <img
+        src={deferServiceCard ? undefined : src}
+        data-src={deferServiceCard ? src : undefined}
+        alt={alt}
+        width={intrinsicWidth}
+        height={intrinsicHeight}
+        loading={resolvedLoading}
+        decoding="async"
+        fetchpriority={resolvedFetchPriority}
+        data-media-image
+      />
+    </picture>
+  ) : hasImage ? (
     <img
       src={src}
       alt={alt}
-      loading={loading}
+      width={intrinsicWidth}
+      height={intrinsicHeight}
+      loading={resolvedLoading}
       decoding="async"
-      fetchpriority={fetchPriority}
-      width={width}
-      height={height}
+      fetchpriority={resolvedFetchPriority}
       data-media-image
     />
-  )}
+  ) : null}
   <span class="media-slot__fallback" aria-hidden="true"></span>
 </div>

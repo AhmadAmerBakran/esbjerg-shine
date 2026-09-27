@@ -92,12 +92,58 @@
     { passive: true }
   );
 
-  const heroBackground = doc.querySelector('.hero__background-media > img');
+  const heroBackground = doc.querySelector('.hero__background-media img');
   if (heroBackground instanceof HTMLImageElement) {
     const syncBackground = () =>
       heroBackground.classList.toggle('is-loaded', heroBackground.complete && heroBackground.naturalWidth > 0);
     heroBackground.addEventListener('load', syncBackground, { once: true });
     syncBackground();
+  }
+
+  const lazyMedia = [...doc.querySelectorAll('[data-lazy-media]')];
+  const activateLazyMedia = (picture) => {
+    if (!(picture instanceof HTMLPictureElement)) return;
+
+    picture.querySelectorAll('source[data-srcset]').forEach((source) => {
+      if (!(source instanceof HTMLSourceElement)) return;
+      const srcset = source.dataset.srcset;
+      if (srcset) source.srcset = srcset;
+      delete source.dataset.srcset;
+    });
+
+    const image = picture.querySelector('img[data-src]');
+    if (image instanceof HTMLImageElement) {
+      const syncImage = () => {
+        const loaded = image.complete && image.naturalWidth > 0;
+        image.classList.toggle('is-loaded', loaded);
+        picture.closest('[data-media-slot]')?.classList.toggle('has-media', loaded);
+      };
+      image.addEventListener('load', syncImage, { once: true });
+      const src = image.dataset.src;
+      if (src) image.src = src;
+      delete image.dataset.src;
+      syncImage();
+    }
+
+    picture.removeAttribute('data-lazy-media');
+  };
+
+  if (lazyMedia.length) {
+    if ('IntersectionObserver' in window) {
+      const lazyMediaObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            lazyMediaObserver.unobserve(entry.target);
+            activateLazyMedia(entry.target);
+          });
+        },
+        { rootMargin: '160px 0px', threshold: 0.01 }
+      );
+      lazyMedia.forEach((picture) => lazyMediaObserver.observe(picture));
+    } else {
+      lazyMedia.forEach(activateLazyMedia);
+    }
   }
 
   const heroReveal = [...doc.querySelectorAll('.hero .reveal')];
