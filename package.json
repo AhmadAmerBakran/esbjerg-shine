@@ -34,7 +34,7 @@
     "eslint": "10.11.0",
     "globals": "17.12.0",
     "prettier": "3.9.9",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "wrangler": "4.141.0"
   },
   "packageManager": "npm@11.19.0",
