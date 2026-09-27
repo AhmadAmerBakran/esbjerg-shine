@@ -35,11 +35,14 @@ const variant = (mediaVariants as Record<string, MediaVariantEntry>)[src];
 const avifSrcset = variant?.candidates.map(({ src: candidateSrc, width: candidateWidth }) => `${candidateSrc} ${candidateWidth}w`).join(', ');
 const intrinsicWidth = variant?.sourceWidth ?? width;
 const intrinsicHeight = variant?.sourceHeight ?? height;
+const isServiceDetail = className?.includes('service-detail__visual') === true;
+const resolvedLoading = isServiceDetail && loading === 'lazy' ? 'eager' : loading;
+const resolvedFetchPriority = isServiceDetail && fetchPriority === 'auto' ? 'high' : fetchPriority;
 const automaticSizes = className?.includes('service-card__visual')
   ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc((100vw - 48px) / 2), (max-width: 980px) 372px, 383px'
   : className?.includes('service-row__media')
     ? '(max-width: 420px) 62px, (max-width: 640px) 84px, 128px'
-    : className?.includes('service-detail__visual')
+    : isServiceDetail
       ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc(100vw - 32px), (max-width: 980px) 760px, 768px'
       : className?.includes('about-panel')
         ? '(max-width: 640px) calc(100vw - 24px), (max-width: 792px) calc(100vw - 32px), (max-width: 980px) 760px, 420px'
@@ -58,9 +61,9 @@ const resolvedSizes = sizes ?? automaticSizes;
         alt={alt}
         width={intrinsicWidth}
         height={intrinsicHeight}
-        loading={loading}
+        loading={resolvedLoading}
         decoding="async"
-        fetchpriority={fetchPriority}
+        fetchpriority={resolvedFetchPriority}
         data-media-image
       />
     </picture>
@@ -70,9 +73,9 @@ const resolvedSizes = sizes ?? automaticSizes;
       alt={alt}
       width={intrinsicWidth}
       height={intrinsicHeight}
-      loading={loading}
+      loading={resolvedLoading}
       decoding="async"
-      fetchpriority={fetchPriority}
+      fetchpriority={resolvedFetchPriority}
       data-media-image
     />
   ) : null}
