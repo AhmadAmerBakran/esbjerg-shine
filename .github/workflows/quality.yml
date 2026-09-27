@@ -120,6 +120,20 @@ jobs:
           ! grep -q 'rel="canonical"' dist/404.html
           ! grep -q 'application/ld+json' dist/404.html
 
+      - name: Verify privacy and legal outputs
+        run: |
+          test -f dist/privatliv/index.html
+          grep -q 'Cloudflare Turnstile' dist/privatliv/index.html
+          grep -q 'Microsoft 365' dist/privatliv/index.html
+          grep -q 'Google Maps' dist/privatliv/index.html
+          grep -q '12 måneder' dist/privatliv/index.html
+          grep -q 'Datatilsynet' dist/privatliv/index.html
+          grep -q 'GDPR artikel 6' dist/privatliv/index.html
+          ! grep -q 'planlagte behandling' dist/privatliv/index.html
+          grep -q 'Jeg har læst, hvordan Esbjerg Shine behandler oplysningerne' dist/index.html
+          grep -q 'ufravigelige rettigheder efter dansk ret' dist/ydelser/motorvask/index.html
+          test -f docs/privacy-operations.md
+
       - name: Verify accessibility outputs
         run: |
           grep -q 'class="skip-link"' dist/index.html
