@@ -112,7 +112,8 @@ const structuredData = !noindex && canonical ? {
     <meta name="robots" content={noindex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'} />
     <meta name="author" content={company.name} />
     {canonical && <link rel="canonical" href={canonical} />}
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={siteMedia.logo} type="image/webp" />
+    <link rel="shortcut icon" href={siteMedia.logo} type="image/webp" />
     <link rel="manifest" href="/site.webmanifest" />
 
     <meta property="og:type" content="website" />
