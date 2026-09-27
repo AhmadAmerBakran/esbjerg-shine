@@ -1,10 +1,10 @@
 const ALLOWED_SERVICES = new Set([
-  'Håndvask & udvendig bilpleje',
+  'Håndvask og udvendig bilpleje',
   'Indvendig bilpleje',
   'Komplet klargøring',
-  'Polering & lakforbedring',
+  'Polering',
   'Motorvask',
-  'Sæde- & tekstilrens',
+  'Sæde- og tekstilrens',
   'Andet'
 ]);
 
