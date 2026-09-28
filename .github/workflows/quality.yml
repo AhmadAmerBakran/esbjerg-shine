@@ -58,6 +58,12 @@ jobs:
           node --check functions/api/contact.js
           node --check worker/index.js
 
+      - name: Verify production Turnstile config
+        if: github.ref == 'refs/heads/master'
+        env:
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+        run: test -n "$PUBLIC_TURNSTILE_SITE_KEY"
+
       - name: Build static site
         run: npm run build
         env:
@@ -67,8 +73,8 @@ jobs:
       - name: Pre-deployment regression tests
         run: npm run test:predeploy
 
-      - name: Validate Cloudflare workers.dev bundle
-        run: npm run cf:workers-dev:dry-run
+      - name: Validate Cloudflare bundle
+        run: npm run cf:dry-run
 
       - name: Enforce public asset budgets
         run: |
