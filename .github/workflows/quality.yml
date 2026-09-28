@@ -61,7 +61,7 @@ jobs:
       - name: Build static site
         run: npm run build
         env:
-          SITE_URL: https://esbjshine.dk
+          SITE_URL: https://esbjergshine.dk
           PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
 
       - name: Pre-deployment regression tests
