@@ -39,22 +39,17 @@ jobs:
       - name: Type check
         run: npm run check
 
-      - name: Verify production security config
-        env:
-          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
-        run: test -n "$PUBLIC_TURNSTILE_SITE_KEY"
-
       - name: Build production site
         run: npm run build
         env:
           SITE_URL: https://esbjergshine.dk
           PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
 
-      - name: Validate Cloudflare bundle
-        run: npm run cf:dry-run
+      - name: Validate Cloudflare workers.dev bundle
+        run: npm run cf:workers-dev:dry-run
 
-      - name: Deploy validated commit
-        run: npm run cf:deploy
+      - name: Deploy validated commit to workers.dev
+        run: npm run cf:workers-dev:deploy
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

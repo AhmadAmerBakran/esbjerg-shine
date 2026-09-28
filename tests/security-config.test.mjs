@@ -4,6 +4,7 @@ import fs from 'node:fs';
 
 const headers = fs.readFileSync('public/_headers', 'utf8');
 const wrangler = JSON.parse(fs.readFileSync('wrangler.jsonc', 'utf8'));
+const workersDevWrangler = JSON.parse(fs.readFileSync('wrangler.workers-dev.jsonc', 'utf8'));
 const gitignore = fs.readFileSync('.gitignore', 'utf8');
 
 test('global security headers remain strict', () => {
@@ -41,7 +42,7 @@ test('third-party CSP access is limited to services actually used', () => {
   }
 });
 
-test('Cloudflare Worker production routing remains locked down', () => {
+test('final custom-domain Worker production routing remains locked down', () => {
   assert.equal(wrangler.workers_dev, false);
   assert.equal(wrangler.preview_urls, false);
   assert.deepEqual(wrangler.routes, [{ pattern: 'esbjergshine.dk', custom_domain: true }]);
@@ -53,11 +54,27 @@ test('Cloudflare Worker production routing remains locked down', () => {
   assert.equal(wrangler.vars?.APP_HOSTNAME, 'esbjergshine.dk');
 });
 
-test('contact rate limit binding remains configured', () => {
-  const limiter = wrangler.ratelimits?.find((entry) => entry.name === 'CONTACT_RATE_LIMITER');
-  assert.ok(limiter, 'Missing CONTACT_RATE_LIMITER binding');
-  assert.equal(limiter.simple?.limit, 5);
-  assert.equal(limiter.simple?.period, 60);
+test('temporary production Worker uses workers.dev without claiming the final domain', () => {
+  assert.equal(workersDevWrangler.name, wrangler.name);
+  assert.equal(workersDevWrangler.main, wrangler.main);
+  assert.equal(workersDevWrangler.workers_dev, true);
+  assert.equal(workersDevWrangler.preview_urls, false);
+  assert.ok(!('routes' in workersDevWrangler));
+  assert.equal(workersDevWrangler.assets?.binding, 'ASSETS');
+  assert.equal(workersDevWrangler.assets?.not_found_handling, '404-page');
+  assert.equal(workersDevWrangler.assets?.html_handling, 'force-trailing-slash');
+  assert.deepEqual(workersDevWrangler.assets?.run_worker_first, ['/api/*']);
+  assert.equal(workersDevWrangler.vars?.APP_ENV, 'production');
+  assert.ok(!workersDevWrangler.vars?.APP_HOSTNAME);
+});
+
+test('contact rate limit binding remains configured in both production configs', () => {
+  for (const config of [wrangler, workersDevWrangler]) {
+    const limiter = config.ratelimits?.find((entry) => entry.name === 'CONTACT_RATE_LIMITER');
+    assert.ok(limiter, 'Missing CONTACT_RATE_LIMITER binding');
+    assert.equal(limiter.simple?.limit, 5);
+    assert.equal(limiter.simple?.period, 60);
+  }
 });
 
 test('local secret files stay ignored', () => {
