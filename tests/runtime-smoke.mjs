@@ -56,6 +56,12 @@ try {
   checkStaticHeaders(privacy);
   assert.match(await privacy.text(), /Datatilsynet/);
 
+  for (const contactPath of ['/kontakt', '/kontakt/']) {
+    const contactRedirect = await fetch(`${origin}${contactPath}`, { redirect: 'manual' });
+    assert.equal(contactRedirect.status, 301);
+    assert.equal(contactRedirect.headers.get('location'), `${origin}/#kontakt`);
+  }
+
   const missing = await fetch(`${origin}/det-her-findes-ikke-task13/`, { redirect: 'manual' });
   assert.equal(missing.status, 404);
   checkStaticHeaders(missing);
