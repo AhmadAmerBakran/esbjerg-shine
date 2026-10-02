@@ -43,6 +43,15 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
+    if (
+      (request.method === 'GET' || request.method === 'HEAD') &&
+      (url.pathname === '/kontakt' || url.pathname === '/kontakt/')
+    ) {
+      const destination = new URL('/', url);
+      destination.hash = 'kontakt';
+      return Response.redirect(destination.toString(), 301);
+    }
+
     if (url.pathname === '/api/contact' || url.pathname === '/api/contact/') {
       const context = {
         request,
