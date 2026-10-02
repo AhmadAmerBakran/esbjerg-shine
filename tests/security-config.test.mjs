@@ -48,7 +48,7 @@ test('Cloudflare Worker production routing remains locked down', () => {
   assert.equal(wrangler.assets?.binding, 'ASSETS');
   assert.equal(wrangler.assets?.not_found_handling, '404-page');
   assert.equal(wrangler.assets?.html_handling, 'force-trailing-slash');
-  assert.deepEqual(wrangler.assets?.run_worker_first, ['/api/*']);
+  assert.deepEqual(wrangler.assets?.run_worker_first, ['/api/*', '/kontakt', '/kontakt/']);
   assert.equal(wrangler.vars?.APP_ENV, 'production');
   assert.equal(wrangler.vars?.APP_HOSTNAME, 'esbjergshine.dk');
 });
